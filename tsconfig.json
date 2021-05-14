@@ -1,8 +1,11 @@
 {
   "compilerOptions": {
     "module": "esnext",
-    "lib": ["esnext"],
-    "target": "es2017",
+    "lib": [
+      "esnext",
+      "DOM"
+    ],
+    "target": "es6",
     "moduleResolution": "Node",
     "outDir": "dist",
     "baseUrl": "src/",
@@ -11,7 +14,9 @@
     "experimentalDecorators": true,
     "noImplicitReturns": true,
     "allowSyntheticDefaultImports": true,
-    "allowUnreachableCode": false
+    "allowUnreachableCode": false,
+    "removeComments": false,
+    "skipLibCheck": true,
   },
   "exclude": [
     "node_modules"

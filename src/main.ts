@@ -1,4 +1,5 @@
 import { ErrorMapper } from "utils/ErrorMapper";
+import { Game, Memory } from "../test/unit/mock";
 
 declare global {
   /*
@@ -14,6 +15,8 @@ declare global {
     uuid: number;
     log: any;
   }
+
+
 
   interface CreepMemory {
     role: string;
