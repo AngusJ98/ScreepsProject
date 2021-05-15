@@ -14,6 +14,14 @@ declare global {
   interface Memory {
     uuid: number;
     log: any;
+    myRooms: any;
+    username: string;
+    rooms: {[name:string]: RoomMemory}
+    skippedRooms: Room[]
+  }
+
+  interface RoomMemory {
+    lastSeen: number;
   }
 
 
