@@ -5,11 +5,11 @@ import * as _ from "lodash"
 Empire.main.execute = function() {
     try {
         Empire.prepareMemory(); //sets up memory
-        Empire.buyPower(); //buys resources
-        Empire.handleNextroom(); //handles claiming new rooms
-        Empire.handleSquadmanager(); //military
+        //Empire.buyPower(); //buys resources
+        //Empire.handleNextroom(); //handles claiming new rooms
+        //Empire.handleSquadmanager(); //military
         //Empire.handleIncomingTransactions();
-        Empire.handleMissions(); //Handles large scale operations
+        //Empire.handleMissions(); //Handles large scale operations
       } catch (e) {
         console.log('Empire Exception', e.stack);
       }

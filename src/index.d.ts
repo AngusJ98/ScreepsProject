@@ -8,3 +8,14 @@ declare global {
 }
 
 declare var Empire;
+
+interface Room {
+    execute(): void;
+}
+
+interface RoomMemory {
+    lastSeen: number;
+    controllerId: string | null;
+    sources: number;
+    hostileCreepCount:number;
+  }
