@@ -17,7 +17,6 @@ interface Room {
 	spawns: StructureSpawn[];
 	extensions: StructureExtension[];
 	containers: StructureContainer[];
-	storageUnits: StorageUnit[];
 	towers: StructureTower[];
 	links: StructureLink[];
 	labs: StructureLab[];
@@ -87,19 +86,6 @@ Object.defineProperties(Room.prototype, {
 		},
 	},
 
-	// All container-like objects in the room
-	storageUnits: {
-		get() {
-			if (!this.structures['storageUnits']) {
-				let storageUnits = [].concat(this.structures[STRUCTURE_CONTAINER],
-											 this.structures[STRUCTURE_STORAGE],
-											 this.structures[STRUCTURE_TERMINAL]);
-				this.structures['storageUnits'] = _.compact(_.flatten(storageUnits));
-			}
-			return this.structures['storageUnits'] || [];
-		},
-	},
-
 	// Towers
 	towers: {
 		get() {
@@ -107,7 +93,7 @@ Object.defineProperties(Room.prototype, {
 		},
 	},
 
-	// Links, some of which are assigned to virtual components
+	// Links
 	links: {
 		get() {
 			return this.structures[STRUCTURE_LINK] || [];
@@ -127,21 +113,6 @@ Object.defineProperties(Room.prototype, {
 			return this.find(FIND_SOURCES) || [];
 		},
 	},
-
-	// // All objects requiring a regular supply of energy
-	// sinks: {
-	// 	get() {
-	// 		if (!this.structures['sinks']) {
-	// 			let sinks = [].concat(this.structures[STRUCTURE_SPAWN],
-	// 								  this.structures[STRUCTURE_EXTENSION],
-	// 								  this.structures[STRUCTURE_LAB],
-	// 								  this.structures[STRUCTURE_TOWER],
-	// 								  this.structures[STRUCTURE_POWER_SPAWN]);
-	// 			this.structures['sinks'] = _.compact(_.flatten(sinks));
-	// 		}
-	// 		return this.structures['sinks'] || [];
-	// 	},
-	// },
 
 	// All non-barrier, non-road repairable objects
 	repairables: {
