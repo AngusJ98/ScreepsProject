@@ -33,6 +33,13 @@ interface Room {
 
 }
 
+Object.defineProperty(Room.prototype, "myCreeps", {
+    get() {
+        return global.creepsByCapital[this.name]
+    }
+
+})
+
 Object.defineProperty(Room.prototype, 'my', {
 	get() {
 		return this.controller && this.controller.my;

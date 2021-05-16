@@ -1,6 +1,6 @@
 Room.prototype.execute = function() {
   this.handle();
-  _.forEach(this.creeps)
+  _.forEach(this.creeps, creep => creep.execute())
 
 
 

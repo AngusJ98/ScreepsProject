@@ -25,3 +25,8 @@ Empire.main.roomExecution = function() {
 
     _.forEach(Game.rooms, (r: Room) => r.execute())
 }
+
+Empire.sortCreeps = function() {
+
+  creepsByCapital = _.groupBy(Game.creeps, r => r.memory.capital)
+}

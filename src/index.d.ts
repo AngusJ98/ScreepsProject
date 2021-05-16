@@ -3,10 +3,11 @@ declare global {
         interface Global {
             Empire: any;
             config: any;
+            creepsByCapital: {[name: String]: Creep}
         }
     }
 }
-
+declare var creepsByCapital;
 declare var Empire;
 
 interface Room {
@@ -18,4 +19,8 @@ interface RoomMemory {
     controllerId: string | null;
     sources: number;
     hostileCreepCount:number;
-  }
+}
+
+interface CreepMemory {
+    capital: string;
+}
