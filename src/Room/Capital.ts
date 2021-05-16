@@ -1,13 +1,16 @@
 //capitals are our claimed rooms. All managers will be assigned to a capital. This allows managers to spawn creeps
 //for other rooms to use and manager military code
 
+import { Building } from "Buildings/Building";
+import { MiningSite } from "Buildings/MiningSite";
+
 enum capitalSize {
     Town = 0,
     City = 1,
     Megacity = 2,
 }
 
-abstract class Capital {
+export class Capital {
     name: string;
     capital: Capital;
     roomNames: string[];
@@ -35,8 +38,10 @@ abstract class Capital {
     repairables: Structure[];
     coreSpawn: StructureSpawn | undefined;
 
-    //A list of sources to mine from. Can be in other rooms too!
-    //miningSites: { [sourceID: string]: MiningSite } TODO
+    //Buildings
+    buildings: Building[]
+    miningSites: { [sourceID: string]: MiningSite } //self explanatory: Sites to mine from
+    barracks: Barracks; //Spawns grouped together
 
     level: number;
     stage: number;
@@ -88,5 +93,18 @@ abstract class Capital {
         this.creeps = creepsByCapital[this.name]
         this.creepsByManager = _.groupBy(this.creeps, r => r.memory.manager)
         this.hostiles = _.flatten(_.map(this.allRooms, room => room.hostiles)); //hostile creeps in all rooms
+
+        this.miningSites = {};
+        this.barracks = undefined;
+        this.buildings = []
+
+        this.createBuildings()
+    }
+
+    //Method to start all buildings
+    createBuildings(): void {
+        if (this.spawns[0]) {
+            this.barracks = new Barracks(this, this.spawns[0])
+        }
     }
 }

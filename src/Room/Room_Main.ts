@@ -5,13 +5,16 @@ interface Room {
 
 Room.prototype.execute = function() {
   this.handle();
-  _.forEach(this.creeps, creep => creep.execute())
+
+  //maybe not needed with managers!
+  //_.forEach(this.creeps, creep => creep.execute())
 
 
 
     this.memory.lastSeen = Game.time;
 }
-
+/*
+DEPRECATED WITH ROOM_FIND!
 function initMemory(room: Room) {
     if (room.memory.sources === undefined) {
       room.memory.sources = room.sources.length;
@@ -24,6 +27,7 @@ function initMemory(room: Room) {
     }
     room.memory.hostileCreepCount = room.hostiles.length;
 }
+*/
 
 Room.prototype.handle = function() {
   if (this.controller && this.controller.my) {

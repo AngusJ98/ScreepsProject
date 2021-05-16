@@ -1,16 +1,16 @@
-export class MiningSite {
-    source: Source;
-    name: string;
-    room: Room | undefined;
-	pos: RoomPosition;
-	capital: Capital;
-    manager: MiningManager
+import { MiningManager } from "Managers/MiningManager";
+import { Capital } from "Room/Capital";
+import { Building } from "./Building";
 
-    constructor(source: Source, capital: Capital) {
+export class MiningSite extends Building{
+    source: Source;
+    name: string
+
+    constructor(capital: Capital, source: Source) {
+        super(capital, source);
         this.source = source;
-        this.name = "Mining_Site_" + source.id;
         this.room = source.room;
-        this.pos = source.pos;
+        this.name = "Mining_Site_" + source.id;
         this.capital = capital;
         this.manager = new MiningManager(this)
     }
