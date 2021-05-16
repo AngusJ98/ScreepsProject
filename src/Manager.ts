@@ -1,3 +1,4 @@
+import { CreepSetup } from "Creep_Setups/CreepSetup";
 import { Capital } from "Room/Capital";
 
 interface IManagerInitialiser {
@@ -7,7 +8,7 @@ interface IManagerInitialiser {
 	capital: Capital;
 }
 
-interface SpawnRequestOptions {
+export interface SpawnRequestOptions {
 	spawn?: StructureSpawn;				// allows you to specify which spawn to use;
 	directions?: DirectionConstant[];	// StructureSpawn.spawning.directions
     priority: number;                   // Priority of spawning, lower number = higher prio

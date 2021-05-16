@@ -1,6 +1,7 @@
 //capitals are our claimed rooms. All managers will be assigned to a capital. This allows managers to spawn creeps
 //for other rooms to use and manager military code
 
+import { Barracks } from "Buildings/Barracks";
 import { Building } from "Buildings/Building";
 import { MiningSite } from "Buildings/MiningSite";
 
@@ -41,7 +42,7 @@ export class Capital {
     //Buildings
     buildings: Building[]
     miningSites: { [sourceID: string]: MiningSite } //self explanatory: Sites to mine from
-    barracks: Barracks; //Spawns grouped together
+    barracks: Barracks | undefined; //Spawns grouped together
 
     level: number;
     stage: number;

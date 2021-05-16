@@ -1,3 +1,4 @@
+import { Manager } from "Manager";
 import { ErrorMapper } from "utils/ErrorMapper";
 import { Game, Memory } from "../test/unit/mock";
 
@@ -25,10 +26,10 @@ declare global {
 
   interface CreepMemory {
     role: string;
-    room: string;
-    working: boolean;
-    routing: any;
-    manager: Manager;
+    capital: string;
+    routing?: any;
+    manager: string;
+    task?: null;
   }
 
   // Syntax for adding proprties to `global` (ex "global.log")

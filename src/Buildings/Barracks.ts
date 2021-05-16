@@ -1,5 +1,20 @@
+import { bodyCost, CreepSetup } from "Creep_Setups/CreepSetup";
+import { Manager } from "Manager";
 import { Capital } from "Room/Capital";
 import { Building } from "./Building";
+
+interface SpawnOrder {
+    body: BodyPartConstant[];
+	name: string;
+    memory: CreepMemory;
+	options: SpawnRequestOptions,
+}
+export interface SpawnRequestOptions {
+	spawn?: StructureSpawn;				// allows you to specify which spawn to use;
+	directions?: DirectionConstant[];	// StructureSpawn.spawning.directions
+    priority: number;                   // Priority of spawning, lower number = higher prio
+    prespawn: number;                   // Spawn creep this many ticks early to prevent downtime
+}
 
 export class Barracks extends Building {
     spawns: StructureSpawn[]
@@ -9,7 +24,7 @@ export class Barracks extends Building {
     energyStructures: (StructureSpawn | StructureExtension)[];
     name: string;
 
-    private productionPriorities: number[];
+    private productionPriorities: number[]; // A list of priorities to check when spawning
 	private productionQueue: {[priority: number]: SpawnOrder[]}; // Prioritized queue of spawning orders
 
     constructor(capital: Capital, mainSpawn: StructureSpawn) {
@@ -40,6 +55,119 @@ export class Barracks extends Building {
 		}
 		return (roleName + '_' + i);
     };
+
+    private createSpawnOrder(setup: CreepSetup, manager: Manager, opts: SpawnRequestOptions): SpawnOrder {
+        let body: BodyPartConstant[] = setup.generateBody(this.room.energyCapacityAvailable)
+        let memory: CreepMemory = {
+            capital: manager.capital.name,
+            manager: manager.name,
+            role: setup.role,
+            routing: null,
+            task: null,
+            recycle: false,
+            killed: false,
+            data: {},
+        }
+        let name = this.generateCreepName(setup.role)
+        let order: SpawnOrder = {
+            name: name,
+            body: body,
+            memory: memory,
+            options: opts
+        }
+        return order;
+    }
+
+    addToQueue(request: SpawnOrder): void {
+        let prio = request.options.priority
+        if (this.canSpawn(request.body) && request.body.length > 0) {
+            if (!this.productionQueue[prio]) {
+                this.productionQueue[prio] = []
+                this.productionPriorities.push(prio)
+            }
+            this.productionQueue[prio].push(request)
+        }
+    }
+
+    canSpawn(body: BodyPartConstant[]): boolean {
+		return bodyCost(body) <= this.room.energyCapacityAvailable;
+    }
+
+    private spawnHighestPriorityCreep(): number | undefined {
+		let sortedKeys = _.sortBy(this.productionPriorities); //Sort prio list
+		for (let prio of sortedKeys) {
+            let nextOrder = this.productionQueue[prio].shift();
+            if (nextOrder) {
+                let res = this.spawnCreep(nextOrder)
+                if (res == OK || res == ERR_BUSY) {
+                    return res
+                } else {
+                    if (res != ERR_NOT_ENOUGH_ENERGY) {
+                        this.productionQueue[prio].unshift(nextOrder)
+                        return res
+                    }
+                }
+            }
+        }
+        return -66
+    }
+
+    private spawnCreep(request: SpawnOrder): number {
+        let body = request.body
+        let name = request.name
+        let memory = request.memory
+        let options = request.options
+        let spawnToUse: StructureSpawn | undefined;
+        if (request.options.spawn) {
+            spawnToUse = request.options.spawn!
+            if(spawnToUse.spawning) {
+                return ERR_BUSY
+            }
+            else {
+				_.remove(this.availableSpawns, spawn => spawn.id == spawnToUse!.id); // mark as used
+			}
+        } else {
+			spawnToUse = this.availableSpawns.shift(); //remove spawn to be used from the list
+        }
+
+        if (spawnToUse) {
+            if (this.capital.coreSpawn && spawnToUse.id == this.capital.coreSpawn.id && !options.directions) {
+                options.directions = [TOP, RIGHT]
+            }
+
+            if(bodyCost(body) > this.room.energyCapacityAvailable) {
+                return ERR_NOT_ENOUGH_ENERGY
+            }
+            memory.data.origin = spawnToUse.pos.roomName
+            let res = spawnToUse.spawnCreep(body, name, {
+                memory: memory,
+                directions: options.directions,
+            })
+
+            if (res == OK) {
+                return res
+            } else {
+                this.availableSpawns.unshift(spawnToUse) //return spawn to stack if spawn unsuccessful
+                return res
+            }
+        } else {
+            return ERR_BUSY
+        }
+
+
+    }
+
+    handleSpawns(): void {
+        while (this.availableSpawns.length > 0) {
+            let res = this.spawnHighestPriorityCreep();
+        }
+
+        //TODO Clear the exit position of spawns if a creep is about to spawn
+    }
+
+    run(): void {
+		this.handleSpawns();
+    }
 
 }
 

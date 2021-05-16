@@ -26,7 +26,14 @@ interface RoomMemory {
 }
 
 interface CreepMemory {
-    capital: string;
     killed: boolean;
     recycle: boolean;
+    role: string;
+    capital: string;
+    routing?: any;
+    manager: string;
+    task?: null;
+    data: {
+        origin?: string,
+    },
 }
