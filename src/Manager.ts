@@ -1,3 +1,4 @@
+import { SpawnRequestOptions } from "Buildings/Barracks";
 import { CreepSetup } from "Creep_Setups/CreepSetup";
 import { Capital } from "Room/Capital";
 

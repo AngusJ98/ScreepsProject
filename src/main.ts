@@ -24,14 +24,6 @@ declare global {
     }
   }
 
-  interface CreepMemory {
-    role: string;
-    capital: string;
-    routing?: any;
-    manager: string;
-    task?: null;
-  }
-
   // Syntax for adding proprties to `global` (ex "global.log")
   namespace NodeJS {
     interface Global {
