@@ -4,11 +4,17 @@ declare global {
             Empire: any;
             config: any;
             creepsByCapital: {[name: String]: Creep}
+            roles: {
+                any
+            };
         }
     }
 }
 declare var creepsByCapital;
 declare var Empire;
+declare var roles;
+
+
 
 interface Room {
     execute(): void;
@@ -23,4 +29,6 @@ interface RoomMemory {
 
 interface CreepMemory {
     capital: string;
+    killed: boolean;
+    recycle: boolean;
 }

@@ -27,6 +27,7 @@ declare global {
     role: string;
     room: string;
     working: boolean;
+    routing: any;
   }
 
   // Syntax for adding proprties to `global` (ex "global.log")
