@@ -12,6 +12,7 @@
 /_book
 /build/*
 /.VSCodeCounter
+/test2
 
 # TypeScript definitions installed by Typings
 /typings

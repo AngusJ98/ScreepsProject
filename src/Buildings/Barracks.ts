@@ -164,6 +164,9 @@ export class Barracks extends Building {
 
         //TODO Clear the exit position of spawns if a creep is about to spawn
     }
+    init(): void {
+
+    }
 
     run(): void {
 		this.handleSpawns();

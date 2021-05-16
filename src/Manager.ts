@@ -8,12 +8,7 @@ interface IManagerInitialiser {
 	capital: Capital;
 }
 
-export interface SpawnRequestOptions {
-	spawn?: StructureSpawn;				// allows you to specify which spawn to use;
-	directions?: DirectionConstant[];	// StructureSpawn.spawning.directions
-    priority: number;                   // Priority of spawning, lower number = higher prio
-    prespawn: number;                   // Spawn creep this many ticks early to prevent downtime
-}
+
 
 export abstract class Manager {
 	room: Room | undefined;
@@ -42,7 +37,7 @@ export abstract class Manager {
     filterLife(creeps: Creep[], prespawn = 50) : Creep[] {
         let distance = 0
         if (this.capital.spawns[0]) {
-            distance = PathFinder.search(this.pos, this.capital.barracks.pos, {maxOps: 4000}).cost || 0
+            distance = PathFinder.search(this.pos, this.capital.barracks!.pos, {maxOps: 4000}).cost || 0
         }
 
         return _.filter(creeps, creep =>creep.ticksToLive! > CREEP_SPAWN_TIME * creep.body.length + distance + prespawn || creep.spawning || (!creep.spawning && !creep.ticksToLive));
@@ -50,8 +45,9 @@ export abstract class Manager {
 
     //request a certain number of creeps! Will check currently existing creeps then add to queue based on manager
     //priority
+    //REMEMBER TO NOT TRY THIS IF NO BARRACKS
     spawnList(quantity: number, setup: CreepSetup, opts = {} as SpawnRequestOptions) {
-        //if not defined, use these options
+        //if not defined, use these options.
         _.defaults(opts, {priority: this.priority, prespawn: config.spawning.prespawn});
 
     }

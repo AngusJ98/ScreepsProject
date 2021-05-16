@@ -15,4 +15,7 @@ export abstract class Building {
         this.capital.buildings.push(this)
     }
 
+    abstract init(): void
+    abstract run(): void
+
 }
