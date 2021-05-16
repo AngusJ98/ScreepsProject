@@ -12,7 +12,7 @@ Empire.main.execute = function() {
     //Empire.handleIncomingTransactions();
     //Empire.handleMissions(); //Handles large scale operations
   } catch (e) {
-    console.log('Empire Exception', e.stack);
+    console.log('Empire Prep Exception', e.stack);
   }
 
 

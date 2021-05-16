@@ -89,5 +89,4 @@ abstract class Capital {
         this.creepsByManager = _.groupBy(this.creeps, r => r.memory.manager)
         this.hostiles = _.flatten(_.map(this.allRooms, room => room.hostiles)); //hostile creeps in all rooms
     }
-
 }
