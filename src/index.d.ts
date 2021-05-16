@@ -16,9 +16,7 @@ declare var roles;
 
 
 
-interface Room {
-    execute(): void;
-}
+
 
 interface RoomMemory {
     lastSeen: number;
