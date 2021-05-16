@@ -1,3 +1,8 @@
+interface Room {
+  execute(): void;
+  handle(): void;
+}
+
 Room.prototype.execute = function() {
   this.handle();
   _.forEach(this.creeps, creep => creep.execute())
@@ -20,3 +25,8 @@ function initMemory(room: Room) {
     room.memory.hostileCreepCount = room.hostiles.length;
 }
 
+Room.prototype.handle = function() {
+  if (this.controller && this.controller.my) {
+
+  }
+}

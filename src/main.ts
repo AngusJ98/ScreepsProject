@@ -18,16 +18,17 @@ declare global {
     username: string;
     rooms: {[name:string]: RoomMemory}
     skippedRooms: Room[]
+    capitals: {
+      outposts: string[];
+    }
   }
-
-
-
 
   interface CreepMemory {
     role: string;
     room: string;
     working: boolean;
     routing: any;
+    manager: Manager;
   }
 
   // Syntax for adding proprties to `global` (ex "global.log")

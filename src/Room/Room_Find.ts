@@ -28,10 +28,23 @@ interface Room {
 	structureSites: ConstructionSite[];
 	roadSites: ConstructionSite[];
 	barriers: (StructureWall | StructureRampart)[];
+	powerSpawn: StructurePowerSpawn;
+	nuker: StructureNuker;
+	observer: StructureObserver;
 
 	getStructures(structureType: string): Structure[];
 
 }
+
+Object.defineProperty(Room.prototype, "structures", {
+	get() {
+		if (!this._structures) {
+			this._structures = _.groupBy(this.find(FIND_STRUCTURES) as Structure[], s => s.structureType);
+		}
+		return this._structures;
+	}
+})
+
 
 Object.defineProperty(Room.prototype, "myCreeps", {
     get() {
@@ -118,6 +131,24 @@ Object.defineProperties(Room.prototype, {
 	sources: {
 		get() {
 			return this.find(FIND_SOURCES) || [];
+		},
+	},
+
+	powerSpawn: {
+		get() {
+			return this.structures[STRUCTURE_POWER_SPAWN][0] || [];
+		},
+	},
+
+	nuker: {
+		get() {
+			return this.structures[STRUCTURE_NUKER][0] || [];
+		},
+	},
+
+	observer: {
+		get() {
+			return this.structures[STRUCTURE_OBSERVER][0] || [];
 		},
 	},
 
