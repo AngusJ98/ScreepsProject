@@ -1,10 +1,8 @@
 interface IManagerInitialiser {
-    ref: string;
 	name: string;
 	room: Room | undefined;
 	pos: RoomPosition;
 	capital: Capital;
-	memory: any;
 }
 
 abstract class Manager {
@@ -12,20 +10,19 @@ abstract class Manager {
     capital: Capital;
 	name: string;
 	priority: number;
-	ref: string;
 	pos: RoomPosition;
-    creeps: { [roleName: string]: Creep[] };
+    creeps: Creep[];
+    creepsByRole: {[roleName: string]: Creep[]}
     constructor(initialiser: IManagerInitialiser, name: string, priority: number) {
+        //info from initialiser
         this.name = name
         this.room = initialiser.room
         this.capital = initialiser.capital
         this.priority = priority
-        this.ref = initialiser.ref + "-" + this.name
         this.pos = initialiser.pos
-        this.creeps = {}
-    }
 
-    grabCreeps(): void {
-        this.creeps = _.groupBy(creepsByCapital[this.capital.name], r => r.memory.manager)
+        //Get list of my creeps from capital and group them by role
+        this.creeps = this.capital.creepsByManager[this.name]
+        this.creepsByRole = _.groupBy(this.creeps, r => r.memory.role)
     }
 }
