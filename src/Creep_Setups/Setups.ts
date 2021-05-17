@@ -3,7 +3,7 @@ import { CreepSetup } from "./CreepSetup";
 export const Roles = {
 	// Civilian roles
 	drone      : 'drone',
-	filler     : 'filler',
+	lorry     : 'lorry',
 	settler      : 'settler',
 	colonist    : 'colonist',
 	treasurer    : 'treasurer',
@@ -22,7 +22,7 @@ export const Roles = {
 };
 
 export const Setups = {
-	resourcers: {
+	drones: {
 		extractor: new CreepSetup(Roles.drone, {
 			pattern  : [WORK, WORK, CARRY, MOVE],
 			sizeLimit: Infinity,
@@ -57,7 +57,7 @@ export const Setups = {
 		}
 	},
 
-	filler: new CreepSetup(Roles.filler, {
+	lorrys: new CreepSetup(Roles.lorry, {
 		pattern  : [CARRY, CARRY, MOVE],
 		sizeLimit: 1,
 	}),

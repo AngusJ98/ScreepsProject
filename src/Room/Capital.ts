@@ -26,6 +26,7 @@ export class Capital {
     extensions: StructureExtension[];
     storage: StructureStorage | undefined;
     links: StructureLink[];
+    containers: StructureContainer[];
     availableLinks: StructureLink[];
     terminal: StructureTerminal | undefined;
     towers: StructureTower[];
@@ -73,6 +74,7 @@ export class Capital {
         this.powerSpawn = this.room.powerSpawn;
         this.nuker = this.room.nuker;
 		this.observer = this.room.observer;
+        this.containers = this.room.containers
 
 
         this.level = this.controller.level

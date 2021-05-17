@@ -1,9 +1,11 @@
 import { bodyCost, CreepSetup } from "Creep_Setups/CreepSetup";
+import { Roles, Setups } from "Creep_Setups/Setups";
 import { Manager } from "Manager";
+import { CrisisManager } from "Managers/CrisisManager";
 import { Capital } from "Room/Capital";
 import { Building } from "./Building";
 
-interface SpawnOrder {
+export interface SpawnOrder {
     body: BodyPartConstant[];
 	name: string;
     memory: CreepMemory;
@@ -13,7 +15,7 @@ export interface SpawnRequestOptions {
 	spawn?: StructureSpawn;				// allows you to specify which spawn to use;
 	directions?: DirectionConstant[];	// StructureSpawn.spawning.directions
     priority: number;                   // Priority of spawning, lower number = higher prio
-    prespawn: number;                   // Spawn creep this many ticks early to prevent downtime
+    prespawn?: number;                   // Spawn creep this many ticks early to prevent downtime
 }
 
 export class Barracks extends Building {
@@ -23,6 +25,8 @@ export class Barracks extends Building {
     extensions: StructureExtension[];
     energyStructures: (StructureSpawn | StructureExtension)[];
     name: string;
+    manager: RecruitmentManager;
+    crisisManager?: CrisisManager; //used if capital is looking bad, or to start up a new capital
 
     private productionPriorities: number[]; // A list of priorities to check when spawning
 	private productionQueue: {[priority: number]: SpawnOrder[]}; // Prioritized queue of spawning orders
@@ -40,6 +44,14 @@ export class Barracks extends Building {
         this.productionPriorities = [];
 		this.productionQueue = {};
         this.manager = new QueenManager(this)
+
+        //Use a crisis manager if there is no queen and not enough energy to make one
+        if (_.filter(this.capital.creeps, r => r.memory.role == Roles.queen).length == 0) {
+            let setup = this.capital.storage ? Setups.queens.default : Setups.queens.early;
+            if(bodyCost(setup.generateBody(this.capital.room.energyCapacityAvailable)) < this.capital.room.energyAvailable) {
+                this.crisisManager = new CrisisManager(this)
+            }
+        }
     }
 
     //TODO MAKE A PROPER IDLE SPOT. HIGH PRIO
@@ -56,7 +68,7 @@ export class Barracks extends Building {
 		return (roleName + '_' + i);
     };
 
-    private createSpawnOrder(setup: CreepSetup, manager: Manager, opts: SpawnRequestOptions): SpawnOrder {
+    createSpawnOrder(setup: CreepSetup, manager: Manager, opts: SpawnRequestOptions): SpawnOrder {
         let body: BodyPartConstant[] = setup.generateBody(this.room.energyCapacityAvailable)
         let memory: CreepMemory = {
             capital: manager.capital.name,

@@ -5,6 +5,7 @@ import { Building } from "./Building";
 export class MiningSite extends Building{
     source: Source;
     name: string
+    manager: MiningManager;
 
     constructor(capital: Capital, source: Source) {
         super(capital, source);
@@ -12,6 +13,6 @@ export class MiningSite extends Building{
         this.room = source.room;
         this.name = "Mining_Site_" + source.id;
         this.capital = capital;
-        this.manager = new MiningManager(this)
+        this.manager! = new MiningManager(this)
     }
 }

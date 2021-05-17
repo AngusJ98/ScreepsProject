@@ -1,14 +1,20 @@
 import { Manager } from "Manager";
 import { Capital } from "Room/Capital";
 
+export interface buildingInstantiator {
+    name: string;
+    room: Room;
+    pos: RoomPosition;
+}
+
 export abstract class Building {
     capital: Capital;
     room: Room;
     pos: RoomPosition;
     abstract name: string;
-    manager: Manager | undefined
+    abstract manager: Manager
 
-    constructor(capital: Capital, intstantiator: RoomObject) {
+    constructor(capital: Capital, intstantiator: buildingInstantiator) {
         this.capital = capital
         this.room = intstantiator.room!
         this.pos = intstantiator.pos

@@ -1,6 +1,6 @@
 export const ManagerPriority = {
     Crisis: {
-        bootstrap: 0,
+        mini: 0,
     },
 
     //Necessary for capitals to function
