@@ -50,7 +50,23 @@ export abstract class Manager {
     spawnList(quantity: number, setup: CreepSetup, opts = {} as SpawnRequestOptions) {
         //if not defined, use these options.
         _.defaults(opts, {priority: this.priority, prespawn: config.spawning.prespawn});
+        let current: number = this.filterLife(this.creepsByRole[setup.role] || [], opts.prespawn).length
+        let needed = quantity - current
+        if (needed > 50) {
+            console.log("too many requests from: ", this.name, "FIX now")
+        }
+        for (let i = 0; i < needed; i++) {
+            this.requestCreep(setup, opts)
+        }
+    }
 
+    //Adds a creep to the queue of the barracks. Ideally wishlist will be used to call this, but direct calls are technically allowed
+    //if needed
+    requestCreep(setup: CreepSetup, opts: SpawnRequestOptions) {
+        _.defaults(opts, {priority: this.priority, prespawn: 50});
+        if (this.capital.barracks) {
+            this.capital.barracks.addToQueue(setup, this, opts)
+        }
     }
 
     //set abstract methods for each child class to implement their own logic
