@@ -33,8 +33,7 @@ export class CrisisManager extends Manager{
             let partsNeeded = SOURCE_ENERGY_CAPACITY / 300 / 2;
             let partsAssigned = _.sum(_.map(currentMiners, r => r.getActiveBodyparts(WORK)));
             if (partsAssigned < partsNeeded && currentMiners.length < mineManager.pos.getAdjacentPositions().length) {
-                let request: SpawnOrder = this.capital.barracks!.createSpawnOrder(Setups.drones.miners.emergency, mineManager, {priority: this.priority})
-                this.capital.barracks!.addToQueue(request)
+                this.capital.barracks!.addToQueue(Setups.drones.miners.emergency, mineManager, {priority: this.priority})
             }
         }
     }

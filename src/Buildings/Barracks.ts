@@ -68,7 +68,7 @@ export class Barracks extends Building {
 		return (roleName + '_' + i);
     };
 
-    createSpawnOrder(setup: CreepSetup, manager: Manager, opts: SpawnRequestOptions): SpawnOrder {
+    private createSpawnOrder(setup: CreepSetup, manager: Manager, opts: SpawnRequestOptions): SpawnOrder {
         let body: BodyPartConstant[] = setup.generateBody(this.room.energyCapacityAvailable)
         let memory: CreepMemory = {
             capital: manager.capital.name,
@@ -90,7 +90,8 @@ export class Barracks extends Building {
         return order;
     }
 
-    addToQueue(request: SpawnOrder): void {
+    addToQueue(setup: CreepSetup, manager: Manager, opts: SpawnRequestOptions): void {
+        let request = this.createSpawnOrder(setup, manager, opts)
         let prio = request.options.priority
         if (this.canSpawn(request.body) && request.body.length > 0) {
             if (!this.productionQueue[prio]) {
