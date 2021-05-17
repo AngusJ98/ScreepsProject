@@ -5,7 +5,7 @@ import { Barracks } from "Buildings/Barracks";
 import { Building } from "Buildings/Building";
 import { MiningSite } from "Buildings/MiningSite";
 
-enum capitalSize {
+export enum CapitalSize {
     Town = 0,
     City = 1,
     Megacity = 2,
@@ -49,6 +49,7 @@ export class Capital {
     stage: number;
 
     creeps: Creep[];
+    creepsByRole: {[role: string]: Creep[]}
     creepsByManager: {[manager: string]: Creep[]}
     hostiles: Creep[]
 
@@ -81,12 +82,12 @@ export class Capital {
 
         if (this.storage && this.storage.isActive() && this.spawns[0]) {
             if (this.level = 8) {
-                this.stage = capitalSize.Megacity
+                this.stage = CapitalSize.Megacity
             } else {
-                this.stage = capitalSize.City
+                this.stage = CapitalSize.City
             }
         } else {
-            this.stage = capitalSize.Town
+            this.stage = CapitalSize.Town
         }
 
         this.sources = _.flatten(_.map(this.allRooms, room => room.sources)); //all sources, including those in outposts
@@ -94,6 +95,7 @@ export class Capital {
 		this.repairables = _.flatten(_.map(this.allRooms, room => room.repairables)); // all objects needing repair
 
         this.creeps = creepsByCapital[this.name]
+        this.creepsByRole = _.groupBy(this.creeps, r => r.memory.role)
         this.creepsByManager = _.groupBy(this.creeps, r => r.memory.manager)
         this.hostiles = _.flatten(_.map(this.allRooms, room => room.hostiles)); //hostile creeps in all rooms
 

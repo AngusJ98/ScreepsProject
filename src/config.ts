@@ -41,4 +41,8 @@ global.config = {
     spawning: {
       prespawn: 50,
     },
+
+    crisis: {
+      emergencyMinersEnergyLimit: 2500,
+    },
 }

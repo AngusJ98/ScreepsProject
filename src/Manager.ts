@@ -4,7 +4,7 @@ import { Capital } from "Room/Capital";
 
 interface IManagerInitialiser {
 	name: string;
-	room: Room | undefined;
+	room: Room;
 	pos: RoomPosition;
 	capital: Capital;
 }
@@ -12,7 +12,7 @@ interface IManagerInitialiser {
 
 
 export abstract class Manager {
-	room!: Room | undefined;
+	room!: Room;
     capital: Capital;
 	name: string;
 	priority: number;

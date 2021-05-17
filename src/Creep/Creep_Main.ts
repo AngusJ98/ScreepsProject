@@ -1,9 +1,12 @@
-interface Creep {
-    execute(): void;
-    checkForRun(): boolean;
-    unit(): any;
-}
+import { Manager } from "Manager";
 
+declare global {
+    interface Creep {
+        reassign(role: string, newManager: Manager): void;
+    }
+}
+/**
+ * DEPRECATED Creeps will now be done by managers
 Creep.prototype.unit = function() {
     return roles[this.memory.role];
 }
@@ -38,4 +41,11 @@ Creep.prototype.checkForRun = function() {
         this.suicide();
     }
     return true
+}
+*/
+
+//Changes the role and manager of a creep
+Creep.prototype.reassign = function(role: string, manager: Manager) {
+    this.memory.role = role;
+    this.memory.manager = manager.name;
 }

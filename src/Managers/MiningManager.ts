@@ -6,7 +6,7 @@ import { ManagerPriority } from "./ManagerPriority";
 export class MiningManager extends Manager {
     miners: Creep[]
     constructor(miningSite: MiningSite, priority = ManagerPriority.Capital.miner) {
-        super(miningSite, "MineManager", priority)
+        super(miningSite, "MineManager_" + miningSite.source.id, priority)
         this.miners = this.creepsByRole[Roles.drone];
     }
 }

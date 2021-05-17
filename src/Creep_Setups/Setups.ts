@@ -57,7 +57,7 @@ export const Setups = {
 		}
 	},
 
-	lorrys: new CreepSetup(Roles.lorry, {
+	lorry: new CreepSetup(Roles.lorry, {
 		pattern  : [CARRY, CARRY, MOVE],
 		sizeLimit: 1,
 	}),
