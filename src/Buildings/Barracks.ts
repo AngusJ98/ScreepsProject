@@ -25,7 +25,7 @@ export class Barracks extends Building {
     extensions: StructureExtension[];
     energyStructures: (StructureSpawn | StructureExtension)[];
     name: string;
-    manager: RecruitmentManager;
+    manager: QueenManager;
     crisisManager?: CrisisManager; //used if capital is looking bad, or to start up a new capital
 
     private productionPriorities: number[]; // A list of priorities to check when spawning

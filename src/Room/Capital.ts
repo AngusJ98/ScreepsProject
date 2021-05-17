@@ -42,7 +42,7 @@ export class Capital {
 
     //Buildings
     buildings: Building[]
-    miningSites: { [sourceID: string]: MiningSite } //self explanatory: Sites to mine from
+    miningSites: MiningSite[] //self explanatory: Sites to mine from
     barracks: Barracks | undefined; //Spawns grouped together
 
     level: number;
@@ -99,7 +99,7 @@ export class Capital {
         this.creepsByManager = _.groupBy(this.creeps, r => r.memory.manager)
         this.hostiles = _.flatten(_.map(this.allRooms, room => room.hostiles)); //hostile creeps in all rooms
 
-        this.miningSites = {};
+        this.miningSites = [];
         this.barracks = undefined;
         this.buildings = []
 
@@ -111,5 +111,20 @@ export class Capital {
         if (this.spawns[0]) {
             this.barracks = new Barracks(this, this.spawns[0])
         }
+
+        for (let source of this.sources) {
+            let site: MiningSite = new MiningSite(this, source)
+            this.miningSites.push(site)
+        }
+    }
+
+    init(): void {
+        _.forEach(this.miningSites, r => r.init())
+        this.barracks?.init();
+    }
+
+    run(): void {
+        _.forEach(this.miningSites, r => r.run())
+        this.barracks?.run();
     }
 }

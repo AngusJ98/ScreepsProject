@@ -1,18 +1,19 @@
-interface Room {
-  execute(): void;
-  handle(): void;
+import { Capital } from "./Capital";
+declare global {
+  interface Room {
+    capital: Capital;
+    init(): void;
+    run(): void;
+  }
 }
 
-Room.prototype.execute = function() {
-  this.handle();
 
   //maybe not needed with managers!
   //_.forEach(this.creeps, creep => creep.execute())
 
 
 
-    this.memory.lastSeen = Game.time;
-}
+
 /*
 DEPRECATED WITH ROOM_FIND!
 function initMemory(room: Room) {
@@ -29,8 +30,17 @@ function initMemory(room: Room) {
 }
 */
 
-Room.prototype.handle = function() {
+Room.prototype.init = function() {
   if (this.controller && this.controller.my) {
+    this.capital = new Capital(this)
+    this.capital.init();
+    this.memory.lastSeen = Game.time
+  }
+}
 
+Room.prototype.run = function() {
+  if (this.controller && this.controller.my) {
+    this.capital = new Capital(this)
+    this.capital.run();
   }
 }

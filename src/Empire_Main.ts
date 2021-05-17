@@ -17,13 +17,15 @@ Empire.main.execute = function() {
 
 
 
-  Empire.main.roomExecution(); //executes rooms
+  Empire.main.init(); //executes rooms
 }
 
 
-Empire.main.roomExecution = function() {
-
-    _.forEach(Game.rooms, (r: Room) => r.execute())
+Empire.main.init = function() {
+  _.forEach(Game.rooms, (r: Room) => r.init())
+}
+Empire.main.run = function() {
+  _.forEach(Game.rooms, (r: Room) => r.run())
 }
 
 Empire.sortCreeps = function() {
