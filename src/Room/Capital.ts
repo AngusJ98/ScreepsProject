@@ -4,6 +4,7 @@
 import { Barracks } from "Buildings/Barracks";
 import { Building } from "Buildings/Building";
 import { MiningSite } from "Buildings/MiningSite";
+import { Manager } from "Manager";
 
 export enum CapitalSize {
     Town = 0,
@@ -53,6 +54,8 @@ export class Capital {
     creepsByManager: {[manager: string]: Creep[]}
     hostiles: Creep[]
 
+    managers: Manager[];
+
     constructor(room:Room) {
         this.name = "Capital_" + room.name
         this.capital = this
@@ -101,7 +104,9 @@ export class Capital {
 
         this.miningSites = [];
         this.barracks = undefined;
-        this.buildings = []
+        this.buildings = [];
+
+        this.managers = [];
 
         this.createBuildings()
     }
@@ -119,12 +124,12 @@ export class Capital {
     }
 
     init(): void {
-        _.forEach(this.miningSites, r => r.init())
-        this.barracks?.init();
+        _.forEach(this.buildings, r => r.init())
+        _.forEach(this.managers, r => r.init())
     }
 
     run(): void {
-        _.forEach(this.miningSites, r => r.run())
-        this.barracks?.run();
+        _.forEach(this.buildings, r => r.run())
+        _.forEach(this.managers, r => r.run())
     }
 }

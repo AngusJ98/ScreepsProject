@@ -31,7 +31,7 @@ export class CrisisManager extends Manager{
 
         for (let mineManager of miningManagers) {
             let currentMiners = this.filterLife(mineManager.miners)
-            let partsNeeded = SOURCE_ENERGY_CAPACITY / 300 / 2;
+            let partsNeeded = Math.ceil(SOURCE_ENERGY_CAPACITY / ENERGY_REGEN_TIME / HARVEST_POWER) + 1;
             let partsAssigned = _.sum(_.map(currentMiners, r => r.getActiveBodyparts(WORK)));
             if (partsAssigned < partsNeeded && currentMiners.length < mineManager.pos.getAdjacentPositions().length) {
                 this.capital.barracks!.addToQueue(Setups.drones.miners.emergency, mineManager, {priority: this.priority})

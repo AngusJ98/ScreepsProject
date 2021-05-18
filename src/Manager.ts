@@ -3,7 +3,6 @@ import { CreepSetup } from "Creep_Setups/CreepSetup";
 import { Capital } from "Room/Capital";
 
 interface IManagerInitialiser {
-	name: string;
 	room: Room;
 	pos: RoomPosition;
 	capital: Capital;
@@ -30,6 +29,8 @@ export abstract class Manager {
         //Get list of my creeps from capital and group them by role
         this.creeps = this.capital.creepsByManager[this.name]
         this.creepsByRole = _.groupBy(this.creeps, r => r.memory.role)
+
+        this.capital.managers.push(this);
     }
 
     //Used for spawning logic. Takes a list of currently alive creeps and removes those that will be dead soon.

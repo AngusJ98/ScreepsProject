@@ -6,6 +6,8 @@ export class MiningSite extends Building{
     source: Source;
     name: string
     manager: MiningManager;
+    link: StructureLink | undefined;
+    container: StructureContainer | undefined;
 
     constructor(capital: Capital, source: Source) {
         super(capital, source);

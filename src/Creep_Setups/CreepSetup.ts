@@ -26,15 +26,15 @@ export class CreepSetup {
         this.bodySetup = bodysetup as bodySetup;
     }
 
-    /**
-     * DEPRECATED
-     * Calculates how bit a creep can be, and returns it.
+
+
+    //Calculates how bit a creep can be, and returns it.
     getBodyPotential(partType: BodyPartConstant, capital: Capital): number {
         let energyCapacity = capital.room.energyCapacityAvailable
 		let body = this.generateBody(energyCapacity);
         return _.filter(body, (part: BodyPartConstant) => part == partType).length;
     }
-    */
+
 
     generateBody(availableEnergy: number): BodyPartConstant[] {
         let patternCost, patternLength, numRepeats: number;
