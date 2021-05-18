@@ -2,6 +2,7 @@ import { MiningSite } from "Buildings/MiningSite";
 import { bodyCost, CreepSetup } from "Creep_Setups/CreepSetup";
 import { Roles, Setups } from "Creep_Setups/Setups";
 import { Manager } from "Manager";
+import { maxBy } from "Rando_Functions";
 import { ManagerPriority } from "./ManagerPriority";
 
 export const MINER_COST = bodyCost(Setups.drones.miners.standard.generateBody(Infinity));
@@ -66,6 +67,8 @@ export class MiningManager extends Manager {
         }
     }
 
+
+
     //calculates where the container should be put. If no barracks, just return the source position for miners to move to
     calculateContainerPos(): RoomPosition {
         if (this.capital.barracks) {
@@ -81,26 +84,82 @@ export class MiningManager extends Manager {
             return
         }
         if (!this.container && !this.constructionSite) {
+            let res = this.calculateContainerPos().createConstructionSite(STRUCTURE_CONTAINER)
 
+            if (res != OK) {
+                console.log("No container could be built at " + JSON.stringify(this.calculateContainerPos()))
+            }
         }
     }
 
     private earlyMiner(miner: Creep): void {
         if (miner.room != this.room) {
 			miner.travelTo(this.pos);
+            return;
 		}
 
         if (this.container) {
-			if (this.container.hits < this.container.hitsMax && miner.carry.energy >= Math.min(miner.carryCapacity, REPAIR_POWER * miner.getActiveBodyparts(WORK))) {
+			if (this.container.hits < this.container.hitsMax && miner.store.energy >= Math.min(miner.carryCapacity, REPAIR_POWER * miner.getActiveBodyparts(WORK))) {
 				miner.goRepair(this.container);
+                return;
             } else {
                 if (miner.store.getFreeCapacity() > 0) {
-                    miner.goHarvest(this.site.source)
+                    miner.goHarvest(this.site.source);
+                    return;
                 } else {
-                    miner.goTransfer(this.container)
+                    miner.goTransfer(this.container);
+                    return;
                 }
             }
         }
+
+        if (this.constructionSite) {
+            if (miner.store.energy >= Math.min(miner.carryCapacity, BUILD_POWER * miner.getActiveBodyparts(WORK))) {
+                miner.goBuild(this.constructionSite);
+                return;
+            } else {
+                miner.goHarvest(this.site.source);
+                return;
+            }
+        }
+
+        if (this.isDropMining) {
+            miner.goHarvest(this.site.source);
+            return;
+        }
+        return;
+    }
+
+    private standardMiner (miner: Creep): void {
+        if (!this.pos.inRangeTo(this.harvestPos!, 0)) {
+            miner.travelTo(this.site.pos);
+        }
+
+        if (this.container) {
+			if (this.container.hits < this.container.hitsMax && miner.store.energy >= Math.min(miner.carryCapacity, REPAIR_POWER * miner.getActiveBodyparts(WORK))) {
+				miner.repair(this.container);
+                return;
+            } else {
+                miner.harvest(this.site.source);
+                return;
+            }
+        }
+
+        if (this.constructionSite) {
+            if (miner.store.energy >= Math.min(miner.carryCapacity, BUILD_POWER * miner.getActiveBodyparts(WORK))) {
+                miner.build(this.constructionSite);
+                return;
+            } else {
+                miner.harvest(this.site.source);
+                return;
+            }
+        }
+
+        if (this.isDropMining) {
+            miner.harvest(this.site.source);
+            return;
+        }
+        return;
     }
 
     private handleMiner(miner: Creep) {
@@ -120,7 +179,7 @@ export class MiningManager extends Manager {
             case "Early":
                 return this.earlyMiner(miner);
             case "Link":
-                return this.linkMiner(miner);
+                return //this.linkMiner(miner); //TODO Link mining
             case "Standard":
                 return this.standardMiner(miner);
             case "SK":
