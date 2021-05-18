@@ -1,10 +1,10 @@
-import { Barracks, SpawnOrder } from "Buildings/Barracks";
+import { Barracks } from "Buildings/Barracks";
 import { MiningSite } from "Buildings/MiningSite";
 import { Roles, Setups } from "Creep_Setups/Setups";
 import { Manager } from "Manager";
 import { CapitalSize } from "Room/Capital";
 import { ManagerPriority } from "./ManagerPriority";
-import { MiningManager } from "./MiningManager";
+
 
 //Used to manage rooms that are just starting out. Uses miniminers and minilorrys to build stuffs
 
@@ -68,6 +68,8 @@ export class CrisisManager extends Manager{
     }
 
     run() {
-        //Activate da creeps!
+        if (this.creeps[0]) {
+            console.log("Crisis manager has creeps?! How?")
+        }
     }
 }

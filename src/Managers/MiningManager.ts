@@ -1,5 +1,4 @@
 import { MiningSite } from "Buildings/MiningSite";
-import { timeStamp } from "console";
 import { bodyCost, CreepSetup } from "Creep_Setups/CreepSetup";
 import { Roles, Setups } from "Creep_Setups/Setups";
 import { Manager } from "Manager";
@@ -19,7 +18,7 @@ export class MiningManager extends Manager {
     energyPerTick: number;
     dropMineUntilRCL = 3;
     setup: CreepSetup;
-    mode: "Early" | "Standard" | "Link" | "Standard" | "Double"
+    mode: "Early" | "Standard" | "Link" | "Standard" | "Double" | "SK"
     isDropMining: boolean;
 
     container: StructureContainer | undefined;
@@ -30,7 +29,7 @@ export class MiningManager extends Manager {
         this.site = miningSite;
         this.container = this.site.container;
         this.link = this.site.link;
-
+        this.constructionSite = _.first(this.pos.findInRange(FIND_MY_CONSTRUCTION_SITES, 2));
 
         this.miners = this.creepsByRole[Roles.drone];
         if (this.room.controller && this.room.controller.my) {
@@ -67,13 +66,82 @@ export class MiningManager extends Manager {
         }
     }
 
-    //calculates where the container should be put
+    //calculates where the container should be put. If no barracks, just return the source position for miners to move to
     calculateContainerPos(): RoomPosition {
-        let pathSearch = PathFinder.search(this.capital.coreSpawn!.pos, this.site.source.pos);
-        return _.last(pathSearch.path);
+        if (this.capital.barracks) {
+            let pathSearch = PathFinder.search(this.capital.coreSpawn!.pos, this.site.source.pos);
+            return _.last(pathSearch.path);
+        } else {
+            return _.first(this.site.source.pos.getAdjacentPositions());
+        }
+    }
+
+    private addContainer(): void {
+        if (this.isDropMining) { //no container needed if we are still drop mining, not worth building one yet
+            return
+        }
+        if (!this.container && !this.constructionSite) {
+
+        }
+    }
+
+    private earlyMiner(miner: Creep): void {
+        if (miner.room != this.room) {
+			miner.travelTo(this.pos);
+		}
+
+        if (this.container) {
+			if (this.container.hits < this.container.hitsMax && miner.carry.energy >= Math.min(miner.carryCapacity, REPAIR_POWER * miner.getActiveBodyparts(WORK))) {
+				miner.goRepair(this.container);
+            } else {
+                if (miner.store.getFreeCapacity() > 0) {
+                    miner.goHarvest(this.site.source)
+                } else {
+                    miner.goTransfer(this.container)
+                }
+            }
+        }
+    }
+
+    private handleMiner(miner: Creep) {
+        if (this.mode == "Early") {
+            if (!miner.pos.inRangeTo(this.pos, 1)) {
+                miner.moveTo(this.pos)
+            }
+        } else if (this.harvestPos) {
+            if (!miner.pos.inRangeTo(this.pos, 1)) {
+                miner.moveTo(this.harvestPos)
+            }
+        } else {
+            console.log("No harvest spot? What went wrong")
+        }
+
+        switch (this.mode) {
+            case "Early":
+                return this.earlyMiner(miner);
+            case "Link":
+                return this.linkMiner(miner);
+            case "Standard":
+                return this.standardMiner(miner);
+            case "SK":
+                return this.standardMiner(miner);
+            case "Double":
+                return this.standardMiner(miner);
+        }
     }
 
     init() {
 		this.spawnList(this.minersNeeded, this.setup);
 	}
+
+    run() {
+        for (let miner of this.miners) {
+            this.handleMiner(miner);
+        }
+        if (this.room && Game.time % 20 == 0) {
+            this.addContainer();
+        }
+
+
+    }
 }
