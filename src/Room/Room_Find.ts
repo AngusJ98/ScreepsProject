@@ -23,7 +23,16 @@ interface Room {
 	sources: Source[];
 	roads: StructureRoad[];
 	// sinks: Sink[];
+	rechargeables: rechargeObjectType[];
 	repairables: Structure[];
+	storageUnits: (StructureStorage
+		| StructureTerminal
+		| StructureContainer
+		| StructureLink)[];
+	_storageUnits: StructureStorage
+	| StructureTerminal
+	| StructureContainer
+	| StructureLink
 	constructionSites: ConstructionSite[];
 	structureSites: ConstructionSite[];
 	roadSites: ConstructionSite[];
@@ -35,6 +44,23 @@ interface Room {
 	getStructures(structureType: string): Structure[];
 
 }
+
+type rechargeObjectType = StructureStorage
+	| StructureTerminal
+	| StructureContainer
+	| StructureLink
+	| Tombstone
+	| Resource;
+
+
+Object.defineProperty(Room.prototype, 'storageUnits', {
+	get() {
+		if (!this._storageUnits) {
+			this._storageUnits = _.compact([this.storage, this.terminal]).concat(this.containers);
+		}
+		return this._storageUnits;
+	},
+});
 
 Object.defineProperty(Room.prototype, "structures", {
 	get() {

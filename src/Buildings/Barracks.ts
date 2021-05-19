@@ -2,6 +2,7 @@ import { bodyCost, CreepSetup } from "Creep_Setups/CreepSetup";
 import { Roles, Setups } from "Creep_Setups/Setups";
 import { Manager } from "Manager";
 import { CrisisManager } from "Managers/CrisisManager";
+import { QueenManager } from "Managers/QueenManager";
 import { Capital } from "Room/Capital";
 import { Building } from "./Building";
 
@@ -14,7 +15,7 @@ export interface SpawnOrder {
 export interface SpawnRequestOptions {
 	spawn?: StructureSpawn;				// allows you to specify which spawn to use;
 	directions?: DirectionConstant[];	// StructureSpawn.spawning.directions
-    priority: number;                   // Priority of spawning, lower number = higher prio
+    priority?: number;                   // Priority of spawning, lower number = higher prio
     prespawn?: number;                   // Spawn creep this many ticks early to prevent downtime
 }
 
@@ -92,7 +93,7 @@ export class Barracks extends Building {
 
     addToQueue(setup: CreepSetup, manager: Manager, opts: SpawnRequestOptions): void {
         let request = this.createSpawnOrder(setup, manager, opts)
-        let prio = request.options.priority
+        let prio = request.options.priority!
         if (this.canSpawn(request.body) && request.body.length > 0) {
             if (!this.productionQueue[prio]) {
                 this.productionQueue[prio] = []
