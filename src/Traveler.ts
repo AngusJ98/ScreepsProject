@@ -2,7 +2,7 @@
  * To start using Traveler, require it in main.js:
  * Example: var Traveler = require('Traveler.js');
  */
-
+//@ts-nocheck
 export class Traveler {
 
     private static structureMatrixCache: {[roomName: string]: CostMatrix} = {};
