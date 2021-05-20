@@ -117,7 +117,7 @@ export class Barracks extends Building {
                     return res
                 } else {
                     if (res != ERR_NOT_ENOUGH_ENERGY) {
-                        this.productionQueue[prio].unshift(nextOrder)
+                        //this.productionQueue[prio].unshift(nextOrder)
                         return res
                     }
                 }
@@ -172,8 +172,10 @@ export class Barracks extends Building {
     }
 
     handleSpawns(): void {
-        while (this.availableSpawns.length > 0) {
+        console.log(1)
+        while (this.availableSpawns.length > 0 ) {
             let res = this.spawnHighestPriorityCreep();
+
         }
 
         //TODO Clear the exit position of spawns if a creep is about to spawn
@@ -183,6 +185,7 @@ export class Barracks extends Building {
     }
 
     run(): void {
+
 		this.handleSpawns();
     }
 

@@ -29,6 +29,9 @@ function initMemory(room: Room) {
     room.memory.hostileCreepCount = room.hostiles.length;
 }
 */
+export function test() {
+  //console.log("running")
+}
 
 Room.prototype.init = function() {
   if (this.controller && this.controller.my) {

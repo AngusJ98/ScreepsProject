@@ -1,16 +1,18 @@
 import * as _ from "lodash"
+import { config } from "config";
 //functions for handling memory
 
-Empire.prepareMemory = function() {
+export function EmpirePrepareMemory() {
     Memory.username = "Aozin"
     Memory.myRooms = Memory.myRooms || [];
     Memory.skippedRooms = []; //Rooms that were skipped due to lack of cpu, not handled yet
+    Memory.capitals = Memory.capitals || {};
 
-    Empire.cleanCreeps(); //Clean up memory of dead creeps
-    Empire.cleanRooms(); //Clean up memory of dead rooms
+    EmpireCleanCreeps(); //Clean up memory of dead creeps
+    EmpireCleanRooms(); //Clean up memory of dead rooms
 }
 
-Empire.cleanCreeps = function() {
+function EmpireCleanCreeps() {
     for (const name in Memory.creeps) {
         if (Game.creeps[name]) {
           continue;
@@ -20,7 +22,7 @@ Empire.cleanCreeps = function() {
     }
 }
 
-Empire.cleanRooms = function() {
+function EmpireCleanRooms () {
     if (Game.time % 300 === 0) {
       for (const name of Object.keys(Memory.rooms)) {
         if (!Memory.rooms[name].lastSeen) {

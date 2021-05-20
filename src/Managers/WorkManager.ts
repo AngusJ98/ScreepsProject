@@ -1,7 +1,7 @@
 import { CreepSetup } from "Creep_Setups/CreepSetup";
 import { Roles, Setups } from "Creep_Setups/Setups";
-import { capitalize } from "lodash";
 import { Manager } from "Manager";
+import { config } from "config";
 import { Capital, CapitalSize } from "Room/Capital";
 import { ManagerPriority } from "./ManagerPriority";
 
@@ -29,7 +29,7 @@ export class WorkManager extends Manager {
     fortifyThreshold = 500000;
 
     constructor(capital: Capital, prio = ManagerPriority.Capital.work) {
-        super(capital, "WorkManager_" + capitalize.name, prio)
+        super(capital, "WorkManager_" + capital.name, prio)
         this.workers = this.creepsByRole[Roles.worker];
         this.setup = this.capital.level == 1 ? Setups.workers.early : Setups.workers.default;
         this.room = capital.room
@@ -77,7 +77,7 @@ export class WorkManager extends Manager {
 
     private upgradeActions(worker: Creep): boolean {
         let target = this.capital.controller
-        if (!this.capital.controller.sign?.text == config.signature) {
+        if (!(this.capital.controller.sign?.text == config.signature)) {
             worker.goSign(this.capital.controller)
             return true;
         } else {

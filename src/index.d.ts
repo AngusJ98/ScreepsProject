@@ -1,7 +1,6 @@
 declare global {
     module NodeJS {
         interface Global {
-            Empire: any;
             config: any;
             creepsByCapital: {[name: String]: Creep}
             roles: {
@@ -11,7 +10,6 @@ declare global {
     }
 }
 declare var creepsByCapital;
-declare var Empire;
 declare var roles;
 
 

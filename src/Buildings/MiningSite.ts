@@ -12,7 +12,6 @@ export class MiningSite extends Building{
     constructor(capital: Capital, source: Source) {
         super(capital, source);
         this.source = source;
-        this.room = source.room;
         this.name = "Mining_Site_" + source.id;
         this.capital = capital;
         this.manager = new MiningManager(this)

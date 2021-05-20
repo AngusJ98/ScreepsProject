@@ -2,6 +2,7 @@ import { Barracks } from "Buildings/Barracks";
 import { MiningSite } from "Buildings/MiningSite";
 import { Roles, Setups } from "Creep_Setups/Setups";
 import { Manager } from "Manager";
+import { config } from "config";
 import { CapitalSize } from "Room/Capital";
 import { ManagerPriority } from "./ManagerPriority";
 

@@ -1,11 +1,12 @@
-import * as _ from "lodash"
+import { EmpirePrepareMemory } from "Empire_Memory";
+
 
 //Runs all parts of the empire. Like an emperor
 
-Empire.main.execute = function() {
+export function EmpireExecute() {
   try {
-    Empire.prepareMemory(); //sets up memory
-    Empire.sortCreeps(); //Assigns creeps to their room.
+    EmpirePrepareMemory(); //sets up memory
+    EmpireSortCreeps(); //Assigns creeps to their room.
     //Empire.buyPower(); //buys resources
     //Empire.handleNextroom(); //handles claiming new rooms
     //Empire.handleSquadmanager(); //military
@@ -17,18 +18,19 @@ Empire.main.execute = function() {
 
 
 
-  Empire.main.init(); //executes rooms
+  EmpireInit(); //executes rooms
+  EmpireRun();
 }
 
 
-Empire.main.init = function() {
+function EmpireInit() {
   _.forEach(Game.rooms, (r: Room) => r.init())
 }
-Empire.main.run = function() {
+function EmpireRun() {
   _.forEach(Game.rooms, (r: Room) => r.run())
 }
 
-Empire.sortCreeps = function() {
+function EmpireSortCreeps() {
 
-  creepsByCapital = _.groupBy(Game.creeps, r => r.memory.capital)
+  global.creepsByCapital = _.groupBy(Game.creeps, r => r.memory.capital)
 }

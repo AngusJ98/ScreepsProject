@@ -1,15 +1,17 @@
+import { config } from "config";
 
-interface Creep {
-    goBuild(target: ConstructionSite): void;
-    goRepair(target: Structure): void;
-    goTransfer(target: Creep | Structure, resource?: ResourceConstant): void;
-    goWithdraw(target: Structure | Tombstone, resource?: ResourceConstant): void;
-    goHarvest(target: Source | Mineral | Deposit): void;
-    goDrop(target: RoomPosition, resource?: ResourceConstant): void;
-    goSign(target: StructureController): void;
-    goUpgrade(target: StructureController): void;
+declare global {
+    interface Creep {
+        goBuild(target: ConstructionSite): void;
+        goRepair(target: Structure): void;
+        goTransfer(target: Creep | Structure, resource?: ResourceConstant): void;
+        goWithdraw(target: Structure | Tombstone, resource?: ResourceConstant): void;
+        goHarvest(target: Source | Mineral | Deposit): void;
+        goDrop(target: RoomPosition, resource?: ResourceConstant): void;
+        goSign(target: StructureController): void;
+        goUpgrade(target: StructureController): void;
+    }
 }
-
 
 const RANGES = {
 	BUILD   : 3,
@@ -22,7 +24,9 @@ const RANGES = {
 	DROP    : 0,
 };
 
+export function test3() {
 
+}
 
 Creep.prototype.goBuild = function(target: ConstructionSite) {
     if (this.pos.inRangeTo(target.pos, RANGES.BUILD)) {
@@ -73,7 +77,7 @@ Creep.prototype.goDrop = function(target: RoomPosition, resource: ResourceConsta
 
 Creep.prototype.goSign = function(target: StructureController) {
     if (this.pos.inRangeTo(target, RANGES.SIGN)) {
-        this.signController(config.signature)
+        this.signController(target, config.signature)
     } else {
         this.travelTo(target)
     }

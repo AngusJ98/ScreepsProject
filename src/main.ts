@@ -1,4 +1,9 @@
+import { test3 } from "Creep/Creep_Actions";
+import { EmpireExecute } from "Empire_Main";
 import { Manager } from "Manager";
+import { test2 } from "Room/Room_Find";
+import { test } from "Room/Room_Main";
+import { test4 } from "RoomPosition";
 import { ErrorMapper } from "utils/ErrorMapper";
 import { Game, Memory } from "../test/unit/mock";
 
@@ -32,9 +37,20 @@ declare global {
   }
 }
 
+export function loop(): void {
+  EmpireExecute();
+  test()
+  test2()
+  test3()
+  test4()
+}
+
 // When compiling TS to JS and bundling with rollup, the line numbers and file names in error messages change
 // This utility uses source maps to get the line numbers and file names of the original, TS source code
+/*
 export const loop = ErrorMapper.wrapLoop(() => {
   console.log(`Current game tick is ${Game.time}`);
   Empire.main.execute();
+  test()
 });
+*/

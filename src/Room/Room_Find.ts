@@ -1,47 +1,53 @@
-interface Room {
-	print: string;
-	my: boolean;
-	reservedByMe: boolean;
-	signedByMe: boolean;
-	creeps: Creep[];
-	hostiles: Creep[];
-	playerHostiles: Creep[];
-	hostileStructures: Structure[];
-	flags: Flag[];
-	// Preprocessed structures
-	drops: { [resourceType: string]: Resource[] };
-	droppedEnergy: Resource[];
-	droppedMinerals: Resource[];
-	droppedPower: Resource[];
-	structures: { [structureType: string]: Structure[] };
-	spawns: StructureSpawn[];
-	extensions: StructureExtension[];
-	containers: StructureContainer[];
-	towers: StructureTower[];
-	links: StructureLink[];
-	labs: StructureLab[];
-	sources: Source[];
-	roads: StructureRoad[];
-	// sinks: Sink[];
-	rechargeables: rechargeObjectType[];
-	repairables: Structure[];
-	storageUnits: (StructureStorage
+declare global {
+	interface Room {
+		print: string;
+		my: boolean;
+		reservedByMe: boolean;
+		signedByMe: boolean;
+		creeps: Creep[];
+		hostiles: Creep[];
+		playerHostiles: Creep[];
+		hostileStructures: Structure[];
+		flags: Flag[];
+		// Preprocessed structures
+		drops: { [resourceType: string]: Resource[] };
+		droppedEnergy: Resource[];
+		droppedMinerals: Resource[];
+		droppedPower: Resource[];
+		structures: { [structureType: string]: Structure[] };
+		spawns: StructureSpawn[];
+		extensions: StructureExtension[];
+		containers: StructureContainer[];
+		towers: StructureTower[];
+		links: StructureLink[];
+		labs: StructureLab[];
+		sources: Source[];
+		roads: StructureRoad[];
+		// sinks: Sink[];
+		rechargeables: rechargeObjectType[];
+		repairables: Structure[];
+		storageUnits: (StructureStorage
+			| StructureTerminal
+			| StructureContainer
+			| StructureLink)[];
+		_storageUnits: StructureStorage
 		| StructureTerminal
 		| StructureContainer
-		| StructureLink)[];
-	_storageUnits: StructureStorage
-	| StructureTerminal
-	| StructureContainer
-	| StructureLink
-	constructionSites: ConstructionSite[];
-	structureSites: ConstructionSite[];
-	roadSites: ConstructionSite[];
-	barriers: (StructureWall | StructureRampart)[];
-	powerSpawn: StructurePowerSpawn;
-	nuker: StructureNuker;
-	observer: StructureObserver;
+		| StructureLink
+		constructionSites: ConstructionSite[];
+		structureSites: ConstructionSite[];
+		roadSites: ConstructionSite[];
+		barriers: (StructureWall | StructureRampart)[];
+		powerSpawn: StructurePowerSpawn;
+		nuker: StructureNuker;
+		observer: StructureObserver;
 
-	getStructures(structureType: string): Structure[];
+		getStructures(structureType: string): Structure[];
+
+	}
+}
+
+export function test2() {
 
 }
 
@@ -160,23 +166,23 @@ Object.defineProperties(Room.prototype, {
 		},
 	},
 
-	powerSpawn: {
-		get() {
-			return this.structures[STRUCTURE_POWER_SPAWN][0] || [];
-		},
-	},
+    powerSpawn: {
+        get() {
+            return this.structures[STRUCTURE_POWER_SPAWN]? this.structures[STRUCTURE_POWER_SPAWN][0] : undefined;
+        },
+    },
 
-	nuker: {
-		get() {
-			return this.structures[STRUCTURE_NUKER][0] || [];
-		},
-	},
+    nuker: {
+        get() {
+            return this.structures[STRUCTURE_NUKER]? this.structures[STRUCTURE_NUKER][0] : undefined;
+        },
+    },
 
-	observer: {
-		get() {
-			return this.structures[STRUCTURE_OBSERVER][0] || [];
-		},
-	},
+    observer: {
+        get() {
+            return this.structures[STRUCTURE_OBSERVER]? this.structures[STRUCTURE_OBSERVER][0] : undefined;
+        },
+    },
 
 	// All non-barrier, non-road repairable objects
 	repairables: {
@@ -206,21 +212,14 @@ Object.defineProperties(Room.prototype, {
 	// All construction sites
 	constructionSites: {
 		get() {
-			return Empire.cache.constructionSites[this.name] || [];
-		},
-	},
-
-	// All non-road construction sites
-	structureSites: {
-		get() {
-			return Empire.cache.structureSites[this.name] || [];
+			return this.find(FIND_CONSTRUCTION_SITES) || [];
 		},
 	},
 
 	// All construction sites for roads
 	roadSites: {
 		get() {
-			return Empire.cache.roadSites[this.name] || [];
+			return this.structures[STRUCTURE_ROAD] || [];
 		},
 	},
 

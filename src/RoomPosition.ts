@@ -1,12 +1,16 @@
+import { minBy } from "Rando_Functions"
 
-interface RoomPosition {
-	getAdjacentPositions(): RoomPosition[];
-	roomCoords: Coord;
-	getMultiRoomRangeTo(pos: RoomPosition): number;
-	findClosestByMultiRoomRange<T extends _HasRoomPosition>(objects: T[]): T | undefined;
+declare global {
+	interface RoomPosition {
+		getAdjacentPositions(): RoomPosition[];
+		roomCoords: Coord;
+		getMultiRoomRangeTo(pos: RoomPosition): number;
+		findClosestByMultiRoomRange<T extends _HasRoomPosition>(objects: T[]): T | undefined;
+	}
 }
+export function test4() {
 
-
+}
 RoomPosition.prototype.getAdjacentPositions = function(): RoomPosition[] {
     let roomName = this.roomName
     let terrain = Game.map.getRoomTerrain(roomName)

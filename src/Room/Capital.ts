@@ -6,6 +6,7 @@ import { Building } from "Buildings/Building";
 import { MiningSite } from "Buildings/MiningSite";
 import { Manager } from "Manager";
 import { WorkManager } from "Managers/WorkManager";
+import * as I from "Room/Room_Find"
 
 export enum CapitalSize {
     Town = 0,
@@ -71,6 +72,7 @@ export class Capital {
         this.pos = this.controller.pos;
 
         this.spawns = _.filter(this.room.spawns, spawn => spawn.my)
+        this.coreSpawn = this.spawns[0] //TODO FIX
         this.extensions = this.room.extensions
         this.storage = this.room.storage
         this.links = this.room.links
@@ -96,11 +98,12 @@ export class Capital {
             this.stage = CapitalSize.Town
         }
 
-        this.sources = _.flatten(_.map(this.allRooms, room => room.sources)); //all sources, including those in outposts
+        this.sources = _.compact(_.flatten(_.map(this.allRooms, room => room.sources))); //all sources, including those in outposts
+        _.map(this.sources, r => console.log(r.id));
 		this.constructionSites = _.flatten(_.map(this.allRooms, room => room.constructionSites)); //all construction sites
 		this.repairables = _.flatten(_.map(this.allRooms, room => room.repairables)); // all objects needing repair
 
-        this.creeps = creepsByCapital[this.name]
+        this.creeps = global.creepsByCapital[this.name]
         this.creepsByRole = _.groupBy(this.creeps, r => r.memory.role)
         this.creepsByManager = _.groupBy(this.creeps, r => r.memory.manager)
         this.hostiles = _.flatten(_.map(this.allRooms, room => room.hostiles)); //hostile creeps in all rooms
@@ -117,11 +120,13 @@ export class Capital {
 
     //Method to start all buildings
     createBuildings(): void {
-        if (this.spawns[0]) {
+        if (this.coreSpawn) {
             this.barracks = new Barracks(this, this.spawns[0])
+            //console.log(this.barracks.name)
         }
 
         for (let source of this.sources) {
+            //console.log(source)
             let site: MiningSite = new MiningSite(this, source)
             this.miningSites.push(site)
         }

@@ -1,5 +1,5 @@
-declare var config: any;
-global.config = {
+
+export var config = {
     signature: "Free Palestine - Aozin",
     nextRoom: {
         scoutMinControllerLevel: 4,

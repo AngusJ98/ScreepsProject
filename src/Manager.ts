@@ -1,5 +1,6 @@
 import { SpawnRequestOptions } from "Buildings/Barracks";
 import { CreepSetup } from "Creep_Setups/CreepSetup";
+import { config } from "config";
 import { Capital } from "Room/Capital";
 
 interface IManagerInitialiser {
