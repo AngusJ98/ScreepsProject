@@ -6,12 +6,16 @@ interface Creep {
     goWithdraw(target: Structure | Tombstone, resource?: ResourceConstant): void;
     goHarvest(target: Source | Mineral | Deposit): void;
     goDrop(target: RoomPosition, resource?: ResourceConstant): void;
+    goSign(target: StructureController): void;
+    goUpgrade(target: StructureController): void;
 }
 
 
 const RANGES = {
 	BUILD   : 3,
 	REPAIR  : 3,
+    UPGRADE : 3,
+    SIGN    : 1,
 	TRANSFER: 1,
 	WITHDRAW: 1,
 	HARVEST : 1,
@@ -62,6 +66,22 @@ Creep.prototype.goHarvest = function(target: Source | Mineral | Deposit) {
 Creep.prototype.goDrop = function(target: RoomPosition, resource: ResourceConstant = RESOURCE_ENERGY) {
     if (this.pos.inRangeTo(target, RANGES.DROP)) {
         this.drop(resource)
+    } else {
+        this.travelTo(target)
+    }
+}
+
+Creep.prototype.goSign = function(target: StructureController) {
+    if (this.pos.inRangeTo(target, RANGES.SIGN)) {
+        this.signController(config.signature)
+    } else {
+        this.travelTo(target)
+    }
+}
+
+Creep.prototype.goUpgrade = function(target: StructureController) {
+    if (this.pos.inRangeTo(target.pos, RANGES.UPGRADE)) {
+        this.upgradeController(target)
     } else {
         this.travelTo(target)
     }

@@ -5,6 +5,7 @@ import { Barracks } from "Buildings/Barracks";
 import { Building } from "Buildings/Building";
 import { MiningSite } from "Buildings/MiningSite";
 import { Manager } from "Manager";
+import { WorkManager } from "Managers/WorkManager";
 
 export enum CapitalSize {
     Town = 0,
@@ -55,6 +56,8 @@ export class Capital {
     hostiles: Creep[]
 
     managers: Manager[];
+    workManager: WorkManager;
+
 
     constructor(room:Room) {
         this.name = "Capital_" + room.name
@@ -107,6 +110,7 @@ export class Capital {
         this.buildings = [];
 
         this.managers = [];
+        this.workManager = new WorkManager(this);
 
         this.createBuildings()
     }

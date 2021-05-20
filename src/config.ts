@@ -1,5 +1,6 @@
 declare var config: any;
 global.config = {
+    signature: "Free Palestine - Aozin",
     nextRoom: {
         scoutMinControllerLevel: 4,
         intervalToCheck: CREEP_CLAIM_LIFE_TIME,
