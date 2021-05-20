@@ -42,8 +42,7 @@ Room.prototype.init = function() {
 }
 
 Room.prototype.run = function() {
-  if (this.controller && this.controller.my) {
-    this.capital = new Capital(this)
+  if(this.capital) {
     this.capital.run();
   }
 }

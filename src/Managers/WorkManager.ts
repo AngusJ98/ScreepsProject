@@ -140,7 +140,7 @@ export class WorkManager extends Manager {
     }
 
     run(): void {
-
+        _.forEach(this.workers, r => this.handleWorker(r));
     }
 
 }

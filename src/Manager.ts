@@ -66,6 +66,7 @@ export abstract class Manager {
     //if needed
     requestCreep(setup: CreepSetup, opts: SpawnRequestOptions) {
         _.defaults(opts, {priority: this.priority, prespawn: 50});
+        //console.log("requesting creep " + setup.role)
         if (this.capital.barracks) {
             this.capital.barracks.addToQueue(setup, this, opts)
         }

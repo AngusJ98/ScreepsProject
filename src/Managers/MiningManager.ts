@@ -194,9 +194,7 @@ export class MiningManager extends Manager {
 	}
 
     run() {
-        for (let miner of this.miners) {
-            this.handleMiner(miner);
-        }
+        _.forEach(this.miners, r => this.handleMiner(r));
         if (this.room && Game.time % 20 == 0) {
             this.addContainer();
         }

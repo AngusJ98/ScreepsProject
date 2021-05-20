@@ -138,7 +138,8 @@ export class Capital {
     }
 
     run(): void {
-        _.forEach(this.buildings, r => r.run())
         _.forEach(this.managers, r => r.run())
+        _.forEach(this.buildings, r => r.run())
+
     }
 }

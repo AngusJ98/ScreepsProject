@@ -100,6 +100,9 @@ export class Barracks extends Building {
                 this.productionPriorities.push(prio)
             }
             this.productionQueue[prio].push(request)
+            //console.log(JSON.stringify(this.productionQueue))
+        } else {
+            console.log("cannot spawn " + setup.role + " for " + manager + request.body)
         }
     }
 
@@ -172,10 +175,9 @@ export class Barracks extends Building {
     }
 
     handleSpawns(): void {
-        console.log(1)
-        while (this.availableSpawns.length > 0 ) {
-            let res = this.spawnHighestPriorityCreep();
-
+        let res:number | undefined = 0
+        while (this.availableSpawns.length > 0 && res != -66) {
+            res = this.spawnHighestPriorityCreep();
         }
 
         //TODO Clear the exit position of spawns if a creep is about to spawn
@@ -185,7 +187,7 @@ export class Barracks extends Building {
     }
 
     run(): void {
-
+        //console.log(JSON.stringify(this.productionQueue))
 		this.handleSpawns();
     }
 

@@ -45,8 +45,7 @@ export class QueenManager extends Manager {
 
 
     run(): void {
-        for (let queen of this.queens) {
-            this.handleQueen(queen)
-        }
+        _.forEach(this.queens, r => this.handleQueen(r));
+
     }
 }
