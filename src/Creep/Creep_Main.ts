@@ -2,7 +2,7 @@ import { Manager } from "Manager";
 
 declare global {
     interface Creep {
-        reassign(role: string, newManager: Manager): void;
+
     }
 }
 /**
@@ -45,7 +45,3 @@ Creep.prototype.checkForRun = function() {
 */
 
 //Changes the role and manager of a creep
-Creep.prototype.reassign = function(role: string, manager: Manager) {
-    this.memory.role = role;
-    this.memory.manager = manager.name;
-}

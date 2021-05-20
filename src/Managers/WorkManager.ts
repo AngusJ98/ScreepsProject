@@ -36,7 +36,7 @@ export class WorkManager extends Manager {
         this.hitsGoal = this.barrierHits[this.capital.level]
         this.fortifyTargets = _.filter(this.room.barriers, r => r.hits < this.hitsGoal);
         this.criticalTargets = _.filter(this.fortifyTargets, r => r.hits < this.critical);
-        this.repairTargets = _.filter(this.capital.repairables);
+        this.repairTargets = _.filter(this.capital.repairables, r => r.hits < r.hitsMax);
         this.constructionSites = this.capital.constructionSites;
     }
 
@@ -89,29 +89,53 @@ export class WorkManager extends Manager {
 
     private handleWorker(worker: Creep): void {
         if (worker.store.energy > 0) {
+
             if(this.capital.controller.ticksToDowngrade <= (this.capital.level >= 4 ? 8000 : 2000)) {
-                if (this.upgradeActions(worker)) return;
+                if (this.upgradeActions(worker)) {
+                    worker.say("Upgrading!")
+                    return;
+                }
             }
+
             if (this.repairTargets.length > 0) {
-				if (this.repairActions(worker)) return;
+				if (this.repairActions(worker)) {
+                    worker.say("Repairing!")
+                    return;
+                }
 			}
 			// Fortify critical barriers
 			if (this.criticalTargets.length > 0) {
-				if (this.fortifyActions(worker, this.criticalTargets)) return;
+				if (this.fortifyActions(worker, this.criticalTargets)) {
+                    worker.say("Fortifying!")
+                    return;
+                }
 			}
 			// Build new structures
 			if (this.constructionSites.length > 0) {
-				if (this.buildActions(worker)) return;
+				if (this.buildActions(worker)) {
+                    worker.say("Building!")
+                    return;
+                }
 			}
             if (this.fortifyTargets.length > 0) {
-				if (this.fortifyActions(worker, this.fortifyTargets)) return;
+				if (this.fortifyActions(worker, this.fortifyTargets)) {
+                    worker.say("Fortifying!")
+                    return;
+                }
 			}
             if (this.capital.level < 8 || this.capital.creepsByRole[Roles.upgrader].length == 0) {
-                if (this.upgradeActions(worker)) return;
+                if (this.upgradeActions(worker)) {
+                    worker.say("Upgrading!")
+                    return;
+                }
             }
             worker.say("BORED!")
         } else {
-            let target = worker.pos.findClosestByRange(_.filter(this.capital.room.storageUnits, r => r.store.energy > worker.store.getCapacity()/4));
+            let drops = _.filter(this.room.droppedEnergy, r => r.amount > worker.store.getCapacity()/4)
+            let structs = _.filter(this.capital.room.storageUnits, r => r.store.energy > worker.store.getCapacity()/4)
+            let targets = _.merge(drops,structs)
+            //console.log(JSON.stringify(this.room.drops))
+            let target = worker.pos.findClosestByRange(targets);
             if(target) {
                 worker.goWithdraw(target)
             }
@@ -121,7 +145,7 @@ export class WorkManager extends Manager {
     init(): void {
         let currentParts = this.setup.getBodyPotential(WORK, this.capital);
         let numWorkers = 0;
-        if (this.capital.stage = CapitalSize.Town) {
+        if (this.capital.stage == CapitalSize.Town) {
             let MAX_WORKERS = 10;
             numWorkers = 3;
         } else {
@@ -136,6 +160,7 @@ export class WorkManager extends Manager {
             numWorkers = Math.min(numWorkers, MAX_WORKERS)
         }
 
+        console.log("Num workers wanted: " + numWorkers)
         this.spawnList(numWorkers, this.setup)
     }
 

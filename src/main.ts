@@ -6,6 +6,7 @@ import { test } from "Room/Room_Main";
 import { test4 } from "RoomPosition";
 import { ErrorMapper } from "utils/ErrorMapper";
 import { Game, Memory } from "../test/unit/mock";
+import {Traveler} from "Traveler"
 
 declare global {
   /*
@@ -44,6 +45,10 @@ export function loop(): void {
   test3()
   test4()
 }
+
+Creep.prototype.travelTo = function(destination: RoomPosition|{pos: RoomPosition}, options?: TravelToOptions) {
+  return Traveler.travelTo(this, destination, options);
+};
 
 // When compiling TS to JS and bundling with rollup, the line numbers and file names in error messages change
 // This utility uses source maps to get the line numbers and file names of the original, TS source code

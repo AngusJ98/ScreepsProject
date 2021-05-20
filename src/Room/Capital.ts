@@ -4,6 +4,7 @@
 import { Barracks } from "Buildings/Barracks";
 import { Building } from "Buildings/Building";
 import { MiningSite } from "Buildings/MiningSite";
+import { Roles } from "Creep_Setups/Setups";
 import { Manager } from "Manager";
 import { WorkManager } from "Managers/WorkManager";
 import * as I from "Room/Room_Find"
@@ -99,12 +100,16 @@ export class Capital {
         }
 
         this.sources = _.compact(_.flatten(_.map(this.allRooms, room => room.sources))); //all sources, including those in outposts
-        _.map(this.sources, r => console.log(r.id));
 		this.constructionSites = _.flatten(_.map(this.allRooms, room => room.constructionSites)); //all construction sites
 		this.repairables = _.flatten(_.map(this.allRooms, room => room.repairables)); // all objects needing repair
 
         this.creeps = global.creepsByCapital[this.name]
         this.creepsByRole = _.groupBy(this.creeps, r => r.memory.role)
+        for (let role in Roles) {
+            if (!this.creepsByRole[role]) {
+                this.creepsByRole[role] = []
+            }
+        }
         this.creepsByManager = _.groupBy(this.creeps, r => r.memory.manager)
         this.hostiles = _.flatten(_.map(this.allRooms, room => room.hostiles)); //hostile creeps in all rooms
 
@@ -133,6 +138,7 @@ export class Capital {
     }
 
     init(): void {
+        //_.forEach(this.managers, r => console.log(r.name))
         _.forEach(this.buildings, r => r.init())
         _.forEach(this.managers, r => r.init())
     }

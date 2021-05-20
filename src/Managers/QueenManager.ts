@@ -27,12 +27,18 @@ export class QueenManager extends Manager {
     }
 
     transferActions(queen: Creep) {
-        let target = _.first(_.filter(this.barracks.energyStructures, r => r.store.getFreeCapacity()! > 0))
-        queen.goTransfer(target)
+        let target = _.first(_.filter(this.barracks.energyStructures, r => r.store.getFreeCapacity(RESOURCE_ENERGY)! > 0))
+        if(target) {
+            queen.goTransfer(target)
+        }
     }
 
     withdrawActions(queen: Creep) {
-        let target = queen.pos.findClosestByRange(_.filter(this.capital.room.storageUnits, r => r.store.energy > queen.store.getCapacity()/4));
+        let drops = _.filter(this.room.droppedEnergy, r => r.amount > queen.store.getCapacity()/4)
+        let structs = _.filter(this.capital.room.storageUnits, r => r.store.energy > queen.store.getCapacity()/4)
+        let targets = _.merge(drops,structs)
+        //console.log(JSON.stringify(this.room.drops))
+        let target = queen.pos.findClosestByRange(targets);
         if(target) {
             queen.goWithdraw(target)
         }

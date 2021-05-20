@@ -47,11 +47,8 @@ export class Barracks extends Building {
         this.manager = new QueenManager(this)
 
         //Use a crisis manager if there is no queen and not enough energy to make one
-        if (_.filter(this.capital.creeps, r => r.memory.role == Roles.queen).length == 0) {
-            let setup = this.capital.storage ? Setups.queens.default : Setups.queens.early;
-            if(bodyCost(setup.generateBody(this.capital.room.energyCapacityAvailable)) < this.capital.room.energyAvailable) {
-                this.crisisManager = new CrisisManager(this)
-            }
+        if (this.capital.room.energyAvailable + _.sum(this.capital.room.storageUnits, r => r.store.energy) < 2000 || this.capital.creepsByRole[Roles.queen].length == 0) {
+            this.crisisManager = new CrisisManager(this)
         }
     }
 
@@ -175,6 +172,7 @@ export class Barracks extends Building {
     }
 
     handleSpawns(): void {
+        console.log(JSON.stringify(this.productionQueue));
         let res:number | undefined = 0
         while (this.availableSpawns.length > 0 && res != -66) {
             res = this.spawnHighestPriorityCreep();

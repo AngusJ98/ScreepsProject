@@ -1,7 +1,10 @@
 import { config } from "config";
+import { Manager } from "Manager";
 
 declare global {
     interface Creep {
+        reassign(role: string, newManager: Manager): void;
+
         goBuild(target: ConstructionSite): void;
         goRepair(target: Structure): void;
         goTransfer(target: Creep | Structure, resource?: ResourceConstant): void;
@@ -51,9 +54,13 @@ Creep.prototype.goTransfer = function(target: Creep | Structure, resource: Resou
     }
 }
 
-Creep.prototype.goWithdraw = function(target: Structure | Tombstone, resource: ResourceConstant = RESOURCE_ENERGY) {
+Creep.prototype.goWithdraw = function(target: Structure | Tombstone | Resource, resource: ResourceConstant = RESOURCE_ENERGY) {
     if (this.pos.inRangeTo(target.pos, RANGES.TRANSFER)) {
-        this.withdraw(target, resource)
+        if(target instanceof Resource) {
+            this.pickup(target)
+        } else {
+            this.withdraw(target, resource)
+        }
     } else {
         this.travelTo(target)
     }
@@ -89,4 +96,9 @@ Creep.prototype.goUpgrade = function(target: StructureController) {
     } else {
         this.travelTo(target)
     }
+}
+
+Creep.prototype.reassign = function(role: string, manager: Manager) {
+    this.memory.role = role;
+    this.memory.manager = manager.name;
 }

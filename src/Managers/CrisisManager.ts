@@ -17,8 +17,8 @@ export class CrisisManager extends Manager{
     constructor(barracks: Barracks, prio = ManagerPriority.Crisis.mini) {
         super(barracks, "CrisisManager_" + barracks.coreSpawn.id, prio);
         this.lorrys = this.creepsByRole[Roles.lorry]
-        this.withdraw = _.filter(_.compact([this.capital.storage!, this.capital.terminal!, ...this.capital.containers, ...this.capital.links, ...this.capital.towers ]))
-        this.targets = _.filter([...this.capital.spawns, ...this.capital.extensions], r => r.energy < r.energyCapacity);
+        this.withdraw = _.filter(_.compact([this.room.storage!, this.room.terminal!, ...this.room.containers, ...this.room.links]), r => r.store.energy > 0);
+        this.targets = _.filter([...this.room.spawns, ...this.room.extensions], r => r.energy < r.energyCapacity);
     }
 
     private spawnMiners() {
@@ -44,7 +44,7 @@ export class CrisisManager extends Manager{
         //spawn early miners if this is early capital and has none. return statement so no other higher prio
         //creeps are spawned
         if(this.capital.stage == CapitalSize.Town) {
-            if (this.capital.creepsByRole[Roles.drone].length = 0) {
+            if (!this.capital.creepsByRole[Roles.drone] || this.capital.creepsByRole[Roles.drone].length == 0) {
                 this.spawnMiners();
                 return
             }
@@ -61,7 +61,7 @@ export class CrisisManager extends Manager{
         }
 
         //then! Spawn the rest of the miners needed if we don't have enough energy in room
-        let roomEnergy: number = this.room.energyAvailable + _.sum(this.withdraw, r => r.energy);
+        let roomEnergy: number = this.room.energyAvailable + _.sum(this.withdraw, r => r.store.energy || r.energy);
         let dropped = _.sum(this.room.droppedEnergy, r => r.amount);
         if (roomEnergy + dropped < config.crisis.emergencyMinersEnergyLimit) {
             this.spawnMiners()
@@ -69,7 +69,7 @@ export class CrisisManager extends Manager{
     }
 
     run() {
-        if (this.creeps[0]) {
+        if (this.creeps.length > 0) {
             console.log("Crisis manager has creeps?! How?")
         }
     }

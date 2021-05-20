@@ -92,6 +92,13 @@ Object.defineProperty(Room.prototype, 'my', {
 });
 
 Object.defineProperties(Room.prototype, {
+
+	drops: {
+        get() {
+			let resources: Resource[] = this.find(FIND_DROPPED_RESOURCES)
+            return _.groupBy(resources, r => r.resourceType)
+        }
+    },
 	// Dropped resources that are eneryg
 	droppedEnergy: {
 		get() {
