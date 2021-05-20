@@ -1,9 +1,7 @@
-import { throws } from "assert";
 import { CreepSetup } from "Creep_Setups/CreepSetup";
 import { Roles, Setups } from "Creep_Setups/Setups";
 import { capitalize } from "lodash";
 import { Manager } from "Manager";
-import { maxBy, minBy } from "Rando_Functions";
 import { Capital, CapitalSize } from "Room/Capital";
 import { ManagerPriority } from "./ManagerPriority";
 
@@ -108,8 +106,14 @@ export class WorkManager extends Manager {
             if (this.fortifyTargets.length > 0) {
 				if (this.fortifyActions(worker, this.fortifyTargets)) return;
 			}
-            if (this.capital.level < 8 || this.capital.creepsByRole[Roles.upgrader].length <= 1) {
+            if (this.capital.level < 8 || this.capital.creepsByRole[Roles.upgrader].length == 0) {
                 if (this.upgradeActions(worker)) return;
+            }
+            worker.say("BORED!")
+        } else {
+            let target = worker.pos.findClosestByRange(_.filter(this.capital.room.storageUnits, r => r.store.energy > worker.store.getCapacity()/4));
+            if(target) {
+                worker.goWithdraw(target)
             }
         }
     }
