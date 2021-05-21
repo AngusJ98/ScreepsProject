@@ -5,8 +5,10 @@ import { Barracks } from "Buildings/Barracks";
 import { Building } from "Buildings/Building";
 import { MiningSite } from "Buildings/MiningSite";
 import { Roles } from "Creep_Setups/Setups";
+import { keys } from "lodash";
 import { Manager } from "Manager";
 import { WorkManager } from "Managers/WorkManager";
+
 import * as I from "Room/Room_Find"
 
 export enum CapitalSize {
@@ -51,6 +53,7 @@ export class Capital {
 
     level: number;
     stage: number;
+    ಠ_ಠ: number;
 
     creeps: Creep[];
     creepsByRole: {[role: string]: Creep[]}
@@ -59,6 +62,8 @@ export class Capital {
 
     managers: Manager[];
     workManager: WorkManager;
+
+    assets: {[type: string]: number}
 
 
     constructor(room:Room) {
@@ -85,6 +90,8 @@ export class Capital {
         this.nuker = this.room.nuker;
 		this.observer = this.room.observer;
         this.containers = this.room.containers
+
+        this.ಠ_ಠ = 0
 
 
         this.level = this.controller.level
@@ -120,6 +127,8 @@ export class Capital {
         this.managers = [];
         this.workManager = new WorkManager(this);
 
+        this.assets = this.getAssets();
+
         this.createBuildings()
     }
 
@@ -135,6 +144,24 @@ export class Capital {
             let site: MiningSite = new MiningSite(this, source)
             this.miningSites.push(site)
         }
+    }
+
+    //God I hope this works
+    private getAssets(): { [resourceType: string]: number } {
+        let stores = _.map(_.compact([this.storage, this.terminal]), r => r!.store);
+        let creepCarries = _.map(this.creeps, creep => creep.store)
+        let combined = _.merge(stores, creepCarries)
+        var ret: {[type: string]: number} = {}
+        for (let store of combined) {
+            for (let key in store) {
+                let amount = store[key as ResourceConstant] || 0;
+                if (!ret[key]) {
+                    ret[key] = 0;
+                }
+                ret[key] += amount;
+            }
+        }
+        return ret
     }
 
     init(): void {

@@ -3,13 +3,13 @@ import { CreepSetup } from "./CreepSetup";
 export const Roles = {
 	// Civilian roles
 	drone      : 'drone',
-	lorry     : 'lorry',
+	van     : 'van',
 	settler      : 'settler',
 	colonist    : 'colonist',
 	treasurer    : 'treasurer',
 	queen      : 'queen',
 	scout      : 'scout',
-	transport  : 'transport',
+	lorry  : 'lorry',
 	worker     : 'worker',
 	upgrader   : 'upgrader',
 
@@ -57,7 +57,7 @@ export const Setups = {
 		}
 	},
 
-	lorry: new CreepSetup(Roles.lorry, {
+	van: new CreepSetup(Roles.van, {
 		pattern  : [CARRY, CARRY, MOVE],
 		sizeLimit: 1,
 	}),
@@ -124,14 +124,14 @@ export const Setups = {
 		sizeLimit: 1,
 	}),
 
-	transporters: {
+	lorrys: {
 
-		default: new CreepSetup(Roles.transport, {
+		default: new CreepSetup(Roles.lorry, {
 			pattern  : [CARRY, CARRY, MOVE],
 			sizeLimit: Infinity,
 		}),
 
-		early: new CreepSetup(Roles.transport, {
+		early: new CreepSetup(Roles.lorry, {
 			pattern  : [CARRY, MOVE],
 			sizeLimit: Infinity,
 		}),

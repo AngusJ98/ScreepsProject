@@ -16,7 +16,7 @@ export class CrisisManager extends Manager{
 
     constructor(barracks: Barracks, prio = ManagerPriority.Crisis.mini) {
         super(barracks, "CrisisManager_" + barracks.coreSpawn.id, prio);
-        this.lorrys = this.creepsByRole[Roles.lorry]
+        this.lorrys = this.creepsByRole[Roles.van]
         this.withdraw = _.filter(_.compact([this.room.storage!, this.room.terminal!, ...this.room.containers, ...this.room.links]), r => r.store.energy > 0);
         this.targets = _.filter([...this.room.spawns, ...this.room.extensions], r => r.energy < r.energyCapacity);
     }
@@ -52,11 +52,11 @@ export class CrisisManager extends Manager{
 
         //spawn a transport and reassign as queen if no queen
         if (this.capital.creepsByRole[Roles.queen].length == 0) {
-            let lorry = this.capital.creepsByRole[Roles.lorry]
+            let lorry = this.capital.creepsByRole[Roles.van]
             if (lorry[0]) {
                 lorry[0].reassign(Roles.queen, this.capital.barracks!.manager)
             } else {
-                this.spawnList(1, Setups.lorry)
+                this.spawnList(1, Setups.van)
             }
         }
 

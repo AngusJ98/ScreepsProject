@@ -12,6 +12,12 @@ export function maxBy<T>(objects: T[], iteratee: ((obj: T) => number | false)): 
 	return maxObj;
 }
 
+export interface StoreStructure extends Structure {
+	store: StoreDefinition;
+	storeCapacity: number;
+}
+
+
 export function minBy<T>(objects: T[], iteratee: ((obj: T) => number | false)): T | undefined {
 	let minObj: T | undefined;
 	let minVal = Infinity;
@@ -25,3 +31,57 @@ export function minBy<T>(objects: T[], iteratee: ((obj: T) => number | false)): 
 	}
 	return minObj;
 }
+declare global {
+	interface Source {
+		name: string;
+	}
+	interface StructureController {
+		name: string;
+	}
+	interface StructureStorage {
+		energy: number;
+	}
+	interface StructureContainer {
+		energy: number;
+	}
+	interface StructureTerminal {
+		energy: number;
+	}
+}
+
+Object.defineProperty(Source.prototype, "name", {
+    get() {
+        return this.id;
+    }
+})
+
+
+
+Object.defineProperty(StructureController.prototype, "name", {
+    get() {
+        return this.id;
+    }
+})
+
+
+Object.defineProperty(StructureStorage.prototype, "energy", {
+    get() {
+        return this.store.energy
+    }
+})
+
+
+
+Object.defineProperty(StructureContainer.prototype, "energy", {
+    get() {
+        return this.store.energy
+    }
+})
+
+
+
+Object.defineProperty(StructureTerminal.prototype, "energy", {
+    get() {
+        return this.store.energy
+    }
+})
