@@ -2,7 +2,7 @@ import { minBy } from "Rando_Functions"
 
 declare global {
 	interface RoomPosition {
-		getAdjacentPositions(): RoomPosition[];
+		getAdjacentPositions(range?: number): RoomPosition[];
 		roomCoords: Coord;
 		getMultiRoomRangeTo(pos: RoomPosition): number;
 		findClosestByMultiRoomRange<T extends _HasRoomPosition>(objects: T[]): T | undefined;
@@ -11,13 +11,23 @@ declare global {
 export function test4() {
 
 }
-RoomPosition.prototype.getAdjacentPositions = function(): RoomPosition[] {
+RoomPosition.prototype.getAdjacentPositions = function(range = 1): RoomPosition[] {
     let roomName = this.roomName
     let terrain = Game.map.getRoomTerrain(roomName)
     let positions = []
-    for (let x = this.x -1; x < this.x + 2; x++) {
-        for (let y = this.y -1; y < this.y + 2; y++) {
-            let terrainAtPositon = terrain.get(x, y)
+    for (let x of [this.x + range, this.x - range]) {
+        for (let y = this.y - range; y <= this.y + range; y++) {
+			let terrainAtPositon = terrain.get(x, y)
+            if (terrainAtPositon === TERRAIN_MASK_SWAMP || terrainAtPositon === 0) {
+
+                positions.push(new RoomPosition(x, y, roomName));
+                //console.log(positions)
+            }
+        }
+    }
+	for (let y of [this.y + range, this.y - range]) {
+        for (let x = this.x - range; x <= this.x + range; x++) {
+			let terrainAtPositon = terrain.get(x, y)
             if (terrainAtPositon === TERRAIN_MASK_SWAMP || terrainAtPositon === 0) {
 
                 positions.push(new RoomPosition(x, y, roomName));
