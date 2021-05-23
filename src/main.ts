@@ -38,6 +38,8 @@ declare global {
   }
 }
 
+
+
 export function loop(): void {
   EmpireExecute();
   test()

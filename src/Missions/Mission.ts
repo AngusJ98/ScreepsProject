@@ -1,3 +1,4 @@
+import { capitals } from "Empire_Main";
 import { type } from "os";
 import { Capital } from "Room/Capital";
 
@@ -10,7 +11,7 @@ interface FlagMemory {
 
 export abstract class Mission {
     memory: FlagMemory;
-    capital: Capital;
+    capital: Capital | undefined;
     pos: RoomPosition;
     room: Room | undefined;
     name: string;
@@ -23,11 +24,7 @@ export abstract class Mission {
         this.capital = this.getCapital();
     }
 
-    getCapital(colonyFilter?: (capital: Capital) => boolean): Capital {
-        if (this.memory.capital) {
-            return global.capitals[this.memory.capital]
-        } else {
-            let names = _.keys(capitals)
-        }
+    getCapital(): Capital | undefined{
+        return //Leaving this todo as Empire needs rework
     }
 }

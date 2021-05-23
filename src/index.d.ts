@@ -1,17 +1,8 @@
-declare global {
-    module NodeJS {
-        interface Global {
-            config: any;
-            creepsByCapital: {[name: String]: Creep}
-            roles: {
-                any
-            };
-        }
-    }
-}
-declare var creepsByCapital;
-declare var roles;
 
+
+
+//declare var creepsByCapital: {[name: string]: Creep[]};
+//declare var capitals: {[name: string]: Capital};
 
 
 

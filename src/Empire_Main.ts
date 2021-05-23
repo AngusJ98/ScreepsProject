@@ -1,6 +1,8 @@
 import { EmpirePrepareMemory } from "Empire_Memory";
+import { Capital } from "Room/Capital";
 
-
+export var creepsByCapital: {[name: string]: Creep[]}
+export var capitals: {[name: string]: Capital};
 //Runs all parts of the empire. Like an emperor
 
 export function EmpireExecute() {
@@ -32,5 +34,6 @@ function EmpireRun() {
 
 function EmpireSortCreeps() {
 
-  global.creepsByCapital = _.groupBy(Game.creeps, r => r.memory.capital)
+  creepsByCapital = _.groupBy(_.values(Game.creeps), r => r.memory.capital)
 }
+

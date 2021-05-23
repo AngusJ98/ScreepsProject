@@ -5,7 +5,7 @@ import { Barracks } from "Buildings/Barracks";
 import { Building } from "Buildings/Building";
 import { MiningSite } from "Buildings/MiningSite";
 import { Roles } from "Creep_Setups/Setups";
-import { keys } from "lodash";
+import { creepsByCapital } from "Empire_Main";
 import { Manager } from "Manager";
 import { WorkManager } from "Managers/WorkManager";
 
@@ -67,7 +67,7 @@ export class Capital {
 
 
     constructor(room:Room) {
-        this.name = "Capital_" + room.name
+        this.name = room.name
         this.capital = this
         this.room = room;
         this.outposts = _.map(Memory.capitals.outposts, r => Game.rooms[r]) || [];
@@ -110,7 +110,7 @@ export class Capital {
 		this.constructionSites = _.flatten(_.map(this.allRooms, room => room.constructionSites)); //all construction sites
 		this.repairables = _.flatten(_.map(this.allRooms, room => room.repairables)); // all objects needing repair
 
-        this.creeps = global.creepsByCapital[this.name]
+        this.creeps = creepsByCapital[this.name]
         this.creepsByRole = _.groupBy(this.creeps, r => r.memory.role)
         for (let role in Roles) {
             if (!this.creepsByRole[role]) {
