@@ -2,6 +2,11 @@ import * as _ from "lodash"
 import { config } from "config";
 //functions for handling memory
 
+/**
+ *
+ * All this code is handled elsewhere now
+
+
 export function EmpirePrepareMemory() {
     Memory.username = "Aozin"
     Memory.myRooms = Memory.myRooms || [];
@@ -37,3 +42,4 @@ function EmpireCleanRooms () {
         }
     }
 }
+*/
