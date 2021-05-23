@@ -1,12 +1,13 @@
 import { test3 } from "Creep/Creep_Actions";
-import { EmpireExecute } from "Empire_Main";
+
 import { Manager } from "Manager";
 import { test2 } from "Room/Room_Find";
-import { test } from "Room/Room_Main";
+
 import { test4 } from "RoomPosition";
 import { ErrorMapper } from "utils/ErrorMapper";
 import { Game, Memory } from "../test/unit/mock";
 import {Traveler} from "Traveler"
+import { Empire } from "Empire";
 
 declare global {
   /*
@@ -41,11 +42,10 @@ declare global {
 
 
 export function loop(): void {
-  EmpireExecute();
-  test()
-  test2()
-  test3()
-  test4()
+  var empire:Empire = new Empire();
+  empire.build();
+  empire.init();
+  empire.run();
 }
 
 Creep.prototype.travelTo = function(destination: RoomPosition|{pos: RoomPosition}, options?: TravelToOptions) {

@@ -1,5 +1,3 @@
-import { capitals } from "Empire_Main";
-import { type } from "os";
 import { Capital } from "Room/Capital";
 
 type MissionConstant = "Settle" | "Attack" | "Siege" | "New_Room_Setup"
