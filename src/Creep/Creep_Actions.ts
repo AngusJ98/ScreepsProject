@@ -8,7 +8,7 @@ declare global {
         goBuild(target: ConstructionSite): void;
         goRepair(target: Structure): void;
         goTransfer(target: Creep | Structure, resource?: ResourceConstant): void;
-        goWithdraw(target: Structure | Tombstone, resource?: ResourceConstant): void;
+        goWithdraw(target: Structure | Tombstone | Resource, resource?: ResourceConstant): void;
         goHarvest(target: Source | Mineral | Deposit): void;
         goDrop(target: RoomPosition, resource?: ResourceConstant): void;
         goSign(target: StructureController): void;

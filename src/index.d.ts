@@ -15,6 +15,8 @@ interface RoomMemory {
 }
 
 interface CreepMemory {
+    state?: "withdraw" | "transfer";
+    targetId?: string;
     killed: boolean;
     recycle: boolean;
     role: string;
