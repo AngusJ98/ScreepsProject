@@ -7,9 +7,9 @@ export function createMission(flag: Flag, empire: Empire): Mission | undefined {
         case COLOR_GREEN:
             switch(flag.secondaryColor) {
                 case COLOR_GREEN:
-                    return new SettleMission(flag, empire);
+                    //return new SettleMission(flag, empire);
                 case COLOR_BLUE:
-                    return new SetupMission(flag, empire);
+                    //return new SetupMission(flag, empire);
 
             }
             break
