@@ -2,7 +2,6 @@ import { Manager } from "Manager";
 import { Capital } from "Room/Capital";
 
 export interface buildingInstantiator {
-    name: string;
     room: Room;
     pos: RoomPosition;
 }

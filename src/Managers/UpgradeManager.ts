@@ -10,6 +10,7 @@ export class UpgradeManager extends Manager {
     upgraders: Creep[];
     upgradeSite: UpgradeSite
     room:Room;
+    powerNeeded: number;
 
     constructor (upgradeSite:UpgradeSite, prio = ManagerPriority.Upgrading.upgrade) {
         super(upgradeSite, "UpgradeManager_" + upgradeSite.controller.id, prio);
@@ -17,6 +18,7 @@ export class UpgradeManager extends Manager {
         this.upgraders = this.creepsByRole[Roles.upgrader]
         this.upgradeSite = upgradeSite
         this.room = upgradeSite.room
+        this.powerNeeded = 0;
 
     }
 
@@ -77,7 +79,7 @@ export class UpgradeManager extends Manager {
 				} else if (extra > 500000) {
 					upgradePartNeeded *= 2;
 				}
-
+                this.powerNeeded = upgradePartNeeded;
 				const upgradersNeeded = Math.ceil(upgradePartNeeded / upgradePowerEach );
 				this.spawnList(upgradersNeeded, setup);
 			}

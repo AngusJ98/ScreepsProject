@@ -62,8 +62,8 @@ export const ManagerPriority = {
         //TODO
     },
 
-    Haul: {
-        haul: 1200
+    Lorry: {
+        lorry: 1200
     }
 
 }

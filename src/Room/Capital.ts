@@ -4,6 +4,7 @@
 import { Barracks } from "Buildings/Barracks";
 import { Building } from "Buildings/Building";
 import { MiningSite } from "Buildings/MiningSite";
+import { UpgradeSite } from "Buildings/UpgradeSite";
 import { Roles } from "Creep_Setups/Setups";
 import { Empire } from "Empire";
 import { Manager } from "Manager";
@@ -45,11 +46,12 @@ export class Capital {
     constructionSites: ConstructionSite[];
     repairables: Structure[];
     coreSpawn: StructureSpawn | undefined;
-
+    battery: StructureContainer | undefined;
     //Buildings
     buildings: Building[]
     miningSites: MiningSite[] //self explanatory: Sites to mine from
     barracks: Barracks | undefined; //Spawns grouped together
+    upgradeSite: UpgradeSite | undefined;
 
     level: number;
     stage: number;
@@ -135,6 +137,8 @@ export class Capital {
         this.createBuildings()
     }
 
+
+
     //Method to start all buildings
     createBuildings(): void {
         if (this.coreSpawn) {
@@ -147,6 +151,8 @@ export class Capital {
             let site: MiningSite = new MiningSite(this, source)
             this.miningSites.push(site)
         }
+
+        this.upgradeSite = new UpgradeSite(this, this.controller)
     }
 
     //God I hope this works

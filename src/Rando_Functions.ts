@@ -40,12 +40,15 @@ declare global {
 	}
 	interface StructureStorage {
 		energy: number;
+		energyCapacity: number;
 	}
 	interface StructureContainer {
 		energy: number;
+		energyCapacity: number;
 	}
 	interface StructureTerminal {
 		energy: number;
+		energyCapacity: number;
 	}
 }
 
@@ -69,6 +72,25 @@ Object.defineProperty(StructureStorage.prototype, "energy", {
         return this.store.energy
     }
 })
+
+Object.defineProperty(StructureStorage.prototype, "energyCapacity", {
+    get() {
+        return this.store.getCapacity()
+    }
+})
+
+Object.defineProperty(StructureContainer.prototype, "energyCapacity", {
+    get() {
+        return this.store.getCapacity()
+    }
+})
+
+Object.defineProperty(StructureTerminal.prototype, "energyCapacity", {
+    get() {
+        return this.store.getCapacity()
+    }
+})
+
 
 
 

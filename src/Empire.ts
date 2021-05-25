@@ -1,4 +1,5 @@
 import { Mission } from "Missions/Mission";
+import { createMission } from "Missions/MissionSwitch";
 import { Capital } from "Room/Capital";
 
 export class Empire {
@@ -64,6 +65,10 @@ export class Empire {
 
         for (let flagName in Game.flags) {
             //do something
+            let flag: Flag = Game.flags[flagName]
+            if (flag.room) {
+                let mission = createMission(flag, this)
+            }
         }
 
     }
