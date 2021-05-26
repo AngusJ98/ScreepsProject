@@ -12,9 +12,9 @@ export class UpgradeSite extends Building {
     constructionSite: ConstructionSite | undefined;
     constructor(capital: Capital, controller:StructureController) {
         super(capital, controller)
+        this.controller = controller;
         this.name = "UpgradeSite_" + controller.name;
         this.manager = new UpgradeManager(this);
-        this.controller = controller;
         this.capital = capital;
         this.container = _.first(_.filter(this.pos.findInRange(FIND_STRUCTURES, 2), r => r.structureType == STRUCTURE_CONTAINER) as StructureContainer[])
         this.link = _.first(_.filter(this.pos.findInRange(FIND_STRUCTURES, 2), r => r.structureType == STRUCTURE_LINK) as StructureLink[])
@@ -22,6 +22,7 @@ export class UpgradeSite extends Building {
     }
 
     buildContainerOrLink(type: STRUCTURE_CONTAINER | STRUCTURE_LINK) {
+        console.log("Check!")
         if (this.link) { //Just in case we accidentally call this when we have a link already
             return
         } else { //finds the position 2 away with most adjacent spots to make pathing easier
@@ -39,7 +40,7 @@ export class UpgradeSite extends Building {
     }
 
     run(): void {
-        if (this.room && Game.time % 20 == 0) {
+        if (this.room && Game.time % 20 == 0 && this.capital.level >= 3 && this.capital.storage) {
             this.buildContainerOrLink(STRUCTURE_CONTAINER);
         }
     }

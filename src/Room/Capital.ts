@@ -3,6 +3,7 @@
 
 import { Barracks } from "Buildings/Barracks";
 import { Building } from "Buildings/Building";
+import { LorryHQ } from "Buildings/LorryHQ";
 import { MiningSite } from "Buildings/MiningSite";
 import { UpgradeSite } from "Buildings/UpgradeSite";
 import { Roles } from "Creep_Setups/Setups";
@@ -52,6 +53,7 @@ export class Capital {
     miningSites: MiningSite[] //self explanatory: Sites to mine from
     barracks: Barracks | undefined; //Spawns grouped together
     upgradeSite: UpgradeSite | undefined;
+    lorryHQ: LorryHQ | undefined;
 
     level: number;
     stage: number;
@@ -141,9 +143,12 @@ export class Capital {
 
     //Method to start all buildings
     createBuildings(): void {
+
         if (this.coreSpawn) {
             this.barracks = new Barracks(this, this.spawns[0])
             //console.log(this.barracks.name)
+        } else {
+            console.log("no spawn in " + this.room.name)
         }
 
         for (let source of this.sources) {
@@ -152,6 +157,9 @@ export class Capital {
             this.miningSites.push(site)
         }
 
+        if (this.storage) {
+            this.lorryHQ = new LorryHQ(this, this.storage)
+        }
         this.upgradeSite = new UpgradeSite(this, this.controller)
     }
 
@@ -177,6 +185,8 @@ export class Capital {
         this.room.memory.lastSeen = Game.time
         //_.forEach(this.managers, r => console.log(r.name))
         _.forEach(this.buildings, r => r.init())
+        _.forEach(this.managers, r => console.log(r.name))
+        //_.forEach(this.buildings, r => console.log(r.name))
         _.forEach(this.managers, r => r.init())
     }
 

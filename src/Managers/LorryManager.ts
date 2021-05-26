@@ -23,7 +23,7 @@ export class LorryManager extends Manager{
     constructor(hq: LorryHQ, prio = ManagerPriority.Lorry.lorry) {
         super(hq, "LorryManager" + hq.storage.id, prio);
         this.lorryHQ = hq
-        this.lorrys = this.creepsByRole[Roles.lorry]
+        this.lorrys = this.creepsByRole[Roles.lorry] || [];
         this.withdraw = [..._.filter(this.room.containers, r => r.store.energy > 0), ..._.filter(this.room.droppedEnergy, r => r.amount > 100)];
         this.currentTargeted = _.filter(_.map(this.lorrys, r => r.memory.targetId ? Game.getObjectById(r.memory.targetId) : undefined), r => r instanceof StructureContainer || r instanceof Resource) as (StructureContainer | Resource)[]
         let filteredTargets: (StructureContainer | Resource)[] = this.currentTargeted.filter(function(item, pos) {

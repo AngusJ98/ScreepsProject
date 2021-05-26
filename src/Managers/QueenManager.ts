@@ -34,8 +34,8 @@ export class QueenManager extends Manager {
     }
 
     withdrawActions(queen: Creep) {
-        let drops = _.filter(this.room.droppedEnergy, r => r.amount > queen.store.getCapacity()/4)
-        let structs = _.filter(this.capital.room.storageUnits, r => r.store.energy > queen.store.getCapacity()/4)
+        let drops = _.filter(this.room.droppedEnergy, r => r.amount >= queen.store.getCapacity()/4)
+        let structs = _.filter(this.capital.room.storageUnits, r => r.store.energy >= queen.store.getCapacity()/2)
         let targets = _.merge(drops,structs)
         //console.log(JSON.stringify(this.room.drops))
         let target = queen.pos.findClosestByRange(targets);

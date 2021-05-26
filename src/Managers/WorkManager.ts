@@ -36,7 +36,7 @@ export class WorkManager extends Manager {
         this.hitsGoal = this.barrierHits[this.capital.level]
         this.fortifyTargets = _.filter(this.room.barriers, r => r.hits < this.hitsGoal);
         this.criticalTargets = _.filter(this.fortifyTargets, r => r.hits < this.critical);
-        this.repairTargets = _.filter(this.capital.repairables, r => r.hits < r.hitsMax);
+        this.repairTargets = _.filter(_.compact(this.capital.repairables), r => r.hits < r.hitsMax);
         this.constructionSites = this.capital.constructionSites;
     }
 
@@ -131,8 +131,8 @@ export class WorkManager extends Manager {
             }
             worker.say("BORED!")
         } else {
-            let drops = _.filter(this.room.droppedEnergy, r => r.amount > worker.store.getCapacity()/4)
-            let structs = _.filter(this.capital.room.storageUnits, r => r.store.energy > worker.store.getCapacity()/4)
+            let drops = _.filter(this.room.droppedEnergy, r => r.amount >= worker.store.getCapacity())
+            let structs = _.filter(this.capital.room.storageUnits, r => r.store.energy >= worker.store.getCapacity())
             let targets = _.merge(drops,structs)
             //console.log(JSON.stringify(this.room.drops))
             let target = worker.pos.findClosestByRange(targets);
@@ -147,7 +147,7 @@ export class WorkManager extends Manager {
         let numWorkers = 0;
         if (this.capital.stage == CapitalSize.Town) {
             let MAX_WORKERS = 10;
-            numWorkers = 3;
+            numWorkers = 5;
         } else {
             let MAX_WORKERS = 5
             let repairTicks = _.sum(this.repairTargets, r => r.hitsMax - r.hits) / REPAIR_POWER;
@@ -160,7 +160,7 @@ export class WorkManager extends Manager {
             numWorkers = Math.min(numWorkers, MAX_WORKERS)
         }
 
-        console.log("Num workers wanted: " + numWorkers)
+        //console.log("Num workers wanted: " + numWorkers)
         this.spawnList(numWorkers, this.setup)
     }
 

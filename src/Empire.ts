@@ -1,6 +1,9 @@
+import { test3 } from "Creep/Creep_Actions";
 import { Mission } from "Missions/Mission";
 import { createMission } from "Missions/MissionSwitch";
 import { Capital } from "Room/Capital";
+import { test2 } from "Room/Room_Find";
+import { test4 } from "RoomPosition";
 
 export class Empire {
     creepsByCapital: {[name: string]: Creep[]};
@@ -58,6 +61,7 @@ export class Empire {
     build() {
         for (let roomName in Game.rooms) {
             let room: Room = Game.rooms[roomName];
+            console.log(room.name)
             if (room.controller && room.controller.my) {
                 this.capitals[room.name] = new Capital(room, this)
             }
@@ -74,6 +78,9 @@ export class Empire {
     }
 
     init() {
+        test2()
+        test3()
+        test4()
         _.forEach(this.capitals, r => r.init())
     }
 

@@ -42,7 +42,9 @@ declare global {
 
 
 export function loop(): void {
+
   var empire:Empire = new Empire();
+
   empire.build();
   empire.init();
   empire.run();

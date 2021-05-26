@@ -29,6 +29,7 @@ export class MiningManager extends Manager {
         super(miningSite, "MineManager_" + miningSite.source.id, priority);
         this.site = miningSite;
         this.container = this.site.container;
+        console.log(this.container!.id)
         this.link = this.site.link;
         this.constructionSite = _.first(this.pos.findInRange(FIND_MY_CONSTRUCTION_SITES, 2));
 

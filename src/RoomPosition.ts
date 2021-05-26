@@ -26,7 +26,7 @@ RoomPosition.prototype.getAdjacentPositions = function(range = 1): RoomPosition[
         }
     }
 	for (let y of [this.y + range, this.y - range]) {
-        for (let x = this.x - range; x <= this.x + range; x++) {
+        for (let x = this.x - range + 1; x <= this.x + range - 1; x++) {
 			let terrainAtPositon = terrain.get(x, y)
             if (terrainAtPositon === TERRAIN_MASK_SWAMP || terrainAtPositon === 0) {
 
