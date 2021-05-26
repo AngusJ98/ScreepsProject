@@ -27,9 +27,11 @@ export class QueenManager extends Manager {
     }
 
     transferActions(queen: Creep) {
-        let target = _.first(_.filter(this.barracks.energyStructures, r => r.store.getFreeCapacity(RESOURCE_ENERGY)! > 0))
+        let target = queen.pos.findClosestByPath(_.filter(this.barracks.energyStructures, r => r.store.getFreeCapacity(RESOURCE_ENERGY)! > 0))
         if(target) {
             queen.goTransfer(target)
+        } else {
+            this.withdrawActions(queen)
         }
     }
 
@@ -47,6 +49,9 @@ export class QueenManager extends Manager {
     init(): void {
         let pre = this.barracks.spawns.length <= 1 ? 100 : 50;
         this.spawnList(1, this.queenSetup, {prespawn: pre})
+        if (this.queens && this.queens.length == 1 && this.queens[0].body.length < 5) {
+            this.spawnList(2, this.queenSetup, {prespawn: pre})
+        }
     }
 
 

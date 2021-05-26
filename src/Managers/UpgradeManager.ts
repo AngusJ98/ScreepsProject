@@ -80,9 +80,11 @@ export class UpgradeManager extends Manager {
 					upgradePartNeeded *= 2;
 				}
                 this.powerNeeded = upgradePartNeeded;
+
 				const upgradersNeeded = Math.ceil(upgradePartNeeded / upgradePowerEach );
 				this.spawnList(upgradersNeeded, setup);
 			}
+            this.powerNeeded += 1
         }
     }
 

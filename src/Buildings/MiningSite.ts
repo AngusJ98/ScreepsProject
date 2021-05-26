@@ -19,6 +19,10 @@ export class MiningSite extends Building{
 
 
         this.link = _.first(_.filter(this.pos.findInRange(FIND_STRUCTURES, 2), r => r.structureType == STRUCTURE_LINK) as StructureLink[])
+
+        if(this.container) {
+            this.capital.buildingsByContainer[this.container.id] = this
+        }
     }
 
     init(): void {

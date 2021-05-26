@@ -69,7 +69,7 @@ export class Capital {
 
     assets: {[type: string]: number}
     empire: Empire
-
+    buildingsByContainer: {[id: string]: UpgradeSite | MiningSite}
     constructor(room:Room, empire: Empire) {
         this.empire = empire;
         this.name = room.name
@@ -130,6 +130,7 @@ export class Capital {
         this.miningSites = [];
         this.barracks = undefined;
         this.buildings = [];
+        this.buildingsByContainer = {};
 
         this.managers = [];
         this.workManager = new WorkManager(this);
@@ -157,10 +158,12 @@ export class Capital {
             this.miningSites.push(site)
         }
 
+
+        this.upgradeSite = new UpgradeSite(this, this.controller)
+
         if (this.storage) {
             this.lorryHQ = new LorryHQ(this, this.storage)
         }
-        this.upgradeSite = new UpgradeSite(this, this.controller)
     }
 
     //God I hope this works
@@ -185,7 +188,7 @@ export class Capital {
         this.room.memory.lastSeen = Game.time
         //_.forEach(this.managers, r => console.log(r.name))
         _.forEach(this.buildings, r => r.init())
-        _.forEach(this.managers, r => console.log(r.name))
+        //_.forEach(this.managers, r => console.log(r.name))
         //_.forEach(this.buildings, r => console.log(r.name))
         _.forEach(this.managers, r => r.init())
     }

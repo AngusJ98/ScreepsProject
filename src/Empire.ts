@@ -15,6 +15,7 @@ export class Empire {
         this.creepsByCapital = this.sortCreeps();
         this.capitals = {} //filled in by capital constructor
         this.missions = [] //filled in with flags
+        this.prepareMemory()
     }
 
 

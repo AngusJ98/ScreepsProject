@@ -37,6 +37,7 @@ export class WorkManager extends Manager {
         this.fortifyTargets = _.filter(this.room.barriers, r => r.hits < this.hitsGoal);
         this.criticalTargets = _.filter(this.fortifyTargets, r => r.hits < this.critical);
         this.repairTargets = _.filter(_.compact(this.capital.repairables), r => r.hits < r.hitsMax);
+        _.forEach(this.capital.miningSites, r => _.remove(this.repairTargets, t => r.container && t.id == r.container.id))
         this.constructionSites = this.capital.constructionSites;
     }
 
@@ -147,7 +148,7 @@ export class WorkManager extends Manager {
         let numWorkers = 0;
         if (this.capital.stage == CapitalSize.Town) {
             let MAX_WORKERS = 10;
-            numWorkers = 5;
+            numWorkers = Math.max(Math.ceil(this.capital.assets[RESOURCE_ENERGY] / 3000), MAX_WORKERS)
         } else {
             let MAX_WORKERS = 5
             let repairTicks = _.sum(this.repairTargets, r => r.hitsMax - r.hits) / REPAIR_POWER;
@@ -157,7 +158,7 @@ export class WorkManager extends Manager {
                 fortifyTicks = 0.2 * _.sum(this.fortifyTargets, r => Math.max(0, this.hitsGoal - r.hits)); //take a fraction of how many barriers need fortifying
             }
             numWorkers = Math.ceil(2 * (5 * buildTicks + repairTicks + fortifyTicks) / currentParts * CREEP_LIFE_TIME)
-            numWorkers = Math.min(numWorkers, MAX_WORKERS)
+            numWorkers = Math.min(numWorkers, MAX_WORKERS, Math.ceil(this.capital.assets[RESOURCE_ENERGY] / 3000))
         }
 
         //console.log("Num workers wanted: " + numWorkers)

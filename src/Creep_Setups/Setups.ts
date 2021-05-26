@@ -40,9 +40,14 @@ export const Setups = {
 				sizeLimit: 1,
 			}),
 
-			emergency: new CreepSetup(Roles.drone, {
+			early: new CreepSetup(Roles.drone, {
 				pattern  : [WORK, WORK, CARRY, MOVE],
 				sizeLimit: 2,
+			}),
+
+			emergency: new CreepSetup(Roles.drone, {
+				pattern  : [WORK, WORK, CARRY, MOVE],
+				sizeLimit: 1,
 			}),
 
 			double: new CreepSetup(Roles.drone, {

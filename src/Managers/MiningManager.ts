@@ -29,7 +29,6 @@ export class MiningManager extends Manager {
         super(miningSite, "MineManager_" + miningSite.source.id, priority);
         this.site = miningSite;
         this.container = this.site.container;
-        console.log(this.container!.id)
         this.link = this.site.link;
         this.constructionSite = _.first(this.pos.findInRange(FIND_MY_CONSTRUCTION_SITES, 2));
 
@@ -44,7 +43,7 @@ export class MiningManager extends Manager {
 
         if(this.capital.room.energyCapacityAvailable < MINER_COST) {
             this.mode = "Early";
-            this.setup = Setups.drones.miners.emergency;
+            this.setup = Setups.drones.miners.early;
         } else if (this.site.link) {
             this.mode = "Link";
             this.setup = Setups.drones.miners.default;
@@ -95,11 +94,15 @@ export class MiningManager extends Manager {
 
     private earlyMiner(miner: Creep): void {
         if (miner.room != this.room) {
-			miner.travelTo(this.pos);
+			miner.travelTo(this.pos, {range: 0});
             return;
 		}
 
         if (this.container) {
+
+            if (this.pos != this.container.pos) {
+                miner.travelTo(this.container.pos, {range: 0});
+            }
 			if (this.container.hits < this.container.hitsMax && miner.store.energy >= Math.min(miner.carryCapacity, REPAIR_POWER * miner.getActiveBodyparts(WORK))) {
 				miner.goRepair(this.container);
                 return;
@@ -132,12 +135,13 @@ export class MiningManager extends Manager {
     }
 
     private standardMiner (miner: Creep): void {
-        if (!this.pos.inRangeTo(this.harvestPos!, 0)) {
-            miner.travelTo(this.site.pos);
-        }
+        //console.log(JSON.stringify(this.harvestPos!))
+
 
         if (this.container) {
-			if (this.container.hits < this.container.hitsMax && miner.store.energy >= Math.min(miner.carryCapacity, REPAIR_POWER * miner.getActiveBodyparts(WORK))) {
+            if (!(miner.pos.getRangeTo(this.harvestPos!) == 0)) {
+                miner.travelTo(this.container.pos, {range: 0});
+            } else if (this.container.hits < this.container.hitsMax && miner.store.energy >= Math.min(miner.carryCapacity, REPAIR_POWER * miner.getActiveBodyparts(WORK))) {
 				miner.repair(this.container);
                 return;
             } else {
@@ -157,7 +161,7 @@ export class MiningManager extends Manager {
         }
 
         if (this.isDropMining) {
-            miner.harvest(this.site.source);
+            miner.goHarvest(this.site.source);
             return;
         }
         return;
@@ -168,14 +172,7 @@ export class MiningManager extends Manager {
             if (!miner.pos.inRangeTo(this.pos, 1)) {
                 miner.moveTo(this.pos)
             }
-        } else if (this.harvestPos) {
-            if (!miner.pos.inRangeTo(this.pos, 1)) {
-                miner.moveTo(this.harvestPos)
-            }
-        } else {
-            console.log("No harvest spot? What went wrong")
         }
-
         switch (this.mode) {
             case "Early":
                 return this.earlyMiner(miner);
@@ -199,6 +196,9 @@ export class MiningManager extends Manager {
         if (this.room && Game.time % 20 == 0) {
             this.addContainer();
         }
+
+        //console.log(this.mode)
+        //console.log(JSON.stringify(this.container!.pos))
 
 
     }
