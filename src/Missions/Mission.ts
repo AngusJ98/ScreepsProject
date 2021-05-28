@@ -23,7 +23,7 @@ export abstract class Mission {
         this.name = flag.name;
         this.empire = empire;
         this.pos = flag.pos;
-        this.room = flag.room;
+        this.room = flag.room ;
         this.capital = this.getCapital();
         this.empire.missions.push(this);
     }
@@ -31,4 +31,7 @@ export abstract class Mission {
     getCapital(): Capital | undefined{
         return //Leaving this todo as Empire needs rework
     }
+
+    abstract init(): void;
+    abstract run(): void;
 }

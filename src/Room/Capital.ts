@@ -104,7 +104,7 @@ export class Capital {
         this.level = this.controller.level
 
         if (this.storage && this.storage.isActive() && this.spawns[0]) {
-            if (this.level = 8) {
+            if (this.level == 8) {
                 this.stage = CapitalSize.Megacity
             } else {
                 this.stage = CapitalSize.City

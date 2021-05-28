@@ -12,7 +12,7 @@ interface IManagerInitialiser {
 
 
 export abstract class Manager {
-	room!: Room;
+	room: Room;
     capital: Capital;
 	name: string;
 	priority: number;

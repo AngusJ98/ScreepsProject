@@ -17,6 +17,8 @@ export interface SpawnRequestOptions {
 	directions?: DirectionConstant[];	// StructureSpawn.spawning.directions
     priority?: number;                   // Priority of spawning, lower number = higher prio
     prespawn?: number;                   // Spawn creep this many ticks early to prevent downtime
+    targetId?: string;
+    state?: "withdraw" | "transfer" | undefined;
 }
 
 export class Barracks extends Building {
@@ -77,6 +79,8 @@ export class Barracks extends Building {
             recycle: false,
             killed: false,
             data: {},
+            targetId: opts.targetId,
+            state: opts.state,
         }
         let name = this.generateCreepName(setup.role)
         let order: SpawnOrder = {

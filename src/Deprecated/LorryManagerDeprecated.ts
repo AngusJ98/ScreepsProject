@@ -3,7 +3,7 @@ import { LorryHQ } from "Buildings/LorryHQ";
 import { Roles, Setups } from "Creep_Setups/Setups";
 import { Manager } from "Manager";
 import { maxBy } from "Rando_Functions";
-import { ManagerPriority } from "./ManagerPriority";
+import { ManagerPriority } from "../Managers/ManagerPriority";
 
 /**
  * This manager handles long range hauls for the capital. For intercapital trading, use a mission instead
