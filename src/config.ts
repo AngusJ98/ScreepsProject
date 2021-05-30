@@ -1,6 +1,6 @@
 
 export var config = {
-    signature: "Free Palestine - Aozin",
+    signature: "Aozin",
     nextRoom: {
         scoutMinControllerLevel: 4,
         intervalToCheck: CREEP_CLAIM_LIFE_TIME,

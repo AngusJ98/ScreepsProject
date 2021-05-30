@@ -170,7 +170,7 @@ export class Capital {
     private getAssets(): { [resourceType: string]: number } {
         let stores = _.map(_.compact([this.storage, this.terminal]), r => r!.store);
         let creepCarries = _.map(this.creeps, creep => creep.store)
-        let combined = _.merge(stores, creepCarries)
+        let combined = stores.concat(creepCarries)
         var ret: {[type: string]: number} = {}
         for (let store of combined) {
             for (let key in store) {

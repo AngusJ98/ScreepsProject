@@ -64,9 +64,9 @@ export class LorryManager extends Manager{
 
     transporterSizePerSite(site: MiningSite | UpgradeSite) {
         if (site instanceof UpgradeSite) {
-            return Math.ceil(UPGRADE_CONTROLLER_POWER * site.manager.powerNeeded * 2 * PathFinder.search(this.lorryHQ.pos, site.pos).path.length / CARRY_CAPACITY);
+            return Math.ceil(UPGRADE_CONTROLLER_POWER * site.manager.powerNeeded * 3 * PathFinder.search(this.lorryHQ.pos, site.pos).path.length / CARRY_CAPACITY);
         } else {
-            return Math.ceil(site.manager.energyPerTick * 2 * PathFinder.search(this.lorryHQ.pos, site.pos).path.length / CARRY_CAPACITY);
+            return Math.ceil(site.manager.energyPerTick * 3 * PathFinder.search(this.lorryHQ.pos, site.pos).path.length / CARRY_CAPACITY);
         }
     }
 
@@ -116,16 +116,30 @@ export class LorryManager extends Manager{
 
     init(): void {
         for (let site of this.sites) {
-            let targetTotal = this.transporterSizePerSite(site)
-            let current = _.filter(this.lorrys, r => r.memory.targetId == site.container!.id)
-            let currentSize = _.sum(current, r => r.getActiveBodyparts(CARRY))
-            let maxSize = this.powerPer
-            if (targetTotal > currentSize) {
-                let size = Math.min(targetTotal - currentSize, maxSize);
-                let state: "withdraw" | "transfer" | undefined = site instanceof MiningSite ? "withdraw" : "transfer";
-                let setup = new CreepSetup(Roles.lorry, {pattern  : [CARRY, MOVE], sizeLimit: size,})
-                this.capital.barracks?.addToQueue(setup, this, {priority: ManagerPriority.Lorry.lorry, targetId: site.container?.id, state: state})
-
+            if (site.container) {
+                let targetTotal = this.transporterSizePerSite(site)
+                let current = _.filter(this.lorrys, r => r.memory.targetId == site.container!.id)
+                let currentSize = _.sum(current, r => r.getActiveBodyparts(CARRY))
+                let maxSize = this.powerPer
+                if (targetTotal > currentSize) {
+                    let numNeeded = 1
+                    let state: "withdraw" | "transfer" | undefined = site instanceof MiningSite ? "withdraw" : "transfer";
+                    let sizeNeeded = targetTotal;
+                    if (maxSize > targetTotal) {
+                        numNeeded = Math.ceil(targetTotal / maxSize)
+                        sizeNeeded = Math.ceil(targetTotal/numNeeded);
+                    }
+                    let setup = new CreepSetup(Roles.lorry, {pattern  : [CARRY, MOVE], sizeLimit: sizeNeeded,})
+                    this.capital.barracks?.addToQueue(setup, this, {priority: ManagerPriority.Lorry.lorry, targetId: site.container?.id, state: state})
+                    /*
+                    let size = Math.min(targetTotal - currentSize, maxSize);
+                    let state: "withdraw" | "transfer" | undefined = site instanceof MiningSite ? "withdraw" : "transfer";
+                    let setup = new CreepSetup(Roles.lorry, {pattern  : [CARRY, MOVE], sizeLimit: size,})
+                    this.capital.barracks?.addToQueue(setup, this, {priority: ManagerPriority.Lorry.lorry, targetId: site.container?.id, state: state})
+                    */
+                }
+            } else {
+                //console.log("no container at site")
             }
 
         }

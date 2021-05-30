@@ -30,9 +30,6 @@ export class UpgradeSite extends Building {
         if (this.link) { //Just in case we accidentally call this when we have a link already
             return
         } else { //finds the position 2 away with most adjacent spots to make pathing easier
-            if (this.container) { //destroy container and rebuild
-                //this.container.destroy();
-            }
             let possiblePos = this.controller.pos.getAdjacentPositions(2)
             let finalPos = maxBy(possiblePos, r => r.getAdjacentPositions().length)
             finalPos!.createConstructionSite(type)

@@ -10,11 +10,16 @@ export class QueenManager extends Manager {
     queens: Creep[];
     queenSetup: CreepSetup;
     refillTowersBelow = 500;
+    targets: (StructureExtension | StructureSpawn | StructureTower)[]
+    towers: StructureTower[];
     constructor(barracks: Barracks,  prio = ManagerPriority.Core.queen) {
         super (barracks, "QueenManager_"+ barracks.coreSpawn.id, prio);
         this.barracks = barracks;
         this.queens = this.creepsByRole[Roles.queen];
         this.queenSetup = this.capital.storage ? Setups.queens.default : Setups.queens.early;
+        this.targets = _.filter(this.barracks.energyStructures, r => r.store.getFreeCapacity(RESOURCE_ENERGY)! > 0)
+        this.towers = _.filter(this.capital.towers, r => r.energy < r.energyCapacity);
+        this.targets = this.targets.concat(this.towers)
     }
 
     private handleQueen(queen: Creep) {
@@ -27,7 +32,7 @@ export class QueenManager extends Manager {
     }
 
     transferActions(queen: Creep) {
-        let target = queen.pos.findClosestByPath(_.filter(this.barracks.energyStructures, r => r.store.getFreeCapacity(RESOURCE_ENERGY)! > 0))
+        let target = queen.pos.findClosestByPath(this.targets)
         if(target) {
             queen.goTransfer(target)
         } else {

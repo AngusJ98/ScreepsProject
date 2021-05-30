@@ -45,9 +45,13 @@ export class UpgradeManager extends Manager {
         } else {
             if (this.upgradeSite.link && this.upgradeSite.link.energy > 0) {
 				upgrader.goWithdraw(this.upgradeSite.link);
+                return
 			} else if (this.upgradeSite.container && this.upgradeSite.container.energy > 0) {
 				upgrader.goWithdraw(this.upgradeSite.container);
-			} else {
+                return
+			} else if (this.upgradeSite.container) {
+                return
+            } else {
                 let drops = _.filter(this.room.droppedEnergy, r => r.amount > upgrader.store.getCapacity()/4)
                 let structs = _.filter(this.capital.room.storageUnits, r => r.store.energy > upgrader.store.getCapacity()/4)
                 let targets = _.merge(drops,structs)
@@ -56,15 +60,18 @@ export class UpgradeManager extends Manager {
                 if(target) {
                     upgrader.goWithdraw(target)
                 }
+                return
             }
         }
     }
 
 
     init(): void {
+
 		if (this.capital.level < 3 || !this.capital.storage) { // let workers upgrade early on until we have a storage
 			return;
 		}
+        console.log(this.capital.assets[RESOURCE_ENERGY])
         if (this.capital.assets[RESOURCE_ENERGY] > 100000 || this.controller.ticksToDowngrade < 500) {
             let setup = this.capital.level == 8 ? Setups.upgraders.rcl8 : Setups.upgraders.default
             if (this.capital.level == 8) {
@@ -79,6 +86,7 @@ export class UpgradeManager extends Manager {
 				} else if (extra > 500000) {
 					upgradePartNeeded *= 2;
 				}
+                console.log(upgradePartNeeded)
                 this.powerNeeded = upgradePartNeeded;
 
 				const upgradersNeeded = Math.ceil(upgradePartNeeded / upgradePowerEach );

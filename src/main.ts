@@ -1,11 +1,3 @@
-import { test3 } from "Creep/Creep_Actions";
-
-import { Manager } from "Manager";
-import { test2 } from "Room/Room_Find";
-
-import { test4 } from "RoomPosition";
-import { ErrorMapper } from "utils/ErrorMapper";
-import { Game, Memory } from "../test/unit/mock";
 import {Traveler} from "Traveler"
 import { Empire } from "Empire";
 
@@ -48,11 +40,39 @@ export function loop(): void {
   empire.build();
   empire.init();
   empire.run();
+  //@ts-ignore
+  if(Game.cpu.bucket == 10000) {
+    //@ts-ignore
+    Game.cpu.generatePixel();
+  }
+
+  for (let room in Game.rooms) {
+    defendRoom(room)
+  }
+}
+//@ts-nocheck
+function defendRoom(roomName:string) {
+  var hostiles = Game.rooms[roomName].find(FIND_HOSTILE_CREEPS);
+  var towers: StructureTower[] = Game.rooms[roomName].find(
+      FIND_MY_STRUCTURES, {filter: {structureType: STRUCTURE_TOWER}}) as StructureTower[];
+  if(hostiles.length > 0) {
+      var username = hostiles[0].owner.username;
+      Game.notify(`User ${username} spotted in room ${roomName}`);
+
+      towers.forEach(tower => tower.attack(hostiles[0]));
+  } else {
+      let healCreeps = _.filter(Game.rooms[roomName].find(FIND_MY_CREEPS), r => r.hits < r.hitsMax)
+      if (healCreeps.length > 0) {
+          towers.forEach(r => r.heal(healCreeps[0]))
+      }
+  }
 }
 
 Creep.prototype.travelTo = function(destination: RoomPosition|{pos: RoomPosition}, options?: TravelToOptions) {
   return Traveler.travelTo(this, destination, options);
 };
+
+
 
 // When compiling TS to JS and bundling with rollup, the line numbers and file names in error messages change
 // This utility uses source maps to get the line numbers and file names of the original, TS source code
