@@ -11,7 +11,7 @@ export abstract class Building {
     room: Room;
     pos: RoomPosition;
     abstract name: string;
-    abstract manager: Manager
+    abstract manager: Manager | undefined;
 
     constructor(capital: Capital, intstantiator: buildingInstantiator) {
         //console.log(JSON.stringify(intstantiator))

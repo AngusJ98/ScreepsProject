@@ -1,6 +1,7 @@
 //capitals are our claimed rooms. All managers will be assigned to a capital. This allows managers to spawn creeps
 //for other rooms to use and manager military code
 
+import { Artillery } from "Buildings/Artillery";
 import { Barracks } from "Buildings/Barracks";
 import { Building } from "Buildings/Building";
 import { LorryHQ } from "Buildings/LorryHQ";
@@ -54,6 +55,7 @@ export class Capital {
     barracks: Barracks | undefined; //Spawns grouped together
     upgradeSite: UpgradeSite | undefined;
     lorryHQ: LorryHQ | undefined;
+    artillery: Artillery | undefined;
 
     level: number;
     stage: number;
@@ -157,6 +159,10 @@ export class Capital {
             let site: MiningSite = new MiningSite(this, source)
             this.miningSites.push(site)
         }
+
+        if (this.towers[0]) {
+			this.artillery = new Artillery(this, this.towers[0]);
+		}
 
 
         this.upgradeSite = new UpgradeSite(this, this.controller)
