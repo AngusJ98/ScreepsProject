@@ -1,4 +1,5 @@
 import { Barracks } from "Buildings/Barracks";
+import { ExtractorSite } from "Buildings/ExtractorSite";
 import { LorryHQ } from "Buildings/LorryHQ";
 import { MiningSite } from "Buildings/MiningSite";
 import { UpgradeSite } from "Buildings/UpgradeSite";
@@ -22,7 +23,7 @@ export class LorryManager extends Manager{
     bunkerStorage: StructureStorage | StructureTerminal | StructureContainer
     setup: CreepSetup;
     powerPer: number;
-    sites: (MiningSite|UpgradeSite)[]
+    sites: (MiningSite|UpgradeSite|ExtractorSite)[]
 
     constructor(hq: LorryHQ, prio = ManagerPriority.Lorry.lorry) {
         super(hq, "LorryManager" + hq.storage.id, prio);
@@ -62,11 +63,11 @@ export class LorryManager extends Manager{
         }
     }
 
-    transporterSizePerSite(site: MiningSite | UpgradeSite) {
+    transporterSizePerSite(site: MiningSite | UpgradeSite | ExtractorSite) {
         if (site instanceof UpgradeSite) {
-            return Math.ceil(UPGRADE_CONTROLLER_POWER * site.manager.powerNeeded * 3 * PathFinder.search(this.lorryHQ.pos, site.pos).path.length / CARRY_CAPACITY);
+            return Math.ceil(UPGRADE_CONTROLLER_POWER * site.manager.powerNeeded * 2 * PathFinder.search(this.lorryHQ.pos, site.pos).cost / CARRY_CAPACITY);
         } else {
-            return Math.ceil(site.manager.energyPerTick * 3 * PathFinder.search(this.lorryHQ.pos, site.pos).path.length / CARRY_CAPACITY);
+            return Math.ceil(site.manager.energyPerTick * 2 * PathFinder.search(this.lorryHQ.pos, site.pos).cost / CARRY_CAPACITY);
         }
     }
 
@@ -74,10 +75,11 @@ export class LorryManager extends Manager{
         switch(lorry.memory.state!) {
             case "withdraw":
                 let target = Game.getObjectById(lorry.memory.targetId!) as StructureContainer | Resource;
-                if (lorry.store.getFreeCapacity() > 0) {
-                    lorry.goWithdraw(target);
+                let type: ResourceConstant = target instanceof StructureContainer? _.first(_.keys(target.store)) as ResourceConstant : RESOURCE_ENERGY;
+                if (target && lorry.store.getFreeCapacity() > 0) {
+                    lorry.goWithdraw(target, type);
                 } else if (target){
-                    lorry.goTransfer(this.bunkerStorage);
+                    lorry.goTransfer(this.bunkerStorage, type);
                 } else {
                     this.noTargetActions(lorry)
                 }
@@ -102,7 +104,7 @@ export class LorryManager extends Manager{
 
     noTargetActions(lorry: Creep) {
         if (lorry.store.getUsedCapacity() == 0) {
-            let drop = lorry.pos.findClosestByMultiRoomRange(this.room.droppedEnergy)
+            let drop = lorry.pos.findClosestByMultiRoomRange(this.room.allDrops)
             if (drop) {
                 lorry.goWithdraw(drop)
             } else {
@@ -116,9 +118,11 @@ export class LorryManager extends Manager{
 
     init(): void {
         for (let site of this.sites) {
-            if (site.container) {
+            if (site.container && site.room.hostiles.length == 0) {
+
                 let targetTotal = this.transporterSizePerSite(site)
-                let current = _.filter(this.lorrys, r => r.memory.targetId == site.container!.id)
+                console.log(site.container.id, " needs ", targetTotal)
+                let current = this.filterLife(_.filter(this.lorrys, r => r.memory.targetId == site.container!.id))
                 let currentSize = _.sum(current, r => r.getActiveBodyparts(CARRY))
                 let maxSize = this.powerPer
                 if (targetTotal > currentSize) {
@@ -129,6 +133,7 @@ export class LorryManager extends Manager{
                         numNeeded = Math.ceil(targetTotal / maxSize)
                         sizeNeeded = Math.ceil(targetTotal/numNeeded);
                     }
+                    console.log("Size Requested", sizeNeeded)
                     let setup = new CreepSetup(Roles.lorry, {pattern  : [CARRY, MOVE], sizeLimit: sizeNeeded,})
                     this.capital.barracks?.addToQueue(setup, this, {priority: ManagerPriority.Lorry.lorry, targetId: site.container?.id, state: state})
                     /*
@@ -142,6 +147,14 @@ export class LorryManager extends Manager{
                 //console.log("no container at site")
             }
 
+        }
+        let dropAmount = _.sum(this.room.droppedEnergy, r => r.amount)
+        if (dropAmount >= 200) {
+            let current = _.filter(this.lorrys, r => r.memory.targetId == undefined).length
+            if (current == 0) {
+                let setup = new CreepSetup(Roles.lorry, {pattern  : [CARRY, MOVE], sizeLimit: Math.floor(dropAmount/CARRY_CAPACITY/8)})
+                this.capital.barracks?.addToQueue(setup, this, {priority: ManagerPriority.Lorry.lorry, targetId: undefined, state: "withdraw"})
+            }
         }
 
 

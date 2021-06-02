@@ -4,8 +4,10 @@
 import { Artillery } from "Buildings/Artillery";
 import { Barracks } from "Buildings/Barracks";
 import { Building } from "Buildings/Building";
+import { ExtractorSite } from "Buildings/ExtractorSite";
 import { LorryHQ } from "Buildings/LorryHQ";
 import { MiningSite } from "Buildings/MiningSite";
+import { ReserveSite } from "Buildings/ReserveSite";
 import { UpgradeSite } from "Buildings/UpgradeSite";
 import { Roles } from "Creep_Setups/Setups";
 import { Empire } from "Empire";
@@ -52,6 +54,7 @@ export class Capital {
     //Buildings
     buildings: Building[]
     miningSites: MiningSite[] //self explanatory: Sites to mine from
+    reserveSites: ReserveSite[];
     barracks: Barracks | undefined; //Spawns grouped together
     upgradeSite: UpgradeSite | undefined;
     lorryHQ: LorryHQ | undefined;
@@ -71,15 +74,23 @@ export class Capital {
 
     assets: {[type: string]: number}
     empire: Empire
-    buildingsByContainer: {[id: string]: UpgradeSite | MiningSite}
+    buildingsByContainer: {[id: string]: UpgradeSite | MiningSite | ExtractorSite}
     constructor(room:Room, empire: Empire) {
         this.empire = empire;
         this.name = room.name
-
+        Memory.capitals[this.name] = {outposts: ["W59N4"]}
 
         this.capital = this
         this.room = room;
-        this.outposts = _.map(Memory.capitals.outposts, r => Game.rooms[r]) || [];
+        this.observer = this.room.observer;
+        let outpostNames = Memory.capitals[this.name].outposts
+        let invisRooms = _.filter(outpostNames, r => !Game.rooms[r])
+        if (invisRooms.length > 0 && this.observer) {
+            this.observer.observeRoom(invisRooms[0])
+        }
+
+
+        this.outposts = _.compact(_.map(outpostNames, r => Game.rooms[r]))
         this.allRooms = this.outposts.concat([this.room])
         this.roomNames = _.map(this.allRooms, r => r.name)
 
@@ -97,7 +108,7 @@ export class Capital {
         this.labs = this.room.labs
         this.powerSpawn = this.room.powerSpawn;
         this.nuker = this.room.nuker;
-		this.observer = this.room.observer;
+
         this.containers = this.room.containers
 
         this.ಠ_ಠ = 0
@@ -130,9 +141,11 @@ export class Capital {
         this.hostiles = _.flatten(_.map(this.allRooms, room => room.hostiles)); //hostile creeps in all rooms
 
         this.miningSites = [];
+        this.reserveSites = [];
         this.barracks = undefined;
         this.buildings = [];
         this.buildingsByContainer = {};
+
 
         this.managers = [];
         this.workManager = new WorkManager(this);
@@ -169,6 +182,12 @@ export class Capital {
 
         if (this.storage) {
             this.lorryHQ = new LorryHQ(this, this.storage)
+        }
+
+        for (let outpost of this.outposts) {
+            if (outpost.controller) {
+                this.reserveSites.push(new ReserveSite(this, outpost.controller))
+            }
         }
     }
 

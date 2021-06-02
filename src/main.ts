@@ -18,9 +18,11 @@ declare global {
     username: string;
     rooms: {[name:string]: RoomMemory}
     skippedRooms: Room[]
-    capitals: {
-      outposts: string[];
-    }
+    capitals: {[capitalName: string]: CapitalMemory}
+  }
+
+  interface CapitalMemory {
+    outposts: string[];
   }
 
   // Syntax for adding proprties to `global` (ex "global.log")

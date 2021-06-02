@@ -24,6 +24,8 @@ export class Empire {
     }
 
     prepareMemory() {
+
+
         Memory.username = "Aozin"
         Memory.myRooms = Memory.myRooms || [];
         Memory.skippedRooms = []; //Rooms that were skipped due to lack of cpu, not handled yet

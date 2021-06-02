@@ -2,6 +2,7 @@ import { bodyCost, CreepSetup } from "Creep_Setups/CreepSetup";
 import { Roles, Setups } from "Creep_Setups/Setups";
 import { Manager } from "Manager";
 import { CrisisManager } from "Managers/CrisisManager";
+import { DefenseManager } from "Managers/DefenseManager";
 import { QueenManager } from "Managers/QueenManager";
 import { Capital } from "Room/Capital";
 import { Building } from "./Building";
@@ -30,6 +31,7 @@ export class Barracks extends Building {
     name: string;
     manager: QueenManager;
     crisisManager?: CrisisManager; //used if capital is looking bad, or to start up a new capital
+    defenseManager: DefenseManager;
 
     private productionPriorities: number[]; // A list of priorities to check when spawning
 	private productionQueue: {[priority: number]: SpawnOrder[]}; // Prioritized queue of spawning orders
@@ -47,6 +49,7 @@ export class Barracks extends Building {
         this.productionPriorities = [];
 		this.productionQueue = {};
         this.manager = new QueenManager(this)
+        this.defenseManager = new DefenseManager(this)
 
         //Use a crisis manager if there is no queen and not enough energy to make one
         if (this.capital.room.energyAvailable + _.sum(this.capital.room.storageUnits, r => r.store.energy) < 2000 || this.capital.creepsByRole[Roles.queen].length == 0) {
@@ -104,6 +107,8 @@ export class Barracks extends Building {
             //console.log(JSON.stringify(this.productionQueue))
         } else {
             console.log("cannot spawn " + setup.role + " for " + manager + request.body)
+            console.log(request.body.length)
+            console.log(this.canSpawn(request.body))
         }
     }
 

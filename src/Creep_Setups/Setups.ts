@@ -169,6 +169,13 @@ export const Setups = {
 			sizeLimit: 5,
 		}),
 
-	}
+	},
+
+	guards: {
+		armored: new CreepSetup(Roles.guardMelee, {
+			pattern  : [TOUGH, ATTACK, ATTACK, ATTACK, MOVE, MOVE, MOVE, MOVE],
+			sizeLimit: Infinity,
+		}),
+	},
 
 }

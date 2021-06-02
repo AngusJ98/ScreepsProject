@@ -152,10 +152,10 @@ export class MiningManager extends Manager {
 
         if (this.constructionSite) {
             if (miner.store.energy >= Math.min(miner.carryCapacity, BUILD_POWER * miner.getActiveBodyparts(WORK))) {
-                miner.build(this.constructionSite);
+                miner.goBuild(this.constructionSite);
                 return;
             } else {
-                miner.harvest(this.site.source);
+                miner.goHarvest(this.site.source);
                 return;
             }
         }
@@ -188,7 +188,9 @@ export class MiningManager extends Manager {
     }
 
     init() {
-		this.spawnList(this.minersNeeded, this.setup);
+        if (this.room.hostiles.length == 0 || this.room == this.capital.room) {
+		    this.spawnList(this.minersNeeded, this.setup);
+        }
 	}
 
     run() {

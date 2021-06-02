@@ -21,7 +21,8 @@ export class WorkManager extends Manager {
         5       : 1e+5,
         6       : 5e+5,
         7       : 1e+6,
-        8       : 2e+7,
+        8       : 1e+6,
+        //8       : 2e+7,
     };
     hitsGoal: number;
     critical = 2500;
@@ -136,7 +137,7 @@ export class WorkManager extends Manager {
             let structs = _.filter(this.capital.room.storageUnits, r => r.store.energy >= worker.store.getCapacity())
             let targets = _.merge(drops,structs)
             //console.log(JSON.stringify(this.room.drops))
-            let target = worker.pos.findClosestByRange(targets);
+            let target = worker.pos.findClosestByMultiRoomRange(targets);
             if(target) {
                 worker.goWithdraw(target)
             }
@@ -157,12 +158,12 @@ export class WorkManager extends Manager {
             if ((this.capital.storage?.store.energy || 0) + _.sum(this.capital.containers, r => r.store.energy) >= this.fortifyThreshold) {
                 fortifyTicks = 0.2 * _.sum(this.fortifyTargets, r => Math.max(0, this.hitsGoal - r.hits)); //take a fraction of how many barriers need fortifying
             }
-            numWorkers = Math.ceil(2 * (5 * buildTicks + repairTicks + fortifyTicks) / currentParts * CREEP_LIFE_TIME)
-            //console.log(Math.ceil(this.capital.assets[RESOURCE_ENERGY] / 10000))
-            numWorkers = Math.min(numWorkers, MAX_WORKERS, Math.ceil(this.capital.assets[RESOURCE_ENERGY] / 10000))
+            numWorkers = Math.ceil(2 * (5 * buildTicks + repairTicks + fortifyTicks) / Math.ceil(currentParts * CREEP_LIFE_TIME)) || 0
+            //console.log(Math.ceil(this.capital.assets[RESOURCE_ENERGY] / 20000))
+            numWorkers = Math.min(numWorkers, MAX_WORKERS, Math.ceil(this.capital.assets[RESOURCE_ENERGY] / 20000))
         }
 
-        //console.log("Num workers wanted: " + numWorkers)
+        console.log("Num workers wanted: " + numWorkers)
         this.spawnList(numWorkers, this.setup)
     }
 

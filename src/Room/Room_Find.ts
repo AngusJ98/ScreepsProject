@@ -11,6 +11,7 @@ declare global {
 		flags: Flag[];
 		// Preprocessed structures
 		drops: { [resourceType: string]: Resource[] };
+		allDrops: Resource[];
 		droppedEnergy: Resource[];
 		droppedMinerals: Resource[];
 		droppedPower: Resource[];
@@ -85,13 +86,29 @@ Object.defineProperty(Room.prototype, 'my', {
 });
 
 Object.defineProperties(Room.prototype, {
-
+	hostiles: {
+		get() {
+			return this.find(FIND_HOSTILE_CREEPS)
+		}
+	},
+	hostileStructures: {
+		get() {
+			return this.find(FIND_HOSTILE_STRUCTURES)
+		}
+	},
 	drops: {
         get() {
-			let resources: Resource[] = this.find(FIND_DROPPED_RESOURCES)
+			let resources: Resource[] = this.allDrops
             return _.groupBy(resources, r => r.resourceType)
         }
     },
+
+	allDrops: {
+		get() {
+			return this.find(FIND_DROPPED_RESOURCES)
+		}
+	},
+
 	// Dropped resources that are eneryg
 	droppedEnergy: {
 		get() {

@@ -2,7 +2,7 @@ import { Manager } from "Manager";
 import { Capital } from "Room/Capital";
 
 export interface buildingInstantiator {
-    room: Room;
+    room?: Room;
     pos: RoomPosition;
 }
 

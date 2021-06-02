@@ -13,6 +13,8 @@ declare global {
         goDrop(target: RoomPosition, resource?: ResourceConstant): void;
         goSign(target: StructureController): void;
         goUpgrade(target: StructureController): void;
+        goReserve(target: StructureController): void;
+        goMelee(target: Creep | Structure): void;
     }
 }
 
@@ -24,6 +26,8 @@ const RANGES = {
 	TRANSFER: 1,
 	WITHDRAW: 1,
 	HARVEST : 1,
+    RESERVE : 1,
+    MELEE   : 1,
 	DROP    : 0,
 };
 
@@ -66,6 +70,7 @@ Creep.prototype.goWithdraw = function(target: Structure | Tombstone | Resource, 
     }
 }
 
+
 Creep.prototype.goHarvest = function(target: Source | Mineral | Deposit) {
     if (this.pos.inRangeTo(target.pos, RANGES.HARVEST)) {
         this.harvest(target)
@@ -93,6 +98,24 @@ Creep.prototype.goSign = function(target: StructureController) {
 Creep.prototype.goUpgrade = function(target: StructureController) {
     if (this.pos.inRangeTo(target.pos, RANGES.UPGRADE)) {
         this.upgradeController(target)
+    } else {
+        this.travelTo(target)
+    }
+}
+
+Creep.prototype.goReserve = function(target: StructureController) {
+    if(this.getActiveBodyparts(CLAIM) == 0) {
+        this.say("No claim body parts, fix now")
+    } else if (this.pos.inRangeTo(target.pos, RANGES.RESERVE)) {
+        this.reserveController(target)
+    } else {
+        this.travelTo(target)
+    }
+}
+
+Creep.prototype.goMelee = function(target: Creep | Structure) {
+    if (this.pos.inRangeTo(target.pos, RANGES.MELEE)) {
+        this.attack(target)
     } else {
         this.travelTo(target)
     }

@@ -5,7 +5,7 @@ import { Capital } from "Room/Capital";
 type MissionConstant = "Settle" | "Attack" | "Siege" | "Setup"
 
 interface FlagMemory {
-    capital: string;
+    capital: string | undefined;
     type: MissionConstant;
 }
 
@@ -23,13 +23,35 @@ export abstract class Mission {
         this.name = flag.name;
         this.empire = empire;
         this.pos = flag.pos;
-        this.room = flag.room ;
+        this.room = flag.room;
         this.capital = this.getCapital();
         this.empire.missions.push(this);
     }
 
-    getCapital(): Capital | undefined{
-        return //Leaving this todo as Empire needs rework
+    getCapital(filter?: (capital: Capital) => boolean): Capital | undefined{
+        if (this.memory.capital) {
+            return this.empire.capitals[this.memory.capital]
+        } else {
+            let nearestCapital = this.findClosestCapital(filter)
+            this.memory.capital = nearestCapital? nearestCapital.name : undefined
+            return nearestCapital
+        }
+    }
+
+    findClosestCapital(filter?: (capital: Capital) => boolean): Capital | undefined {
+        let nearestCapital: Capital | undefined;
+		let minDistance = Infinity;
+        for (let name in this.empire.capitals) {
+            let capital = this.empire.capitals[name]
+            if (!filter || filter(capital)) {
+                let length = PathFinder.search(this.pos, capital.pos).path.length
+                if (length < minDistance) {
+                    minDistance = length
+                    nearestCapital = capital
+                }
+            }
+        }
+        return nearestCapital
     }
 
     abstract init(): void;
