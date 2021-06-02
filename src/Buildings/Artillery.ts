@@ -49,6 +49,11 @@ export class Artillery extends Building {
             let target = maxBy(this.room.hostiles, r => this.towerDamageAtPos(r.pos))
             this.attack(target!)
 
+        } else {
+            let healableCreeps = this.room.find(FIND_MY_CREEPS, {filter: r => r.hits < r.hitsMax})
+            if (healableCreeps.length > 0) {
+                _.forEach(this.towers, r => r.heal(healableCreeps[0]))
+            }
         }
     }
 
