@@ -31,7 +31,8 @@ export class ExtractorManager extends Manager {
         this.extractor = this.site.extractor
         this.constructionSite = _.first(this.pos.findInRange(FIND_MY_CONSTRUCTION_SITES, 2));
 
-        this.energyPerTick = _.sum(this.miners, r => r.getActiveBodyparts(WORK) * 2)
+        this.energyPerTick = Math.max(_.sum(this.miners, r => r.getActiveBodyparts(WORK) * 2), Math.ceil((this.container?.store.getUsedCapacity() || 0) / 500))
+        console.log("ene",this.energyPerTick)
 
 
         if (this.container) {
@@ -52,7 +53,7 @@ export class ExtractorManager extends Manager {
     }
 
     private addContainer(): void {
-        if (!this.container && !this.constructionSite) {
+        if (!this.container && !this.constructionSite && this.capital.level >= 6) {
             let res = this.calculateContainerPos().createConstructionSite(STRUCTURE_CONTAINER)
 
             if (res != OK) {
@@ -62,7 +63,8 @@ export class ExtractorManager extends Manager {
     }
 
     private addExtractor(): void {
-        if (!this.container && !this.constructionSite) {
+        console.log("Checking for extractor position")
+        if (!this.extractor && !this.constructionSite) {
             let res = this.pos.createConstructionSite(STRUCTURE_EXTRACTOR)
 
             if (res != OK) {
@@ -72,10 +74,21 @@ export class ExtractorManager extends Manager {
     }
 
     private handleMiner(miner: Creep) {
-        if (this.harvestPos && this.container) {
-            miner.goHarvest(this.mineral)
+        if (this.mineral.mineralAmount > 0) {
+            if (this.harvestPos && this.container && this.container.store.getFreeCapacity() > 100) {
+                miner.goHarvest(this.mineral)
+            } else {
+                miner.travelTo(this.mineral.pos)
+            }
         } else {
-            miner.travelTo(this.mineral.pos)
+            let spawn = miner.pos.findClosestByMultiRoomRange(this.capital.spawns);
+            if (spawn && miner.pos.getMultiRoomRangeTo(spawn.pos) > 1) {
+                miner.travelTo(spawn)
+            } else if (spawn) {
+                spawn.recycleCreep(miner)
+            } else {
+                miner.suicide()
+            }
         }
     }
 

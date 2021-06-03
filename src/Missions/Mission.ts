@@ -5,28 +5,44 @@ import { Capital } from "Room/Capital";
 type MissionConstant = "Settle" | "Attack" | "Siege" | "Setup"
 
 interface FlagMemory {
-    capital: string | undefined;
+    capital?: string;
+    roomName?: string;
     type: MissionConstant;
 }
 
 export abstract class Mission {
     memory: FlagMemory;
     capital: Capital | undefined;
+    flag: Flag;
     pos: RoomPosition;
-    room: Room | undefined;
+    room: Room;
     name: string;
     manager: Manager | undefined;
     empire: Empire;
+    filter: (capital: Capital) => boolean;
 
     constructor(flag: Flag, empire: Empire) {
+        this.filter = function(capital: Capital): boolean {
+            if (capital.barracks && capital.level > 4) {
+                return true
+            } else {
+                return false
+            }
+        }
         this.memory = flag.memory as FlagMemory;
-        this.name = flag.name;
+        this.flag = flag
+        this.name = flag.name + flag.room!.name;
         this.empire = empire;
         this.pos = flag.pos;
-        this.room = flag.room;
+        this.room = flag.room!;
+        if (!this.memory.roomName) {
+            this.memory.roomName = this.room.name
+        }
         this.capital = this.getCapital();
-        this.empire.missions.push(this);
+        //this.capital?.missions.push(this);
     }
+
+
 
     getCapital(filter?: (capital: Capital) => boolean): Capital | undefined{
         if (this.memory.capital) {

@@ -85,6 +85,7 @@ export class Empire {
         test3()
         test4()
         _.forEach(this.capitals, r => r.init())
+
     }
 
     run() {

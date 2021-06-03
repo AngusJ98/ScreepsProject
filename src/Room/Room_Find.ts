@@ -42,6 +42,8 @@ declare global {
 		powerSpawn: StructurePowerSpawn;
 		nuker: StructureNuker;
 		observer: StructureObserver;
+		tombstones: Tombstone[]
+		minerals: Mineral[]
 
 		getStructures(structureType: string): Structure[];
 
@@ -102,6 +104,17 @@ Object.defineProperties(Room.prototype, {
             return _.groupBy(resources, r => r.resourceType)
         }
     },
+	minerals: {
+		get() {
+			return this.find(FIND_MINERALS)
+		}
+	},
+
+	tombstones: {
+		get() {
+			return this.find(FIND_TOMBSTONES)
+		}
+	},
 
 	allDrops: {
 		get() {

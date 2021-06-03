@@ -18,7 +18,7 @@ export class UpgradeManager extends Manager {
         this.upgraders = this.creepsByRole[Roles.upgrader]
         this.upgradeSite = upgradeSite
         this.room = upgradeSite.room
-        this.powerNeeded = 0;
+        this.powerNeeded = _.sum(this.upgraders, r => r.getActiveBodyparts(WORK));
 
     }
 
@@ -76,6 +76,7 @@ export class UpgradeManager extends Manager {
             let setup = this.capital.level == 8 ? Setups.upgraders.rcl8 : Setups.upgraders.default
             if (this.capital.level == 8) {
 				this.spawnList(1, setup);
+                this.powerNeeded = 15;
 			} else {
                 let upgradePowerEach = setup.getBodyPotential(WORK, this.capital);
                 let extra = Math.max(this.capital.assets[RESOURCE_ENERGY] - 80000, 0) // how much energy we have spare. 80k is cutoff point TODO add to config

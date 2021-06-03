@@ -10,6 +10,7 @@ export class WorkManager extends Manager {
     setup: CreepSetup;
     room: Room;
     repairTargets: Structure[];
+    deconstructTargets: Structure[];
     fortifyTargets: (StructureWall | StructureRampart)[];
     criticalTargets: (StructureWall | StructureRampart)[];
     constructionSites: ConstructionSite[];
@@ -21,8 +22,8 @@ export class WorkManager extends Manager {
         5       : 1e+5,
         6       : 5e+5,
         7       : 1e+6,
-        8       : 1e+6,
-        //8       : 2e+7,
+        //8       : 1e+6,
+        8       : 2e+7,
     };
     hitsGoal: number;
     critical = 2500;
@@ -37,9 +38,20 @@ export class WorkManager extends Manager {
         this.hitsGoal = this.barrierHits[this.capital.level]
         this.fortifyTargets = _.filter(this.room.barriers, r => r.hits < this.hitsGoal);
         this.criticalTargets = _.filter(this.fortifyTargets, r => r.hits < this.critical);
-        this.repairTargets = _.filter(_.compact(this.capital.repairables), r => r.hits < r.hitsMax);
+        this.deconstructTargets = _.compact(_.map(["60b917185571fb2d25c8b16d", "5d8a144874b4f975f63335b1"], r => Game.getObjectById(r))) as Structure[]
+        console.log(this.deconstructTargets.length, " buildings to deconstruct")
+        this.repairTargets = _.filter(_.compact(this.capital.repairables), r => r.hits < 0.8 * r.hitsMax);
         _.forEach(this.capital.miningSites, r => _.remove(this.repairTargets, t => r.container && t.id == r.container.id))
         this.constructionSites = this.capital.constructionSites;
+    }
+
+    private deconstructActions(worker: Creep): boolean {
+        let target = worker.pos.findClosestByMultiRoomRange(this.deconstructTargets)
+        if (target) {
+            worker.goDeconstruct(target);
+            return true;
+        }
+        return false;
     }
 
     private buildActions(worker: Creep): boolean {
@@ -99,6 +111,13 @@ export class WorkManager extends Manager {
                 }
             }
 
+            if (this.deconstructTargets.length > 0) {
+				if (this.deconstructActions(worker)) {
+                    worker.say("Deconstructing!")
+                    return;
+                }
+			}
+
             if (this.repairTargets.length > 0) {
 				if (this.repairActions(worker)) {
                     worker.say("Repairing!")
@@ -133,6 +152,12 @@ export class WorkManager extends Manager {
             }
             worker.say("BORED!")
         } else {
+            if (this.deconstructTargets.length > 0) {
+				if (this.deconstructActions(worker)) {
+                    worker.say("Deconstructing!")
+                    return;
+                }
+			}
             let drops = _.filter(this.room.droppedEnergy, r => r.amount >= worker.store.getCapacity())
             let structs = _.filter(this.capital.room.storageUnits, r => r.store.energy >= worker.store.getCapacity())
             let targets = _.merge(drops,structs)
@@ -149,7 +174,7 @@ export class WorkManager extends Manager {
         let numWorkers = 0;
         if (this.capital.stage == CapitalSize.Town) {
             let MAX_WORKERS = 10;
-            numWorkers = Math.min(Math.ceil(this.capital.assets[RESOURCE_ENERGY] / 3000), MAX_WORKERS)
+            numWorkers = Math.min(Math.ceil(this.capital.assets[RESOURCE_ENERGY] / 3000), MAX_WORKERS) || 0
         } else {
             let MAX_WORKERS = 5
             let repairTicks = _.sum(this.repairTargets, r => r.hitsMax - r.hits) / REPAIR_POWER;
@@ -159,7 +184,7 @@ export class WorkManager extends Manager {
                 fortifyTicks = 0.2 * _.sum(this.fortifyTargets, r => Math.max(0, this.hitsGoal - r.hits)); //take a fraction of how many barriers need fortifying
             }
             numWorkers = Math.ceil(2 * (5 * buildTicks + repairTicks + fortifyTicks) / Math.ceil(currentParts * CREEP_LIFE_TIME)) || 0
-            //console.log(Math.ceil(this.capital.assets[RESOURCE_ENERGY] / 20000))
+            console.log("Num: ", numWorkers)
             numWorkers = Math.min(numWorkers, MAX_WORKERS, Math.ceil(this.capital.assets[RESOURCE_ENERGY] / 20000))
         }
 

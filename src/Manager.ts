@@ -6,7 +6,7 @@ import { Capital } from "Room/Capital";
 interface IManagerInitialiser {
 	room: Room;
 	pos: RoomPosition;
-	capital: Capital;
+	capital?: Capital;
 }
 
 
@@ -23,7 +23,7 @@ export abstract class Manager {
         //info from initialiser
         this.name = name
         this.room = initialiser.room
-        this.capital = initialiser.capital
+        this.capital = initialiser.capital!
         this.priority = priority
         this.pos = initialiser.pos
 

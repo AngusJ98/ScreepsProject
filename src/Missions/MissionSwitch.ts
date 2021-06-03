@@ -1,5 +1,7 @@
 import { Empire } from "Empire";
 import { Mission } from "./Mission";
+import { SettleMission } from "./SettleMission";
+import { SetupMission } from "./SetupMission";
 
 export function createMission(flag: Flag, empire: Empire): Mission | undefined {
     switch (flag.color) {
@@ -7,9 +9,9 @@ export function createMission(flag: Flag, empire: Empire): Mission | undefined {
         case COLOR_GREEN:
             switch(flag.secondaryColor) {
                 case COLOR_GREEN:
-                    //return new SettleMission(flag, empire);
-                case COLOR_BLUE:
-                    //return new SetupMission(flag, empire);
+                    return new SettleMission(flag, empire);
+                case COLOR_RED:
+                    return new SetupMission(flag, empire);
 
             }
             break

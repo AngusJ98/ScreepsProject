@@ -13,6 +13,7 @@ import { Roles } from "Creep_Setups/Setups";
 import { Empire } from "Empire";
 import { Manager } from "Manager";
 import { WorkManager } from "Managers/WorkManager";
+import { Mission } from "Missions/Mission";
 
 import * as I from "Room/Room_Find"
 
@@ -46,6 +47,7 @@ export class Capital {
     nuker: StructureNuker | undefined;
     observer: StructureObserver | undefined;
     sources: Source[];
+    minerals: Mineral[];
     //flags: Flag[];
     constructionSites: ConstructionSite[];
     repairables: Structure[];
@@ -55,6 +57,7 @@ export class Capital {
     buildings: Building[]
     miningSites: MiningSite[] //self explanatory: Sites to mine from
     reserveSites: ReserveSite[];
+    extractorSites: ExtractorSite[];
     barracks: Barracks | undefined; //Spawns grouped together
     upgradeSite: UpgradeSite | undefined;
     lorryHQ: LorryHQ | undefined;
@@ -70,25 +73,31 @@ export class Capital {
     hostiles: Creep[]
 
     managers: Manager[];
-    workManager: WorkManager;
+    workManager: WorkManager | undefined;
+
+
 
     assets: {[type: string]: number}
     empire: Empire
     buildingsByContainer: {[id: string]: UpgradeSite | MiningSite | ExtractorSite}
+    missions: Mission[];
     constructor(room:Room, empire: Empire) {
         this.empire = empire;
         this.name = room.name
-        Memory.capitals[this.name] = {outposts: ["W59N4"]}
-
+        if (!Memory.capitals[this.name]) {
+            Memory.capitals[this.name] = {outposts: []}
+        }
         this.capital = this
         this.room = room;
         this.observer = this.room.observer;
         let outpostNames = Memory.capitals[this.name].outposts
-        let invisRooms = _.filter(outpostNames, r => !Game.rooms[r])
+
+
+
+        let invisRooms = _.filter(outpostNames, r => !Game.rooms[r]).concat("W58N7")
         if (invisRooms.length > 0 && this.observer) {
             this.observer.observeRoom(invisRooms[0])
         }
-
 
         this.outposts = _.compact(_.map(outpostNames, r => Game.rooms[r]))
         this.allRooms = this.outposts.concat([this.room])
@@ -127,6 +136,7 @@ export class Capital {
         }
 
         this.sources = _.compact(_.flatten(_.map(this.allRooms, room => room.sources))); //all sources, including those in outposts
+        this.minerals = this.room.minerals//_.compact(_.flatten(_.map(this.allRooms, room => room.minerals)));
 		this.constructionSites = _.flatten(_.map(this.allRooms, room => room.constructionSites)); //all construction sites
 		this.repairables = _.flatten(_.map(this.allRooms, room => room.repairables)); // all objects needing repair
 
@@ -142,17 +152,21 @@ export class Capital {
 
         this.miningSites = [];
         this.reserveSites = [];
+        this.extractorSites = [];
         this.barracks = undefined;
         this.buildings = [];
         this.buildingsByContainer = {};
 
 
         this.managers = [];
-        this.workManager = new WorkManager(this);
+        this.missions = []
+
 
         this.assets = this.getAssets();
 
         this.createBuildings()
+        this.workManager = this.barracks? new WorkManager(this) : undefined;
+
     }
 
 
@@ -176,6 +190,11 @@ export class Capital {
         if (this.towers[0]) {
 			this.artillery = new Artillery(this, this.towers[0]);
 		}
+
+        for (let mineral of this.minerals) {
+            this.extractorSites.push(new ExtractorSite(this, mineral))
+
+        }
 
 
         this.upgradeSite = new UpgradeSite(this, this.controller)
@@ -215,11 +234,14 @@ export class Capital {
         _.forEach(this.buildings, r => r.init())
         //_.forEach(this.managers, r => console.log(r.name))
         //_.forEach(this.buildings, r => console.log(r.name))
+        _.forEach(this.missions, r => r.init())
         _.forEach(this.managers, r => r.init())
     }
 
     run(): void {
+        _.forEach(this.missions, r => console.log(r.name))
         _.forEach(this.managers, r => r.run())
+        _.forEach(this.missions, r => r.run())
         _.forEach(this.buildings, r => r.run())
 
     }

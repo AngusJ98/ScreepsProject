@@ -28,7 +28,7 @@ export class DefenseManager extends Manager {
             } else if (spawn) {
                 spawn.recycleCreep(guard)
             } else {
-                guard.suicide
+                guard.suicide()
             }
 
         }

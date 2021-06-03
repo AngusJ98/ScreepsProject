@@ -7,6 +7,7 @@ declare global {
 
         goBuild(target: ConstructionSite): void;
         goRepair(target: Structure): void;
+        goDeconstruct(target: Structure): void;
         goTransfer(target: Creep | Structure, resource?: ResourceConstant): void;
         goWithdraw(target: Structure | Tombstone | Resource, resource?: ResourceConstant): void;
         goHarvest(target: Source | Mineral | Deposit): void;
@@ -14,6 +15,7 @@ declare global {
         goSign(target: StructureController): void;
         goUpgrade(target: StructureController): void;
         goReserve(target: StructureController): void;
+        goClaim(target: StructureController): void;
         goMelee(target: Creep | Structure): void;
     }
 }
@@ -22,11 +24,13 @@ const RANGES = {
 	BUILD   : 3,
 	REPAIR  : 3,
     UPGRADE : 3,
+    DECONSTRUCT: 1,
     SIGN    : 1,
 	TRANSFER: 1,
 	WITHDRAW: 1,
 	HARVEST : 1,
     RESERVE : 1,
+    CLAIM   : 1,
     MELEE   : 1,
 	DROP    : 0,
 };
@@ -43,6 +47,14 @@ Creep.prototype.goBuild = function(target: ConstructionSite) {
     }
 }
 
+Creep.prototype.goDeconstruct = function(target: Structure) {
+    if (this.pos.inRangeTo(target.pos, RANGES.DECONSTRUCT)) {
+        this.dismantle(target)
+    } else {
+        this.travelTo(target)
+    }
+}
+
 Creep.prototype.goRepair = function(target: Structure) {
     if (this.pos.inRangeTo(target.pos, RANGES.REPAIR)) {
         this.repair(target)
@@ -50,9 +62,9 @@ Creep.prototype.goRepair = function(target: Structure) {
         this.travelTo(target)
     }
 }
-Creep.prototype.goTransfer = function(target: Creep | Structure, resource: ResourceConstant = RESOURCE_ENERGY) {
+Creep.prototype.goTransfer = function(target: Creep | Structure) {
     if (this.pos.inRangeTo(target.pos, RANGES.TRANSFER)) {
-        this.transfer(target, resource)
+        _.forEach(_.keys(this.store) as ResourceConstant[], r => this.transfer(target, r))
     } else {
         this.travelTo(target)
     }
@@ -108,6 +120,16 @@ Creep.prototype.goReserve = function(target: StructureController) {
         this.say("No claim body parts, fix now")
     } else if (this.pos.inRangeTo(target.pos, RANGES.RESERVE)) {
         this.reserveController(target)
+    } else {
+        this.travelTo(target)
+    }
+}
+
+Creep.prototype.goClaim = function(target: StructureController) {
+    if(this.getActiveBodyparts(CLAIM) == 0) {
+        this.say("No claim body parts, fix now")
+    } else if (this.pos.inRangeTo(target.pos, RANGES.CLAIM)) {
+        this.claimController(target)
     } else {
         this.travelTo(target)
     }
