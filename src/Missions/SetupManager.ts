@@ -5,12 +5,14 @@ import { ManagerPriority } from "Managers/ManagerPriority";
 import { config } from "config";
 import { SettleMission } from "./SettleMission";
 import { Capital } from "Room/Capital";
+import { SetupMission } from "./SetupMission";
 
 export class SetupManager extends Manager {
 
     pioneers: Creep[];
     setup: CreepSetup;
     room: Room;
+    mission: SetupMission;
     repairTargets: Structure[];
     constructionSites: ConstructionSite[];
     deconstructTargets: Structure[];
@@ -34,6 +36,7 @@ export class SetupManager extends Manager {
 
     constructor(mission: SettleMission, prio = ManagerPriority.Colonization.pioneer) {
         super(mission.capital!, "SetupManager_" + mission.name, prio)
+        this.mission = mission
         this.pioneers = this.creepsByRole[Roles.colonist] || []
         this.setup = Setups.colonist
         this.room = mission.room
@@ -48,8 +51,14 @@ export class SetupManager extends Manager {
 
 
     private handlePioneer(pioneer: Creep) {
-        let source = pioneer.pos.findClosestByMultiRoomRange(_.filter(this.room.sources, r => r.energy > 0))
-        let distance = pioneer.pos.getMultiRoomRangeTo(source!.pos)
+        if (pioneer.room != this.mission.flag.room) {
+            pioneer.travelTo(this.mission.flag)
+
+            return
+        }
+
+        let source = pioneer.pos.findClosestByPath(_.filter(this.room.sources, r => r.energy > 0))
+        let distance =source ? pioneer.pos.getMultiRoomRangeTo(source!.pos) : Infinity
         if (this.deconstructTargets.length > 0) {
             if (this.deconstructActions(pioneer)) {
                 pioneer.say("Deconstructing!")
@@ -62,12 +71,14 @@ export class SetupManager extends Manager {
         let targets = _.merge(drops,structs)
         //console.log(JSON.stringify(this.room.drops))
         let target = pioneer.pos.findClosestByMultiRoomRange(targets);
-        if(target) {
+        if(target && pioneer.store.getUsedCapacity() == 0) {
             pioneer.goWithdraw(target)
         } else {
             if (distance <= 1 && pioneer.store.getFreeCapacity() > 0) {
+                pioneer.say("I mine")
                 pioneer.goHarvest(source!)
             } else if (pioneer.store.getUsedCapacity() == 0) {
+                pioneer.say("I go")
                 pioneer.goHarvest(source!)
             } else {
                 this.workActions(pioneer)

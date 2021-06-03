@@ -73,7 +73,7 @@ export class WorkManager extends Manager {
     }
 
     private fortifyActions(worker: Creep, targets: (StructureWall | StructureRampart)[]): boolean {
-        if (targets.length == 0) {
+        if (targets.length == 0 || this.capital.level < 4) {
             return false
         }
         let lowTargets: (StructureWall | StructureRampart)[];
@@ -174,7 +174,7 @@ export class WorkManager extends Manager {
         let numWorkers = 0;
         if (this.capital.stage == CapitalSize.Town) {
             let MAX_WORKERS = 10;
-            numWorkers = Math.min(Math.ceil(this.capital.assets[RESOURCE_ENERGY] / 3000), MAX_WORKERS) || 0
+            numWorkers = Math.max(Math.min(Math.ceil(this.capital.assets[RESOURCE_ENERGY] / 2000), MAX_WORKERS) || 0, 4)
         } else {
             let MAX_WORKERS = 5
             let repairTicks = _.sum(this.repairTargets, r => r.hitsMax - r.hits) / REPAIR_POWER;

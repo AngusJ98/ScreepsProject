@@ -221,8 +221,7 @@ Object.defineProperties(Room.prototype, {
 				let repairables: Structure[] = [];
 				for (let structureType in this.structures) {
 					if (structureType != STRUCTURE_WALL &&
-						structureType != STRUCTURE_RAMPART &&
-						structureType != STRUCTURE_ROAD) {
+						structureType != STRUCTURE_RAMPART) {
 						repairables = repairables.concat(this.structures[structureType]);
 					}
 				}
