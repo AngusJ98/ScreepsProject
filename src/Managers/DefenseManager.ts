@@ -21,10 +21,21 @@ export class DefenseManager extends Manager {
         let target = guard.pos.findClosestByMultiRoomRange(this.targets)
         if(target) {
             guard.goMelee(target)
+        } else {
+            let spawn = guard.pos.findClosestByMultiRoomRange(this.capital.spawns);
+            if (spawn && guard.pos.getMultiRoomRangeTo(spawn.pos) > 1) {
+                guard.travelTo(spawn)
+            } else if (spawn) {
+                spawn.recycleCreep(guard)
+            } else {
+                guard.suicide
+            }
+
         }
     }
 
     init(): void {
+        console.log("HOSTILES: ", this.needed)
         this.spawnList(this.needed, this.setup)
     }
 
