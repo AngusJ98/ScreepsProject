@@ -23,9 +23,7 @@ export class SetupMission extends Mission {
     }
 
     init(): void {
-        if (this.room.spawns.length >= 1 && this.controller!.level >= 3) {
-            this.flag.remove()
-        }
+
     }
 
     run(): void {

@@ -187,6 +187,12 @@ export class SetupManager extends Manager {
     }
 
     init() {
+
+        if (this.room.spawns.length >= 1 && this.mission.controller!.level >= 2 && this.mission.empire.capitals[this.mission.room.name].barracks) {
+            _.forEach(this.pioneers, r => r.reassign(Roles.worker, this.mission.empire.capitals[this.mission.room.name].workManager!))
+            _.forEach(this.pioneers, r => r.memory.capital = this.mission.room.name)
+            this.mission.flag.remove()
+        }
         console.log(this.name, "REQUESTING SETUP CREEPS FROM ", this.capital.name, "current: ", this.pioneers.length)
         this.spawnList(2, this.setup)
     }

@@ -173,8 +173,8 @@ export class WorkManager extends Manager {
         let currentParts = this.setup.getBodyPotential(WORK, this.capital);
         let numWorkers = 0;
         if (this.capital.stage == CapitalSize.Town) {
-            let MAX_WORKERS = 10;
-            numWorkers = Math.max(Math.min(Math.ceil(this.capital.assets[RESOURCE_ENERGY] / 2000), MAX_WORKERS) || 0, 4)
+            let MAX_WORKERS = 5;
+            numWorkers = Math.max(Math.ceil(this.capital.assets[RESOURCE_ENERGY] / 2000) || 0, MAX_WORKERS)
         } else {
             let MAX_WORKERS = 5
             let repairTicks = _.sum(this.repairTargets, r => r.hitsMax - r.hits) / REPAIR_POWER;

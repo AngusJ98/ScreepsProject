@@ -18,7 +18,7 @@ export class UpgradeManager extends Manager {
         this.upgraders = this.creepsByRole[Roles.upgrader]
         this.upgradeSite = upgradeSite
         this.room = upgradeSite.room
-        this.powerNeeded = _.sum(this.upgraders, r => r.getActiveBodyparts(WORK));
+        this.powerNeeded = this.upgraders && this.upgraders.length > 0? this.upgraders[0].getActiveBodyparts(WORK) : 0;
 
     }
 
