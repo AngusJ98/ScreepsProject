@@ -1,3 +1,4 @@
+/* eslint-disable prefer-const */
 import { CreepSetup } from "Creep_Setups/CreepSetup";
 import { Roles, Setups } from "Creep_Setups/Setups";
 import { Manager } from "Manager";
@@ -28,7 +29,7 @@ export class WorkManager extends Manager {
     hitsGoal: number;
     critical = 2500;
     tolerance = 100000;
-    fortifyThreshold = 500000;
+    fortifyThreshold = 300000;
 
     constructor(capital: Capital, prio = ManagerPriority.Capital.work) {
         super(capital, "WorkManager_" + capital.name, prio)
@@ -181,14 +182,15 @@ export class WorkManager extends Manager {
             let buildTicks = _.sum(this.constructionSites, r => (r.progressTotal - r.progress) / BUILD_POWER)
             let fortifyTicks = 0;
             if ((this.capital.storage?.store.energy || 0) + _.sum(this.capital.containers, r => r.store.energy) >= this.fortifyThreshold) {
-                fortifyTicks = 0.2 * _.sum(this.fortifyTargets, r => Math.max(0, this.hitsGoal - r.hits)); //take a fraction of how many barriers need fortifying
+                fortifyTicks = _.sum(this.fortifyTargets, r => Math.max(0, this.hitsGoal - r.hits));
             }
-            numWorkers = Math.ceil(2 * (5 * buildTicks + repairTicks + fortifyTicks) / Math.ceil(currentParts * CREEP_LIFE_TIME)) || 0
+            console.log("build: ", buildTicks, " repair: ", repairTicks, " fort: ", fortifyTicks)
+            numWorkers = Math.ceil(2 * (5 * buildTicks + repairTicks + fortifyTicks) / Math.ceil(currentParts * CREEP_LIFE_TIME))
             console.log("Num: ", numWorkers)
             numWorkers = Math.min(numWorkers, MAX_WORKERS, Math.ceil(this.capital.assets[RESOURCE_ENERGY] / 20000))
         }
 
-        console.log("Num workers wanted: " + numWorkers)
+        console.log(this.room.name, "Num workers wanted: ", numWorkers)
         this.spawnList(numWorkers, this.setup)
     }
 

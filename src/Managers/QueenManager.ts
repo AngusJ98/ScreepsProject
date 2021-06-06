@@ -24,15 +24,17 @@ export class QueenManager extends Manager {
 
     private handleQueen(queen: Creep) {
         if (queen.store.energy > 0) {
+            queen.say("T")
             this.transferActions(queen)
         } else {
+            queen.say("W")
             this.withdrawActions(queen)
         }
 
     }
 
     transferActions(queen: Creep) {
-        let target = queen.pos.findClosestByPath(this.targets)
+        const target = queen.pos.findClosestByPath(this.targets)
         if(target) {
             queen.goTransfer(target)
         } else {
@@ -41,19 +43,22 @@ export class QueenManager extends Manager {
     }
 
     withdrawActions(queen: Creep) {
-        let drops = _.filter(this.room.droppedEnergy, r => r.amount >= queen.store.getCapacity()/4)
-        let structs = _.filter(_.compact([this.capital.storage, this.capital.terminal]), r => r!.energy > 0)
-        let tombs = _.filter(this.capital.room.tombstones, r => r.store.energy > queen.store.getCapacity()/4)
-        let targets = _.merge(drops,structs,tombs)
+        const drops = _.filter(this.room.droppedEnergy, r => r.amount >= queen.store.getCapacity()/2)
+        const structs = _.filter(_.compact([this.capital.storage, this.capital.terminal, ...this.capital.containers]), r => r?.store.energy || 0 >= queen.store.getCapacity()/2)
+        const tombs = _.filter(this.capital.room.tombstones, r => r.store.energy > queen.store.getCapacity()/4)
+        const targets = _.merge(drops,structs,tombs)
         //console.log(JSON.stringify(this.room.drops))
-        let target = queen.pos.findClosestByRange(targets);
+        const target = queen.pos.findClosestByRange(targets);
+        console.log(target?.id)
         if(target) {
             queen.goWithdraw(target)
+        } else {
+            queen.say("No target")
         }
     }
 
     init(): void {
-        let pre = this.barracks.spawns.length <= 1 ? 100 : 50;
+        const pre = this.barracks.spawns.length <= 1 ? 100 : 50;
         this.spawnList(1, this.queenSetup, {prespawn: pre})
         if (this.queens && this.queens.length == 1 && this.queens[0].body.length < 5) {
             this.spawnList(2, this.queenSetup, {prespawn: pre})

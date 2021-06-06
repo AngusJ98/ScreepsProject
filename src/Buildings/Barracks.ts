@@ -72,8 +72,8 @@ export class Barracks extends Building {
     };
 
     private createSpawnOrder(setup: CreepSetup, manager: Manager, opts: SpawnRequestOptions): SpawnOrder {
-        let body: BodyPartConstant[] = setup.generateBody(this.room.energyCapacityAvailable)
-        let memory: CreepMemory = {
+        const body: BodyPartConstant[] = setup.generateBody(this.room.energyCapacityAvailable)
+        const memory: CreepMemory = {
             capital: manager.capital.name,
             manager: manager.name,
             role: setup.role,
@@ -85,19 +85,19 @@ export class Barracks extends Building {
             targetId: opts.targetId,
             state: opts.state,
         }
-        let name = this.generateCreepName(setup.role)
-        let order: SpawnOrder = {
-            name: name,
-            body: body,
-            memory: memory,
+        const name = this.generateCreepName(setup.role)
+        const order: SpawnOrder = {
+            name,
+            body,
+            memory,
             options: opts
         }
         return order;
     }
 
     addToQueue(setup: CreepSetup, manager: Manager, opts: SpawnRequestOptions): void {
-        let request = this.createSpawnOrder(setup, manager, opts)
-        let prio = request.options.priority!
+        const request = this.createSpawnOrder(setup, manager, opts)
+        const prio = request.options.priority!
         if (this.canSpawn(request.body) && request.body.length > 0) {
             if (!this.productionQueue[prio]) {
                 this.productionQueue[prio] = []
@@ -117,11 +117,11 @@ export class Barracks extends Building {
     }
 
     private spawnHighestPriorityCreep(): number | undefined {
-		let sortedKeys = _.sortBy(this.productionPriorities); //Sort prio list
-		for (let prio of sortedKeys) {
-            let nextOrder = this.productionQueue[prio].shift();
+		const sortedKeys = _.sortBy(this.productionPriorities); //Sort prio list
+		for (const prio of sortedKeys) {
+            const nextOrder = this.productionQueue[prio].shift();
             if (nextOrder) {
-                let res = this.spawnCreep(nextOrder)
+                const res = this.spawnCreep(nextOrder)
                 if (res == OK || res == ERR_BUSY) {
                     return res
                 } else {
@@ -136,13 +136,13 @@ export class Barracks extends Building {
     }
 
     private spawnCreep(request: SpawnOrder): number {
-        let body = request.body
-        let name = request.name
-        let memory = request.memory
-        let options = request.options
+        const body = request.body
+        const name = request.name
+        const memory = request.memory
+        const options = request.options
         let spawnToUse: StructureSpawn | undefined;
         if (request.options.spawn) {
-            spawnToUse = request.options.spawn!
+            spawnToUse = request.options.spawn
             if(spawnToUse.spawning) {
                 return ERR_BUSY
             }
@@ -162,8 +162,8 @@ export class Barracks extends Building {
                 return ERR_NOT_ENOUGH_ENERGY
             }
             memory.data.origin = spawnToUse.pos.roomName
-            let res = spawnToUse.spawnCreep(body, name, {
-                memory: memory,
+            const res = spawnToUse.spawnCreep(body, name, {
+                memory,
                 directions: options.directions,
             })
 
@@ -181,7 +181,9 @@ export class Barracks extends Building {
     }
 
     handleSpawns(): void {
-        console.log(JSON.stringify(this.productionQueue));
+        console.log(this.room.name)
+        _.forEach(this.productionQueue, r => _.forEach(r, t => console.log(t.name)))
+        console.log("----------------------------------------")
         let res:number | undefined = 0
         while (this.availableSpawns.length > 0 && res != -66) {
             res = this.spawnHighestPriorityCreep();

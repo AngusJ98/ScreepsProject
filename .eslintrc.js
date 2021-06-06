@@ -8,7 +8,7 @@ module.exports = {
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:@typescript-eslint/recommended-requiring-type-checking",
-    "plugin:prettier/recommended",
+    //"plugin:prettier/recommended",
     "prettier/@typescript-eslint",
     "plugin:import/errors",
     "plugin:import/warnings",
@@ -33,17 +33,12 @@ module.exports = {
     "@typescript-eslint/consistent-type-assertions": "error",
     "@typescript-eslint/consistent-type-definitions": "error",
     "@typescript-eslint/explicit-function-return-type": "off",
-    "@typescript-eslint/explicit-member-accessibility": [
-      "error",
-      {
-        accessibility: "explicit"
-      }
-    ],
+
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-parameter-properties": "off",
     "@typescript-eslint/no-unused-expressions": "error",
     "@typescript-eslint/no-use-before-define": ["error", { functions: false }],
-    "@typescript-eslint/prefer-for-of": "error",
+    "@typescript-eslint/prefer-for-of": "off",
     "@typescript-eslint/space-within-parens": ["off", "never"],
     "@typescript-eslint/unified-signatures": "error",
     "arrow-parens": ["off", "as-needed"],
@@ -51,7 +46,7 @@ module.exports = {
     complexity: "off",
     "dot-notation": "error",
     "eol-last": "off",
-    eqeqeq: ["error", "smart"],
+    //eqeqeq: ["error", "smart"],
     "guard-for-in": "off",
     "id-blacklist": ["error", "any", "Number", "number", "String", "string", "Boolean", "boolean", "Undefined"],
     "id-match": "error",
@@ -82,7 +77,7 @@ module.exports = {
     "one-var": ["error", "never"],
     "quote-props": "off",
     radix: "error",
-    "sort-imports": "warn",
-    "spaced-comment": "error",
+    "sort-imports": "off",
+    "spaced-comment": "off",
   }
 };
