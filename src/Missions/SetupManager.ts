@@ -13,6 +13,8 @@ export class SetupManager extends Manager {
     setup: CreepSetup;
     room: Room;
     mission: SetupMission;
+    hostileStructs: Structure[]
+    hostileSpawns: StructureSpawn[]
     repairTargets: Structure[];
     constructionSites: ConstructionSite[];
     deconstructTargets: Structure[];
@@ -39,13 +41,15 @@ export class SetupManager extends Manager {
         this.mission = mission
         this.pioneers = this.creepsByRole[Roles.colonist] || []
         this.setup = Setups.colonist
-        this.room = mission.room
+        this.room = mission.room!
+        this.hostileStructs = this.room.find(FIND_HOSTILE_STRUCTURES)
+        this.hostileSpawns = _.filter(this.hostileStructs, r => r.structureType == STRUCTURE_SPAWN) as StructureSpawn[]
         this.hitsGoal = this.barrierHits[this.capital.level]
         this.fortifyTargets = [];
         this.criticalTargets = _.filter(this.fortifyTargets, r => r.hits < this.critical);
         this.repairTargets = _.filter(_.compact(this.room.repairables), r => r.hits < 0.8 * r.hitsMax);
         this.constructionSites = this.room.constructionSites;
-        this.deconstructTargets = this.room.find(FIND_HOSTILE_STRUCTURES)
+        this.deconstructTargets = this.hostileSpawns
     }
 
 

@@ -11,7 +11,8 @@ export class SettleMission extends Mission {
     constructor(flag: Flag, empire: Empire) {
 
         super(flag, empire)
-        this.controller = this.room.controller
+        this.scoutingNeeded = true;
+        this.controller = this.room? this.room.controller : undefined
         if(this.capital) {
             this.manager = new SettleManager(this)
         }

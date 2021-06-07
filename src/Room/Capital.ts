@@ -87,16 +87,16 @@ export class Capital {
         this.empire = empire;
         this.name = room.name
         if (!Memory.capitals[this.name]) {
-            Memory.capitals[this.name] = {outposts: []}
+            Memory.capitals[this.name] = {outposts: [], scoutTargets: []}
         }
         this.capital = this
         this.room = room;
         this.observer = this.room.observer;
         let outpostNames = Memory.capitals[this.name].outposts
+        let scoutTargets = Memory.capitals[this.name].scoutTargets
 
 
-
-        this.invisRooms = _.filter(outpostNames, r => !Game.rooms[r])
+        this.invisRooms = _.filter(_.merge(outpostNames, scoutTargets), r => !Game.rooms[r])
         if (this.invisRooms.length > 0 && this.observer) {
             this.observer.observeRoom(this.invisRooms[0])
             _.remove(this.invisRooms, this.invisRooms[0])

@@ -73,9 +73,10 @@ export class Empire {
         for (let flagName in Game.flags) {
             //do something
             let flag: Flag = Game.flags[flagName]
-            if (flag.room) {
-                let mission = createMission(flag, this)
-            }
+
+            let mission = createMission(flag, this)
+            console.log("Created ", mission?.name)
+
         }
 
     }
