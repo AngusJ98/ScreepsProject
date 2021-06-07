@@ -7,7 +7,6 @@ export class ReserveManager extends Manager {
     controller: StructureController;
     reservers: Creep[];
     reserveSite: ReserveSite
-    room:Room;
 
 
     constructor (reserveSite: ReserveSite, prio = ManagerPriority.Outpost.reserve) {
@@ -23,7 +22,7 @@ export class ReserveManager extends Manager {
     }
 
     init() {
-        if (this.room.hostiles.length == 0) {
+        if (this.room && this.room.hostiles.length == 0) {
             let setup = this.controller.reservation && this.controller.reservation?.ticksToEnd > 4500 ? Setups.colonisers.settler : Setups.colonisers.reserve
             this.spawnList(1, setup)
         }

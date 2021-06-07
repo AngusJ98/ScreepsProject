@@ -181,9 +181,7 @@ export class Barracks extends Building {
     }
 
     handleSpawns(): void {
-        console.log(this.room.name)
-        _.forEach(this.productionQueue, r => _.forEach(r, t => console.log(t.name)))
-        console.log("----------------------------------------")
+
         let res:number | undefined = 0
         while (this.availableSpawns.length > 0 && res != -66) {
             res = this.spawnHighestPriorityCreep();

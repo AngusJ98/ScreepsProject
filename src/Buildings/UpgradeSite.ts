@@ -26,7 +26,6 @@ export class UpgradeSite extends Building {
     }
 
     buildContainerOrLink(type: STRUCTURE_CONTAINER | STRUCTURE_LINK) {
-        console.log("Check!")
         if (this.link) { //Just in case we accidentally call this when we have a link already
             return
         } else { //finds the position 2 away with most adjacent spots to make pathing easier

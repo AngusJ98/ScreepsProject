@@ -14,6 +14,7 @@ import { ManagerPriority } from "./ManagerPriority";
  * This also moves energy between containers and the storage in reserved rooms
  *
  * Damn after 30 minutes thinking in the shower, this code is so much nicer wtf was I thinking before
+ * TODO replace with a request system
  *
  */
 
@@ -25,6 +26,8 @@ export class LorryManager extends Manager{
     setup: CreepSetup;
     powerPer: number;
     sites: (MiningSite|UpgradeSite|ExtractorSite)[]
+    room: Room;
+    pos: RoomPosition
 
     constructor(hq: LorryHQ, prio = ManagerPriority.Lorry.lorry) {
         super(hq, "LorryManager" + hq.storage.id, prio);
@@ -42,6 +45,8 @@ export class LorryManager extends Manager{
 
 
         this.sites = _.compact(this.sites)
+        this.room = hq.room
+        this.pos = hq.pos
     }
 
     grabInputs() {
@@ -71,7 +76,7 @@ export class LorryManager extends Manager{
 
     transporterSizePerSite(site: MiningSite | UpgradeSite | ExtractorSite) {
         if (site instanceof UpgradeSite) {
-            return Math.ceil(UPGRADE_CONTROLLER_POWER * site.manager.powerNeeded * 3 * PathFinder.search(this.lorryHQ.pos, site.pos).cost / CARRY_CAPACITY);
+            return Math.ceil(UPGRADE_CONTROLLER_POWER * site.manager.powerNeeded * 4 * PathFinder.search(this.lorryHQ.pos, site.pos).cost / CARRY_CAPACITY);
         } else if (site instanceof ExtractorSite) {
             return Math.ceil(site.manager.energyPerTick * 3 * PathFinder.search(this.lorryHQ.pos, site.pos).cost / CARRY_CAPACITY)
         } else {
@@ -84,7 +89,7 @@ export class LorryManager extends Manager{
             case "withdraw":
                 let target = Game.getObjectById(lorry.memory.targetId!) as StructureContainer | Resource;
                 let type: ResourceConstant = target instanceof StructureContainer? _.first(_.keys(target.store)) as ResourceConstant : RESOURCE_ENERGY;
-                if (target && lorry.store.getFreeCapacity() > 0) {
+                if (target && lorry.store.getUsedCapacity() == 0) {
                     let site = this.capital.buildingsByContainer[lorry.memory.targetId!]
                     if (site && site instanceof ExtractorSite) {
                         if (site.container?.store.getUsedCapacity() == 0 && site.mineral.mineralAmount == 0) {
@@ -150,7 +155,7 @@ export class LorryManager extends Manager{
                 let current = this.filterLife(_.filter(this.lorrys, r => r.memory.targetId == site.container!.id))
 
                 let currentSize = _.sum(current, r => r.getActiveBodyparts(CARRY))
-                console.log(site.container.id, site instanceof ExtractorSite, " needs: ", targetTotal, ". Current: ", currentSize)
+                //console.log(site.container.id, site instanceof ExtractorSite, " needs: ", targetTotal, ". Current: ", currentSize)
                 let maxSize = this.powerPer
                 if (targetTotal > currentSize) {
                     let numNeeded = 1
@@ -160,7 +165,7 @@ export class LorryManager extends Manager{
                         numNeeded = Math.ceil(targetTotal / maxSize)
                         sizeNeeded = Math.ceil(targetTotal/numNeeded);
                     }
-                    console.log(numNeeded, ", ", sizeNeeded)
+                    //console.log(numNeeded, ", ", sizeNeeded)
                     let setup = new CreepSetup(Roles.lorry, {pattern  : [CARRY, MOVE], sizeLimit: sizeNeeded,})
                     this.capital.barracks?.addToQueue(setup, this, {priority: ManagerPriority.Lorry.lorry, targetId: site.container?.id, state: state})
                     /*

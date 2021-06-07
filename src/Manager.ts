@@ -4,28 +4,26 @@ import { config } from "config";
 import { Capital } from "Room/Capital";
 
 interface IManagerInitialiser {
-	room: Room;
-	pos: RoomPosition;
-	capital?: Capital;
+	capital: Capital;
+    room?: Room;
 }
 
 
 
 export abstract class Manager {
-	room: Room;
+	room: Room | undefined;
     capital: Capital;
 	name: string;
 	priority: number;
-	pos: RoomPosition;
     creeps: Creep[];
     creepsByRole: {[roleName: string]: Creep[]}
+    pos?: RoomPosition
     constructor(initialiser: IManagerInitialiser, name: string, priority: number) {
         //info from initialiser
         this.name = name
         this.room = initialiser.room
-        this.capital = initialiser.capital!
+        this.capital = initialiser.capital
         this.priority = priority
-        this.pos = initialiser.pos
 
         //Get list of my creeps from capital and group them by role
         this.creeps = this.capital.creepsByManager[this.name] || []
@@ -40,7 +38,8 @@ export abstract class Manager {
     filterLife(creeps: Creep[], prespawn = 50) : Creep[] {
         let distance = 0
         if (this.capital.spawns[0]) {
-            distance = PathFinder.search(this.pos, this.capital.barracks!.pos, {maxOps: 4000}).cost || 0
+
+            distance = this.pos? PathFinder.search(this.pos, this.capital.barracks!.pos, {maxOps: 4000}).cost || 0 : 0;
         }
 
         return _.filter(creeps, creep =>creep.ticksToLive! > CREEP_SPAWN_TIME * creep.body.length + distance + prespawn || creep.spawning || (!creep.spawning && !creep.ticksToLive));

@@ -12,14 +12,18 @@ export class QueenManager extends Manager {
     refillTowersBelow = 500;
     targets: (StructureExtension | StructureSpawn | StructureTower)[]
     towers: StructureTower[];
+    room: Room
+    pos: RoomPosition
     constructor(barracks: Barracks,  prio = ManagerPriority.Core.queen) {
         super (barracks, "QueenManager_"+ barracks.coreSpawn.id, prio);
         this.barracks = barracks;
+        this.room = barracks.room
         this.queens = this.creepsByRole[Roles.queen];
         this.queenSetup = this.capital.storage ? Setups.queens.default : Setups.queens.early;
         this.targets = _.filter(this.barracks.energyStructures, r => r.store.getFreeCapacity(RESOURCE_ENERGY)! > 0)
         this.towers = _.filter(this.capital.towers, r => r.energy < r.energyCapacity);
         this.targets = this.targets.concat(this.towers)
+        this.pos = barracks.pos
     }
 
     private handleQueen(queen: Creep) {

@@ -20,19 +20,23 @@ export class ExtractorManager extends Manager {
     container: StructureContainer | undefined;
     link: StructureLink | undefined;
     energyPerTick: number;
+    pos: RoomPosition
+    room: Room
 
     constructor(extractorSite: ExtractorSite, priority = ManagerPriority.Capital.miner) {
         super(extractorSite, "ExtractorManager_" + extractorSite.mineral.id, priority);
+        this.pos = extractorSite.pos
+        this.room = extractorSite.room
         this.site = extractorSite;
         this.container = this.site.container;
-        this.link = this.site.link;
+        this.link = this.site.link || undefined;
         this.miners = this.creepsByRole[Roles.drone];
         this.mineral = this.site.mineral
         this.extractor = this.site.extractor
         this.constructionSite = _.first(this.pos.findInRange(FIND_MY_CONSTRUCTION_SITES, 2));
 
         this.energyPerTick = Math.max(_.sum(this.miners, r => r.getActiveBodyparts(WORK) * 2), Math.ceil((this.container?.store.getUsedCapacity() || 0) / 500))
-        console.log("ene",this.energyPerTick)
+
 
 
         if (this.container) {
