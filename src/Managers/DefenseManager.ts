@@ -9,18 +9,23 @@ export class DefenseManager extends Manager {
     setup: CreepSetup;
     targets: Creep[];
     needed: number;
+    invaderCore: StructureInvaderCore[];
     constructor(barracks: Barracks, prio = ManagerPriority.OutpostDefense.outpostDefense) {
         super(barracks, "DefenseManager_" + barracks.coreSpawn.id, prio);
         this.guards = this.creepsByRole[Roles.guardMelee]
         this.setup = Setups.guards.armored
         this.targets = _.flatten(_.map(this.capital.allRooms, r => r.hostiles))
-        this.needed = this.targets.length
+        this.invaderCore = _.flatten(_.map(this.capital.allRooms, r => r.find(FIND_HOSTILE_STRUCTURES, {filter: (s) => s.structureType == STRUCTURE_INVADER_CORE})))  as StructureInvaderCore[]
+        this.needed = this.targets.length + this.invaderCore.length
+
     }
 
     private handleGuard(guard: Creep) {
         let target = guard.pos.findClosestByMultiRoomRange(this.targets)
         if(target) {
             guard.goMelee(target)
+        } else if (this.invaderCore[0]) {
+            guard.goMelee(this.invaderCore[0])
         } else {
             let spawn = guard.pos.findClosestByMultiRoomRange(this.capital.spawns);
             if (spawn && guard.pos.getMultiRoomRangeTo(spawn.pos) > 1) {

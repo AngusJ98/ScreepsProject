@@ -16,6 +16,7 @@ declare global {
         goUpgrade(target: StructureController): void;
         goReserve(target: StructureController): void;
         goClaim(target: StructureController): void;
+        goAttackController(target: StructureController): void;
         goMelee(target: Creep | Structure): void;
     }
 }
@@ -130,6 +131,16 @@ Creep.prototype.goClaim = function(target: StructureController) {
         this.say("No claim body parts, fix now")
     } else if (this.pos.inRangeTo(target.pos, RANGES.CLAIM)) {
         this.claimController(target)
+    } else {
+        this.travelTo(target)
+    }
+}
+
+Creep.prototype.goAttackController = function(target: StructureController) {
+    if(this.getActiveBodyparts(CLAIM) == 0) {
+        this.say("No claim body parts, fix now")
+    } else if (this.pos.inRangeTo(target.pos, RANGES.CLAIM)) {
+        this.attackController(target)
     } else {
         this.travelTo(target)
     }

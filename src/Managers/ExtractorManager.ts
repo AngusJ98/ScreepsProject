@@ -79,7 +79,7 @@ export class ExtractorManager extends Manager {
 
     private handleMiner(miner: Creep) {
         if (this.mineral.mineralAmount > 0) {
-            if (this.harvestPos && this.container && this.container.store.getFreeCapacity() > 100) {
+            if (this.harvestPos && this.container && this.container.store.getUsedCapacity() < this.container.store.getCapacity()) {
                 miner.goHarvest(this.mineral)
             } else {
                 miner.travelTo(this.mineral.pos)
