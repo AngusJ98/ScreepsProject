@@ -61,7 +61,7 @@ export class MiningManager extends Manager {
             this.setup = Setups.drones.miners.default;
         } //TODO Add code for when we want double miners (saves cpu)
 
-        this.minersNeeded = Math.min(this.pos.getAdjacentPositions().length, Math.ceil(this.miningPowerNeeded / (this.setup.getBodyPotential(WORK, this.capital))))
+        this.minersNeeded = Math.min(this.pos.getAdjacentPositions(1, true).length, Math.ceil(this.miningPowerNeeded / (this.setup.getBodyPotential(WORK, this.capital))))
 
         this.isDropMining = this.capital.level < this.dropMineUntilRCL;
 
@@ -109,8 +109,8 @@ export class MiningManager extends Manager {
 
         if (this.container) {
 
-            if (this.pos != this.container.pos) {
-                miner.travelTo(this.container.pos, {range: 0});
+            if (this.pos.inRangeTo(this.site.pos, 1)) {
+                miner.travelTo(this.site.pos);
             }
 			if (this.container.hits < this.container.hitsMax && miner.store.energy >= Math.min(miner.carryCapacity, REPAIR_POWER * miner.getActiveBodyparts(WORK))) {
 				miner.goRepair(this.container);

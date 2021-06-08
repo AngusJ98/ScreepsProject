@@ -50,6 +50,7 @@ export class UpgradeManager extends Manager {
 				upgrader.goWithdraw(this.upgradeSite.container);
                 return
 			} else if (this.upgradeSite.container) {
+                upgrader.travelTo(this.upgradeSite.container, {range: 0})
                 return
             } else {
                 let drops = _.filter(this.room.droppedEnergy, r => r.amount > upgrader.store.getCapacity()/4)

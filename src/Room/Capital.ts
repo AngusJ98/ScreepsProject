@@ -235,9 +235,7 @@ export class Capital {
     init(): void {
 
         for (let structure of this.room.hostileStructures) {
-            if (structure.structureType != STRUCTURE_STORAGE) {
-                structure.destroy()
-            }
+            structure.destroy()
         }
         this.room.memory.lastSeen = Game.time
         //_.forEach(this.managers, r => console.log(r.name))

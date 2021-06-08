@@ -2,7 +2,7 @@ import { minBy } from "Rando_Functions"
 
 declare global {
 	interface RoomPosition {
-		getAdjacentPositions(range?: number): RoomPosition[];
+		getAdjacentPositions(range?: number, filteredStructures?: boolean): RoomPosition[];
 		roomCoords: Coord;
 		getMultiRoomRangeTo(pos: RoomPosition): number;
 		findClosestByMultiRoomRange<T extends _HasRoomPosition>(objects: T[]): T | undefined;
@@ -11,32 +11,27 @@ declare global {
 export function test4() {
 
 }
-RoomPosition.prototype.getAdjacentPositions = function(range = 1): RoomPosition[] {
+RoomPosition.prototype.getAdjacentPositions = function(range = 1, filterStructures: boolean = false): RoomPosition[] {
     let roomName = this.roomName
     let terrain = Game.map.getRoomTerrain(roomName)
-    let positions = []
-    for (let x of [this.x + range, this.x - range]) {
-        for (let y = this.y - range; y <= this.y + range; y++) {
-			let terrainAtPositon = terrain.get(x, y)
-            if (terrainAtPositon === TERRAIN_MASK_SWAMP || terrainAtPositon === 0) {
+    let offsets = []
+	for (let x = -range; x <= range; x++) { for (let y = -range; y <= range; y++) {
+		if (x === 0 && y === 0 || Math.abs(x) + Math.abs(y) < range) continue; // Don't include the 0,0 point
+		offsets.push({ x, y });
+	}}
 
-                positions.push(new RoomPosition(x, y, roomName));
-                //console.log(positions)
-            }
-        }
-    }
-	for (let y of [this.y + range, this.y - range]) {
-        for (let x = this.x - range + 1; x <= this.x + range - 1; x++) {
-			let terrainAtPositon = terrain.get(x, y)
-            if (terrainAtPositon === TERRAIN_MASK_SWAMP || terrainAtPositon === 0) {
-
-                positions.push(new RoomPosition(x, y, roomName));
-                //console.log(positions)
-            }
-        }
-    }
-    return positions
+	let positions = _.map(offsets, r => new RoomPosition(this.x + r.x, this.y + r.y, this.roomName))
+	_.remove(positions, r => ![0, 1].includes(terrain.get(r.x, r.y)))
+	if (filterStructures) {
+		_.remove(positions, r => _.filter(r.lookFor(LOOK_STRUCTURES), t => _.includes(OBSTACLE_OBJECT_TYPES, t.structureType as string)))
+		return positions
+	} else {
+		return positions
+	}
 }
+
+
+
 
 RoomPosition.prototype.getMultiRoomRangeTo = function(pos: RoomPosition): number {
 	if (this.roomName == pos.roomName) {

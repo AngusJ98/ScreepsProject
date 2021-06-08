@@ -107,47 +107,47 @@ export class WorkManager extends Manager {
 
             if(this.capital.controller.ticksToDowngrade <= (this.capital.level >= 4 ? 8000 : 0)) {
                 if (this.upgradeActions(worker)) {
-                    worker.say("Upgrading!")
+                    worker.say("⚡")
                     return;
                 }
             }
 
             if (this.deconstructTargets.length > 0) {
 				if (this.deconstructActions(worker)) {
-                    worker.say("Deconstructing!")
+                    worker.say("🔨")
                     return;
                 }
 			}
 
             if (this.repairTargets.length > 0) {
 				if (this.repairActions(worker)) {
-                    worker.say("Repairing!")
+                    worker.say("🛠️")
                     return;
                 }
 			}
 			// Fortify critical barriers
 			if (this.criticalTargets.length > 0) {
 				if (this.fortifyActions(worker, this.criticalTargets)) {
-                    worker.say("Fortifying!")
+                    worker.say("🏛️")
                     return;
                 }
 			}
 			// Build new structures
 			if (this.constructionSites.length > 0) {
 				if (this.buildActions(worker)) {
-                    worker.say("Building!")
+                    worker.say("☭")
                     return;
                 }
 			}
             if (this.fortifyTargets.length > 0) {
 				if (this.fortifyActions(worker, this.fortifyTargets)) {
-                    worker.say("Fortifying!")
+                    worker.say("🏛️")
                     return;
                 }
 			}
             if (this.capital.level < 8 || this.capital.creepsByRole[Roles.upgrader].length == 0) {
                 if (this.upgradeActions(worker)) {
-                    worker.say("Upgrading!")
+                    worker.say("⚡")
                     return;
                 }
             }
@@ -175,9 +175,11 @@ export class WorkManager extends Manager {
         let numWorkers = 0;
         if (this.capital.stage == CapitalSize.Town) {
             let MAX_WORKERS = 5;
-            numWorkers = Math.max(Math.ceil(this.capital.assets[RESOURCE_ENERGY] / 2000) || 0, MAX_WORKERS)
+            let energyMinedPerTick = _.sum(_.map(this.capital.miningSites, r => _.sum(r.manager.miners, t => t.getActiveBodyparts(WORK) * HARVEST_POWER)))
+            numWorkers = Math.ceil(energyMinedPerTick / currentParts / 1.1 / 0.8)
+            numWorkers = Math.min(MAX_WORKERS, numWorkers)
         } else {
-            let MAX_WORKERS = 5
+            let MAX_WORKERS = 10
             let repairTicks = _.sum(this.repairTargets, r => r.hitsMax - r.hits) / REPAIR_POWER;
             let buildTicks = _.sum(this.constructionSites, r => (r.progressTotal - r.progress) / BUILD_POWER)
             let fortifyTicks = 0;

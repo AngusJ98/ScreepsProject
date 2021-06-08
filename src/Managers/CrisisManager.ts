@@ -23,6 +23,7 @@ export class CrisisManager extends Manager{
         this.lorrys = this.creepsByRole[Roles.van]
         this.withdraw = _.filter(_.compact([this.room.storage!, this.room.terminal!, ...this.room.containers, ...this.room.links]), r => r.store.energy > 0);
         this.targets = _.filter([...this.room.spawns, ...this.room.extensions], r => r.energy < r.energyCapacity);
+        console.log("CRISIS MANAGER IN PROGRESS: ", this.room.name)
     }
 
     private spawnMiners() {
@@ -35,6 +36,8 @@ export class CrisisManager extends Manager{
         let miningManagers = _.map(miningSites, r => r.manager) //get a list of managers
 
         for (let mineManager of miningManagers) {
+
+
             let currentMiners = this.filterLife(mineManager.miners)
             let partsNeeded = Math.ceil(SOURCE_ENERGY_CAPACITY / ENERGY_REGEN_TIME / HARVEST_POWER) + 1;
             let partsAssigned = _.sum(_.map(currentMiners, r => r.getActiveBodyparts(WORK)));
@@ -49,6 +52,7 @@ export class CrisisManager extends Manager{
         //creeps are spawned
         console.log("Checking miners in ", this.room.name)
         if(this.capital.stage == CapitalSize.Town) {
+
             if (!this.capital.creepsByRole[Roles.drone] || this.capital.creepsByRole[Roles.drone].length == 0) {
                 this.spawnMiners();
                 return

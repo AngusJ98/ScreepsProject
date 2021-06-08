@@ -25,7 +25,7 @@ export const Setups = {
 	drones: {
 		extractor: new CreepSetup(Roles.drone, {
 			pattern  : [WORK, WORK, CARRY, MOVE],
-			sizeLimit: Infinity,
+			sizeLimit: 8,
 		}),
 
 		miners: {

@@ -46,7 +46,7 @@ export function loop(): void {
   //@ts-ignore
   if(Game.cpu.bucket == 10000) {
     //@ts-ignore
-    Game.cpu.generatePixel();
+    //Game.cpu.generatePixel();
   }
 
 }

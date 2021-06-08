@@ -1,4 +1,5 @@
 import { ReserveSite } from "Buildings/ReserveSite";
+import { config } from "config";
 import { Roles, Setups } from "Creep_Setups/Setups";
 import { Manager } from "Manager";
 import { ManagerPriority } from "./ManagerPriority";
@@ -18,12 +19,14 @@ export class ReserveManager extends Manager {
     }
 
     private handleReserver(reserver: Creep) {
+        //reserver.goAttackController(this.controller)
+
         reserver.goReserve(this.controller)
     }
 
     init() {
         if (this.room && this.room.hostiles.length == 0) {
-            let setup = this.controller.reservation && this.controller.reservation?.ticksToEnd > 4500 ? Setups.colonisers.settler : Setups.colonisers.reserve
+            let setup = this.controller.reservation && this.controller.reservation.username == config.username && this.controller.reservation?.ticksToEnd > 4500 ? Setups.colonisers.settler : Setups.colonisers.reserve
             this.spawnList(1, setup)
         }
     }

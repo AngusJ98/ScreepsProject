@@ -1,6 +1,7 @@
 
 export var config = {
     signature: "Aozin",
+    username: "Aozin",
     nextRoom: {
         scoutMinControllerLevel: 4,
         intervalToCheck: CREEP_CLAIM_LIFE_TIME,

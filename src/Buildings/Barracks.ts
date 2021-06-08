@@ -52,7 +52,7 @@ export class Barracks extends Building {
         this.defenseManager = new DefenseManager(this)
 
         //Use a crisis manager if there is no queen and not enough energy to make one
-        if (this.capital.room.energyAvailable + _.sum(this.capital.room.storageUnits, r => r.store.energy) < 2000 || this.capital.creepsByRole[Roles.queen].length == 0) {
+        if (this.capital.room.energyAvailable < 1000 || this.capital.creepsByRole[Roles.queen].length == 0) {
             this.crisisManager = new CrisisManager(this)
         }
 
@@ -155,9 +155,6 @@ export class Barracks extends Building {
         }
 
         if (spawnToUse) {
-            if (this.capital.coreSpawn && spawnToUse.id == this.capital.coreSpawn.id && !options.directions) {
-                options.directions = [TOP, RIGHT]
-            }
 
             if(bodyCost(body) > this.room.energyCapacityAvailable) {
                 return ERR_NOT_ENOUGH_ENERGY
