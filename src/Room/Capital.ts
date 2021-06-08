@@ -12,6 +12,7 @@ import { UpgradeSite } from "Buildings/UpgradeSite";
 import { Roles } from "Creep_Setups/Setups";
 import { Empire } from "Empire";
 import { Manager } from "Manager";
+import { ScoutManager } from "Managers/ScoutManager";
 import { WorkManager } from "Managers/WorkManager";
 import { Mission } from "Missions/Mission";
 
@@ -74,29 +75,31 @@ export class Capital {
 
     managers: Manager[];
     workManager: WorkManager | undefined;
-
+    scoutManager: ScoutManager | undefined;
 
 
     assets: {[type: string]: number}
     empire: Empire
     buildingsByContainer: {[id: string]: UpgradeSite | MiningSite | ExtractorSite}
     missions: Mission[];
+    invisRooms: string[];
     constructor(room:Room, empire: Empire) {
         this.empire = empire;
         this.name = room.name
         if (!Memory.capitals[this.name]) {
-            Memory.capitals[this.name] = {outposts: []}
+            Memory.capitals[this.name] = {outposts: [], scoutTargets: []}
         }
         this.capital = this
         this.room = room;
         this.observer = this.room.observer;
         let outpostNames = Memory.capitals[this.name].outposts
+        let scoutTargets = Memory.capitals[this.name].scoutTargets
 
 
-
-        let invisRooms = _.filter(outpostNames, r => !Game.rooms[r]).concat("W58N7")
-        if (invisRooms.length > 0 && this.observer) {
-            this.observer.observeRoom(invisRooms[0])
+        this.invisRooms = _.filter(_.merge(outpostNames, scoutTargets), r => !Game.rooms[r])
+        if (this.invisRooms.length > 0 && this.observer) {
+            this.observer.observeRoom(this.invisRooms[0])
+            _.remove(this.invisRooms, this.invisRooms[0])
         }
 
         this.outposts = _.compact(_.map(outpostNames, r => Game.rooms[r]))
@@ -166,6 +169,7 @@ export class Capital {
 
         this.createBuildings()
         this.workManager = this.barracks? new WorkManager(this) : undefined;
+        this.scoutManager = new ScoutManager(this)
 
     }
 
@@ -229,6 +233,12 @@ export class Capital {
     }
 
     init(): void {
+
+        for (let structure of this.room.hostileStructures) {
+            if (structure.structureType != STRUCTURE_STORAGE) {
+                structure.destroy()
+            }
+        }
         this.room.memory.lastSeen = Game.time
         //_.forEach(this.managers, r => console.log(r.name))
         _.forEach(this.buildings, r => r.init())

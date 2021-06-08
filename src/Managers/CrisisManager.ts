@@ -13,9 +13,13 @@ export class CrisisManager extends Manager{
     lorrys: Creep[];
     withdraw: (StructureStorage | StructureTerminal | StructureContainer | StructureLink | StructureTower)[];
     targets: (StructureSpawn | StructureExtension)[];
+    room: Room;
+    pos: RoomPosition
 
     constructor(barracks: Barracks, prio = ManagerPriority.Crisis.mini) {
         super(barracks, "CrisisManager_" + barracks.coreSpawn.id, prio);
+        this.room = barracks.room
+        this.pos = barracks.pos
         this.lorrys = this.creepsByRole[Roles.van]
         this.withdraw = _.filter(_.compact([this.room.storage!, this.room.terminal!, ...this.room.containers, ...this.room.links]), r => r.store.energy > 0);
         this.targets = _.filter([...this.room.spawns, ...this.room.extensions], r => r.energy < r.energyCapacity);
@@ -43,6 +47,7 @@ export class CrisisManager extends Manager{
     init() {
         //spawn early miners if this is early capital and has none. return statement so no other higher prio
         //creeps are spawned
+        console.log("Checking miners in ", this.room.name)
         if(this.capital.stage == CapitalSize.Town) {
             if (!this.capital.creepsByRole[Roles.drone] || this.capital.creepsByRole[Roles.drone].length == 0) {
                 this.spawnMiners();
@@ -72,5 +77,7 @@ export class CrisisManager extends Manager{
         if (this.creeps.length > 0) {
             console.log("Crisis manager has creeps?! How?")
         }
+        if(this.capital.name == "W57N9") console.log(this.name, "===================")
+
     }
 }

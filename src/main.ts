@@ -23,6 +23,7 @@ declare global {
 
   interface CapitalMemory {
     outposts: string[];
+    scoutTargets: string[]
   }
 
   // Syntax for adding proprties to `global` (ex "global.log")

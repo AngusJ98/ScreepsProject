@@ -8,11 +8,12 @@ import { SettleMission } from "./SettleMission";
 export class SettleManager extends Manager {
     claimers: Creep[];
     mission: SettleMission;
-    controller?: StructureController;
+    controller?: StructureController | undefined;
     constructor(mission: SettleMission, prio = ManagerPriority.Colonization.claim) {
-        super(mission, "SettleManager_" + mission.name, prio)
+        super(mission.capital!, "SettleManager_" + mission.name, prio)
         this.mission = mission
-        this.controller = this.room.controller
+        this.room = this.mission.room
+        this.controller = this.room? this.room.controller : undefined
         this.claimers = this.creepsByRole[Roles.settler]
     }
 

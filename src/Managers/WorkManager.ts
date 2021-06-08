@@ -1,3 +1,4 @@
+/* eslint-disable prefer-const */
 import { CreepSetup } from "Creep_Setups/CreepSetup";
 import { Roles, Setups } from "Creep_Setups/Setups";
 import { Manager } from "Manager";
@@ -28,7 +29,7 @@ export class WorkManager extends Manager {
     hitsGoal: number;
     critical = 2500;
     tolerance = 100000;
-    fortifyThreshold = 500000;
+    fortifyThreshold = 300000;
 
     constructor(capital: Capital, prio = ManagerPriority.Capital.work) {
         super(capital, "WorkManager_" + capital.name, prio)
@@ -38,7 +39,7 @@ export class WorkManager extends Manager {
         this.hitsGoal = this.barrierHits[this.capital.level]
         this.fortifyTargets = _.filter(this.room.barriers, r => r.hits < this.hitsGoal);
         this.criticalTargets = _.filter(this.fortifyTargets, r => r.hits < this.critical);
-        this.deconstructTargets = _.compact(_.map(["60b917185571fb2d25c8b16d", "5d8a144874b4f975f63335b1"], r => Game.getObjectById(r))) as Structure[]
+        this.deconstructTargets = this.room.hostileStructures
         console.log(this.deconstructTargets.length, " buildings to deconstruct")
         this.repairTargets = _.filter(_.compact(this.capital.repairables), r => r.hits < 0.8 * r.hitsMax);
         _.forEach(this.capital.miningSites, r => _.remove(this.repairTargets, t => r.container && t.id == r.container.id))
@@ -104,7 +105,7 @@ export class WorkManager extends Manager {
     private handleWorker(worker: Creep): void {
         if (worker.store.energy > 0) {
 
-            if(this.capital.controller.ticksToDowngrade <= (this.capital.level >= 4 ? 8000 : 2000)) {
+            if(this.capital.controller.ticksToDowngrade <= (this.capital.level >= 4 ? 8000 : 4000)) {
                 if (this.upgradeActions(worker)) {
                     worker.say("Upgrading!")
                     return;
@@ -181,14 +182,15 @@ export class WorkManager extends Manager {
             let buildTicks = _.sum(this.constructionSites, r => (r.progressTotal - r.progress) / BUILD_POWER)
             let fortifyTicks = 0;
             if ((this.capital.storage?.store.energy || 0) + _.sum(this.capital.containers, r => r.store.energy) >= this.fortifyThreshold) {
-                fortifyTicks = 0.2 * _.sum(this.fortifyTargets, r => Math.max(0, this.hitsGoal - r.hits)); //take a fraction of how many barriers need fortifying
+                fortifyTicks = _.sum(this.fortifyTargets, r => Math.max(0, this.hitsGoal - r.hits));
             }
-            numWorkers = Math.ceil(2 * (5 * buildTicks + repairTicks + fortifyTicks) / Math.ceil(currentParts * CREEP_LIFE_TIME)) || 0
+            console.log("build: ", buildTicks, " repair: ", repairTicks, " fort: ", fortifyTicks)
+            numWorkers = Math.ceil(2 * (5 * buildTicks + repairTicks + fortifyTicks) / Math.ceil(currentParts * CREEP_LIFE_TIME))
             console.log("Num: ", numWorkers)
             numWorkers = Math.min(numWorkers, MAX_WORKERS, Math.ceil(this.capital.assets[RESOURCE_ENERGY] / 20000))
         }
 
-        console.log("Num workers wanted: " + numWorkers)
+        console.log(this.room.name, "Num workers wanted: ", numWorkers)
         this.spawnList(numWorkers, this.setup)
     }
 

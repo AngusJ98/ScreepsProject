@@ -1,3 +1,5 @@
+import { throws } from "assert";
+
 declare global {
 	interface Room {
 		print: string;
@@ -44,7 +46,7 @@ declare global {
 		observer: StructureObserver;
 		tombstones: Tombstone[]
 		minerals: Mineral[]
-
+		hostileStructsByType: {[type: string]: Structure[]}
 		getStructures(structureType: string): Structure[];
 
 	}
@@ -75,6 +77,15 @@ Object.defineProperty(Room.prototype, "structures", {
 	get() {
 		if (!this._structures) {
 			this._structures = _.groupBy(this.find(FIND_STRUCTURES) as Structure[], s => s.structureType);
+		}
+		return this._structures;
+	}
+})
+
+Object.defineProperty(Room.prototype, "hostileStructsByType", {
+	get() {
+		if (!this._structures) {
+			this._structures = _.groupBy(this.find(FIND_HOSTILE_STRUCTURES) as Structure[], s => s.structureType);
 		}
 		return this._structures;
 	}

@@ -15,10 +15,11 @@ export abstract class Mission {
     capital: Capital | undefined;
     flag: Flag;
     pos: RoomPosition;
-    room: Room;
+    room?: Room;
     name: string;
     manager: Manager | undefined;
     empire: Empire;
+    scoutingNeeded: boolean = false
     filter: (capital: Capital) => boolean;
 
     constructor(flag: Flag, empire: Empire) {
@@ -31,15 +32,18 @@ export abstract class Mission {
         }
         this.memory = flag.memory as FlagMemory;
         this.flag = flag
-        this.name = flag.name + flag.room!.name;
+        this.name = flag.name + flag.pos.roomName;
         this.empire = empire;
         this.pos = flag.pos;
-        this.room = flag.room!;
+        this.room = flag.room;
         if (!this.memory.roomName) {
-            this.memory.roomName = this.room.name
+            this.memory.roomName = this.pos.roomName
+        }
+        if (this.scoutingNeeded && this.capital) {
+            Memory.capitals[this.capital.name].scoutTargets.push(this.pos.roomName)
         }
         this.capital = this.getCapital();
-        //this.capital?.missions.push(this);
+        this.capital?.missions.push(this);
     }
 
 

@@ -21,16 +21,25 @@ export class MiningManager extends Manager {
     setup: CreepSetup;
     mode: "Early" | "Standard" | "Link" | "Standard" | "Double" | "SK"
     isDropMining: boolean;
+    pos: RoomPosition
+    room: Room
 
     container: StructureContainer | undefined;
+    extensions: StructureExtension[]
+    extenstionsToFill: StructureExtension[]
     link: StructureLink | undefined;
 
     constructor(miningSite: MiningSite, priority = ManagerPriority.Capital.miner) {
         super(miningSite, "MineManager_" + miningSite.source.id, priority);
         this.site = miningSite;
+        this.pos = miningSite.pos
         this.container = this.site.container;
         this.link = this.site.link;
         this.constructionSite = _.first(this.pos.findInRange(FIND_MY_CONSTRUCTION_SITES, 2));
+        this.extensions = this.site.extensions
+        this.extenstionsToFill = _.filter(this.extensions, r => r.store[RESOURCE_ENERGY] < r.store.getCapacity(RESOURCE_ENERGY))
+        this.room = miningSite.room
+
 
         this.miners = this.creepsByRole[Roles.drone];
         if (this.room.controller && this.room.controller.my) {
@@ -145,10 +154,14 @@ export class MiningManager extends Manager {
 				miner.repair(this.container);
                 return;
             } else {
+                if (this.extenstionsToFill.length > 0 && miner.store.energy > 50) {
+                    miner.transfer(this.extenstionsToFill[0], RESOURCE_ENERGY)
+                }
                 miner.harvest(this.site.source);
                 return;
             }
         }
+
 
         if (this.constructionSite) {
             if (miner.store.energy >= Math.min(miner.carryCapacity, BUILD_POWER * miner.getActiveBodyparts(WORK))) {
