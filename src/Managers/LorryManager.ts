@@ -18,7 +18,7 @@ import { ManagerPriority } from "./ManagerPriority";
  *
  */
 
-export class LorryManager extends Manager{
+export class LorryManager extends Manager {
     lorrys: Creep[];
     lorryHQ: LorryHQ;
     bunkerStorage: StructureStorage;
