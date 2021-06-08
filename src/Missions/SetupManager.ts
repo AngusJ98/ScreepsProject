@@ -61,6 +61,7 @@ export class SetupManager extends Manager {
             return
         }
 
+
         let source = pioneer.pos.findClosestByPath(_.filter(this.room.sources, r => r.energy > 0))
         let distance =source ? pioneer.pos.getMultiRoomRangeTo(source!.pos) : Infinity
         if (this.deconstructTargets.length > 0) {

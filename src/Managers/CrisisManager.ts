@@ -47,6 +47,7 @@ export class CrisisManager extends Manager{
     init() {
         //spawn early miners if this is early capital and has none. return statement so no other higher prio
         //creeps are spawned
+        console.log("Checking miners in ", this.room.name)
         if(this.capital.stage == CapitalSize.Town) {
             if (!this.capital.creepsByRole[Roles.drone] || this.capital.creepsByRole[Roles.drone].length == 0) {
                 this.spawnMiners();
@@ -76,5 +77,7 @@ export class CrisisManager extends Manager{
         if (this.creeps.length > 0) {
             console.log("Crisis manager has creeps?! How?")
         }
+        if(this.capital.name == "W57N9") console.log(this.name, "===================")
+
     }
 }

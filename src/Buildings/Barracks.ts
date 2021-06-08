@@ -55,6 +55,7 @@ export class Barracks extends Building {
         if (this.capital.room.energyAvailable + _.sum(this.capital.room.storageUnits, r => r.store.energy) < 2000 || this.capital.creepsByRole[Roles.queen].length == 0) {
             this.crisisManager = new CrisisManager(this)
         }
+
     }
 
     //TODO MAKE A PROPER IDLE SPOT. HIGH PRIO
@@ -104,7 +105,7 @@ export class Barracks extends Building {
                 this.productionPriorities.push(prio)
             }
             this.productionQueue[prio].push(request)
-            //console.log(JSON.stringify(this.productionQueue))
+
         } else {
             console.log("cannot spawn " + setup.role + " for " + manager + request.body)
             console.log(request.body.length)
@@ -194,7 +195,7 @@ export class Barracks extends Building {
     }
 
     run(): void {
-        //console.log(JSON.stringify(this.productionQueue))
+        console.log(_.map(this.productionQueue, r => _.map(r, t => t.name)))
 		this.handleSpawns();
     }
 

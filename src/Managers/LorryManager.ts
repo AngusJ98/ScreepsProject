@@ -78,7 +78,7 @@ export class LorryManager extends Manager {
         if (site instanceof UpgradeSite) {
             return Math.ceil(UPGRADE_CONTROLLER_POWER * site.manager.powerNeeded * 4 * PathFinder.search(this.lorryHQ.pos, site.pos).cost / CARRY_CAPACITY);
         } else if (site instanceof ExtractorSite) {
-            return Math.ceil(site.manager.energyPerTick * 3 * PathFinder.search(this.lorryHQ.pos, site.pos).cost / CARRY_CAPACITY)
+            return Math.max(Math.ceil(site.manager.energyPerTick * 3 * PathFinder.search(this.lorryHQ.pos, site.pos).cost / CARRY_CAPACITY), 20)
         } else {
             return Math.ceil(site.manager.energyPerTick * 3 * PathFinder.search(this.lorryHQ.pos, site.pos).cost / CARRY_CAPACITY);
         }

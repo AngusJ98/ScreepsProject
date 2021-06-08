@@ -39,7 +39,7 @@ export class WorkManager extends Manager {
         this.hitsGoal = this.barrierHits[this.capital.level]
         this.fortifyTargets = _.filter(this.room.barriers, r => r.hits < this.hitsGoal);
         this.criticalTargets = _.filter(this.fortifyTargets, r => r.hits < this.critical);
-        this.deconstructTargets = _.compact(_.map(["60b917185571fb2d25c8b16d", "5d8a144874b4f975f63335b1"], r => Game.getObjectById(r))) as Structure[]
+        this.deconstructTargets = this.room.hostileStructures
         console.log(this.deconstructTargets.length, " buildings to deconstruct")
         this.repairTargets = _.filter(_.compact(this.capital.repairables), r => r.hits < 0.8 * r.hitsMax);
         _.forEach(this.capital.miningSites, r => _.remove(this.repairTargets, t => r.container && t.id == r.container.id))
@@ -105,7 +105,7 @@ export class WorkManager extends Manager {
     private handleWorker(worker: Creep): void {
         if (worker.store.energy > 0) {
 
-            if(this.capital.controller.ticksToDowngrade <= (this.capital.level >= 4 ? 8000 : 2000)) {
+            if(this.capital.controller.ticksToDowngrade <= (this.capital.level >= 4 ? 8000 : 4000)) {
                 if (this.upgradeActions(worker)) {
                     worker.say("Upgrading!")
                     return;
