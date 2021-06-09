@@ -21,11 +21,11 @@ RoomPosition.prototype.getAdjacentPositions = function(range = 1, filterStructur
 	}}
 
 	let positions = _.map(offsets, r => new RoomPosition(this.x + r.x, this.y + r.y, this.roomName))
-	_.remove(positions, r => !([0, 1].includes(terrain.get(r.x, r.y))))
+	_.remove(positions, r => !([0, 2].includes(terrain.get(r.x, r.y))))
 	if (filterStructures) {
 		let clearPos = []
 		for (let pos of positions) {
-			if (!(_.some(OBSTACLE_OBJECT_TYPES, pos.lookFor(LOOK_STRUCTURES)))){
+			if (pos.lookFor(LOOK_STRUCTURES).length == 0 || !(_.some(OBSTACLE_OBJECT_TYPES, pos.lookFor(LOOK_STRUCTURES)))){
 				clearPos.push(pos)
 			}
 		}

@@ -192,7 +192,7 @@ export class Barracks extends Building {
     }
 
     run(): void {
-        console.log(_.map(this.productionQueue, r => _.map(r, t => t.name)))
+        console.log(this.room.name,"-------", _.map(this.productionQueue, r => _.map(r, t => t.name)))
 		this.handleSpawns();
     }
 

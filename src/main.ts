@@ -49,6 +49,9 @@ export function loop(): void {
     //Game.cpu.generatePixel();
   }
 
+  let test: Source = Game.getObjectById("59f19f4a82100e1594f34b76") as Source
+  console.log(test.pos.getAdjacentPositions(1, true))
+  console.log(test.pos.getAdjacentPositions(1, false))
 }
 
 

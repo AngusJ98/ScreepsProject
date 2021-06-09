@@ -25,6 +25,7 @@ export class MiningManager extends Manager {
     room: Room
 
     container: StructureContainer | undefined;
+    source: Source
     extensions: StructureExtension[]
     extenstionsToFill: StructureExtension[]
     link: StructureLink | undefined;
@@ -39,6 +40,7 @@ export class MiningManager extends Manager {
         this.extensions = this.site.extensions
         this.extenstionsToFill = _.filter(this.extensions, r => r.store[RESOURCE_ENERGY] < r.store.getCapacity(RESOURCE_ENERGY))
         this.room = miningSite.room
+        this.source = miningSite.source
 
 
         this.miners = this.creepsByRole[Roles.drone];
@@ -60,16 +62,15 @@ export class MiningManager extends Manager {
             this.mode = "Standard";
             this.setup = Setups.drones.miners.default;
         } //TODO Add code for when we want double miners (saves cpu)
-
-        this.minersNeeded = Math.min(this.pos.getAdjacentPositions(1, true).length, Math.ceil(this.miningPowerNeeded / (this.setup.getBodyPotential(WORK, this.capital))))
-
+        this.minersNeeded = Math.min(this.source.pos.getAdjacentPositions(1, true).length, Math.ceil(this.miningPowerNeeded / (this.setup.getBodyPotential(WORK, this.capital))))
+        console.log(this.name, "-", this.minersNeeded, "-", this.miningPowerNeeded, "-", Math.min(this.source.pos.getAdjacentPositions(1, true).length))
         this.isDropMining = this.capital.level < this.dropMineUntilRCL;
 
         if (this.mode != "Early" && !this.isDropMining) {
             if (this.container) {
                 this.harvestPos = this.container.pos;
             } else if (this.link) {
-                this.harvestPos = _.first(_.filter(this.pos.getAdjacentPositions(), r => r.getRangeTo(this.link!) == 1));
+                this.harvestPos = _.first(_.filter(this.source.pos.getAdjacentPositions(), r => r.getRangeTo(this.link!) == 1));
             } else {
                 this.harvestPos = this.calculateContainerPos();
             }

@@ -72,7 +72,7 @@ export class CrisisManager extends Manager{
         //then! Spawn the rest of the miners needed if we don't have enough energy in room
         let roomEnergy: number = this.room.energyAvailable + _.sum(this.withdraw, r => r.store.energy || r.energy);
         let dropped = _.sum(this.room.droppedEnergy, r => r.amount);
-        if (roomEnergy + dropped < config.crisis.emergencyMinersEnergyLimit) {
+        if (roomEnergy + dropped < config.crisis.emergencyMinersEnergyLimit && (!this.capital.creepsByRole[Roles.drone] || this.capital.creepsByRole[Roles.drone].length < 2)) {
             this.spawnMiners()
         }
     }

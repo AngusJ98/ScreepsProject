@@ -45,6 +45,6 @@ export var config = {
     },
 
     crisis: {
-      emergencyMinersEnergyLimit: 2500,
+      emergencyMinersEnergyLimit: 1000,
     },
 }
