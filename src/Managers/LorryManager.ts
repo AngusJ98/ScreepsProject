@@ -76,9 +76,9 @@ export class LorryManager extends Manager {
 
     transporterSizePerSite(site: MiningSite | UpgradeSite | ExtractorSite) {
         if (site instanceof UpgradeSite) {
-            return Math.ceil(UPGRADE_CONTROLLER_POWER * site.manager.powerNeeded * 4 * PathFinder.search(this.lorryHQ.pos, site.pos).cost / CARRY_CAPACITY);
+            return Math.ceil(UPGRADE_CONTROLLER_POWER * site.manager.powerNeeded * 2 * PathFinder.search(this.lorryHQ.pos, site.pos).cost / CARRY_CAPACITY);
         } else if (site instanceof ExtractorSite) {
-            return Math.min(Math.ceil(site.manager.energyPerTick * 3 * PathFinder.search(this.lorryHQ.pos, site.pos).cost / CARRY_CAPACITY / 5), 20)
+            return Math.min(Math.ceil(site.manager.energyPerTick * 2 * PathFinder.search(this.lorryHQ.pos, site.pos).cost / CARRY_CAPACITY / 5), 20)
         } else {
             return Math.ceil(site.manager.energyPerTick * 3 * PathFinder.search(this.lorryHQ.pos, site.pos).cost / CARRY_CAPACITY);
         }

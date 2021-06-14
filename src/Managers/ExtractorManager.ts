@@ -81,7 +81,7 @@ export class ExtractorManager extends Manager {
         if (this.mineral.mineralAmount > 0) {
             if (!(miner.pos.inRangeTo(this.container.pos, 0))) {
                 miner.travelTo(this.container.pos)
-            } else {
+            } else if (Game.time % EXTRACTOR_COOLDOWN == 0) {
                 miner.harvest(this.mineral)
             }
         } else {

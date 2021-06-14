@@ -24,7 +24,7 @@ export class SettleManager extends Manager {
         } else if (this.controller) {
             claimer.goAttackController(this.controller)
         } else {
-            claimer.travelTo(this.mission.pos)
+            claimer.travelTo(this.mission.pos, {allowHostile: true, allowSK: true})
         }
     }
 
