@@ -163,7 +163,7 @@ export class WorkManager extends Manager {
             let structs = _.filter(this.capital.room.storageUnits, r => r.store.energy >= worker.store.getCapacity())
             let targets = _.merge(drops,structs)
             //console.log(JSON.stringify(this.room.drops))
-            let target = worker.pos.findClosestByMultiRoomRange(targets);
+            let target = worker.pos.findClosestByPath(targets, {ignoreCreeps: false});
             if(target) {
                 worker.goWithdraw(target)
             }

@@ -6,7 +6,9 @@ export const ManagerPriority = {
     //Necessary for capitals to function
     Core: {
         queen: 100,
+        charger: 100,
         treasurer: 101,
+
     },
 
     Defense: {

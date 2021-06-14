@@ -17,5 +17,5 @@ export function createMission(flag: Flag, empire: Empire): Mission | undefined {
             break
     }
 
-    return
+    return undefined
 }

@@ -1,10 +1,29 @@
+interface ProtoPos {
+	x: number;
+	y: number;
+	roomName: string;
+}
 
+interface CapitalMemory {
+    outposts: string[],
+    scoutTargets: string[],
+    isBunker: boolean;
+    anchor: ProtoPos;
+  }
+declare const require: (module: string) => any;
+declare var global: any;
 
 
 //declare var creepsByCapital: {[name: string]: Creep[]};
 //declare var capitals: {[name: string]: Capital};
 
+declare namespace NodeJS {
+	interface Global {
 
+		derefRoomPosition(protoPos: ProtoPos): RoomPosition,
+
+	}
+}
 
 
 interface RoomMemory {

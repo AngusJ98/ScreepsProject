@@ -53,7 +53,16 @@ export class Artillery extends Building {
             let healableCreeps = this.room.find(FIND_MY_CREEPS, {filter: r => r.hits < r.hitsMax})
             if (healableCreeps.length > 0) {
                 _.forEach(this.towers, r => r.heal(healableCreeps[0]))
+                return
             }
+
+            let criticalFortifications = _.filter(this.room.barriers, r => r.hits < 5000)
+            if(criticalFortifications.length > 0) {
+                _.forEach(this.towers, r => r.repair(criticalFortifications[0]))
+                return
+            }
+
+
         }
     }
 

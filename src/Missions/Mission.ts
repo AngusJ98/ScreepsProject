@@ -20,16 +20,8 @@ export abstract class Mission {
     manager: Manager | undefined;
     empire: Empire;
     scoutingNeeded: boolean = false
-    filter: (capital: Capital) => boolean;
 
     constructor(flag: Flag, empire: Empire) {
-        this.filter = function(capital: Capital): boolean {
-            if (capital.barracks && capital.level > 4) {
-                return true
-            } else {
-                return false
-            }
-        }
         this.memory = flag.memory as FlagMemory;
         this.flag = flag
         this.name = flag.name + flag.pos.roomName;
@@ -48,32 +40,32 @@ export abstract class Mission {
 
 
 
-    getCapital(filter?: (capital: Capital) => boolean): Capital | undefined{
+    getCapital(): Capital | undefined{
         if (this.memory.capital) {
             return this.empire.capitals[this.memory.capital]
         } else {
-            let nearestCapital = this.findClosestCapital(filter)
+            let nearestCapital = this.findClosestCapital()
             this.memory.capital = nearestCapital? nearestCapital.name : undefined
             return nearestCapital
         }
     }
 
-    findClosestCapital(filter?: (capital: Capital) => boolean): Capital | undefined {
+    findClosestCapital(): Capital | undefined {
         let nearestCapital: Capital | undefined;
 		let minDistance = Infinity;
         for (let name in this.empire.capitals) {
             let capital = this.empire.capitals[name]
-            if (!filter || filter(capital)) {
-                let length = PathFinder.search(this.pos, capital.pos).path.length
-                if (length < minDistance) {
-                    minDistance = length
-                    nearestCapital = capital
-                }
+
+            let length = PathFinder.search(this.pos, capital.pos).path.length
+            if (length < minDistance && this.filter(capital)) {
+                minDistance = length
+                nearestCapital = capital
             }
+
         }
         return nearestCapital
     }
-
+    abstract filter(capital: Capital): boolean;
     abstract init(): void;
     abstract run(): void;
 }

@@ -8,6 +8,7 @@ export const Roles = {
 	colonist    : 'colonist',
 	treasurer    : 'treasurer',
 	queen      : 'queen',
+	charger    : "charger",
 	scout      : 'scout',
 	lorry  : 'lorry',
 	worker     : 'worker',
@@ -113,6 +114,20 @@ export const Setups = {
 	queens: {
 
 		default: new CreepSetup(Roles.queen, {
+			pattern  : [CARRY, CARRY, MOVE],
+			sizeLimit: Infinity,
+		}),
+
+		early: new CreepSetup(Roles.queen, {
+			pattern  : [CARRY, MOVE],
+			sizeLimit: Infinity,
+		}),
+
+	},
+
+	chargers: {
+
+		default: new CreepSetup(Roles.charger, {
 			pattern  : [CARRY, CARRY, MOVE],
 			sizeLimit: Infinity,
 		}),

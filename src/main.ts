@@ -19,12 +19,10 @@ declare global {
     rooms: {[name:string]: RoomMemory}
     skippedRooms: Room[]
     capitals: {[capitalName: string]: CapitalMemory}
+
   }
 
-  interface CapitalMemory {
-    outposts: string[];
-    scoutTargets: string[]
-  }
+
 
   // Syntax for adding proprties to `global` (ex "global.log")
   namespace NodeJS {
@@ -49,9 +47,6 @@ export function loop(): void {
     //Game.cpu.generatePixel();
   }
 
-  let test: Source = Game.getObjectById("59f19f4a82100e1594f34b76") as Source
-  console.log(test.pos.getAdjacentPositions(1, true))
-  console.log(test.pos.getAdjacentPositions(1, false))
 }
 
 

@@ -17,6 +17,8 @@
     "allowUnreachableCode": false,
     "removeComments": false,
     "skipLibCheck": true,
+    "strictNullChecks": false,
+    "noImplicitAny": false,
   },
   "exclude": [
     "node_modules"

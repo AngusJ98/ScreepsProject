@@ -75,18 +75,14 @@ export class MiningManager extends Manager {
                 this.harvestPos = this.calculateContainerPos();
             }
         }
+
     }
 
 
 
     //calculates where the container should be put. If no barracks, just return the source position for miners to move to
     calculateContainerPos(): RoomPosition {
-        if (this.capital.barracks) {
-            let pathSearch = PathFinder.search(this.capital.coreSpawn!.pos, this.site.source.pos);
-            return _.last(pathSearch.path);
-        } else {
-            return _.first(this.site.source.pos.getAdjacentPositions());
-        }
+        return _.first(this.site.source.pos.getAdjacentPositions(1));
     }
 
     private addContainer(): void {
@@ -95,7 +91,6 @@ export class MiningManager extends Manager {
         }
         if (!this.container && !this.constructionSite) {
             let res = this.calculateContainerPos().createConstructionSite(STRUCTURE_CONTAINER)
-
             if (res != OK) {
                 console.log("No container could be built at " + JSON.stringify(this.calculateContainerPos()))
             }

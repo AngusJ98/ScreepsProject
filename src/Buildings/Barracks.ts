@@ -52,7 +52,7 @@ export class Barracks extends Building {
         this.defenseManager = new DefenseManager(this)
 
         //Use a crisis manager if there is no queen and not enough energy to make one
-        if (this.capital.room.energyAvailable < 1000 || this.capital.creepsByRole[Roles.queen].length == 0) {
+        if (this.capital.room.energyAvailable < 1000 || this.capital.creepsByRole[Roles.queen].length < 2) {
             this.crisisManager = new CrisisManager(this)
         }
 

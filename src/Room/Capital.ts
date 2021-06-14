@@ -76,7 +76,8 @@ export class Capital {
     managers: Manager[];
     workManager: WorkManager | undefined;
     scoutManager: ScoutManager | undefined;
-
+    memory: CapitalMemory
+    anchor?: RoomPosition
 
     assets: {[type: string]: number}
     empire: Empire
@@ -87,7 +88,11 @@ export class Capital {
         this.empire = empire;
         this.name = room.name
         if (!Memory.capitals[this.name]) {
-            Memory.capitals[this.name] = {outposts: [], scoutTargets: []}
+            Memory.capitals[this.name] = {outposts: [], scoutTargets: [], isBunker: true, anchor: {x: 25, y: 25, roomName: room.name}}
+        }
+        this.memory = Memory.capitals[this.name]
+        if (this.memory.isBunker) {
+            //this.anchor = derefRoomPosition(this.memory.anchor) || this.storage?.pos || undefined
         }
         this.capital = this
         this.room = room;

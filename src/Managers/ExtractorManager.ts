@@ -79,10 +79,10 @@ export class ExtractorManager extends Manager {
 
     private handleMiner(miner: Creep) {
         if (this.mineral.mineralAmount > 0) {
-            if (this.harvestPos && this.container && this.container.store.getUsedCapacity() < this.container.store.getCapacity()) {
-                miner.goHarvest(this.mineral)
+            if (!(miner.pos.inRangeTo(this.container.pos, 0))) {
+                miner.travelTo(this.container.pos)
             } else {
-                miner.travelTo(this.mineral.pos)
+                miner.harvest(this.mineral)
             }
         } else {
             let spawn = miner.pos.findClosestByMultiRoomRange(this.capital.spawns);

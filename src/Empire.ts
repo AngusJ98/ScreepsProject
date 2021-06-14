@@ -33,6 +33,17 @@ export class Empire {
 
         this.cleanCreeps(); //Clean up memory of dead creeps
         this.cleanRooms(); //Clean up memory of dead rooms
+        this.cleanFlags();
+    }
+
+    cleanFlags() {
+        for (const name in Memory.flags) {
+            if (Game.flags[name]) {
+              continue;
+            } else {
+                delete Memory.flags[name];
+            }
+        }
     }
 
     cleanRooms () {

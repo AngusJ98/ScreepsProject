@@ -6,6 +6,7 @@ declare global {
 		roomCoords: Coord;
 		getMultiRoomRangeTo(pos: RoomPosition): number;
 		findClosestByMultiRoomRange<T extends _HasRoomPosition>(objects: T[]): T | undefined;
+		findPositionAtDirection(direction: DirectionConstant): RoomPosition;
 	}
 }
 export function test4() {
@@ -66,3 +67,18 @@ RoomPosition.prototype.findClosestByMultiRoomRange = function <T extends _HasRoo
 	T | undefined {
 	return minBy(objects, (obj: T) => this.getMultiRoomRangeTo(obj.pos));
 };
+
+const DirectionOffsets = {
+	1: {x: 0, y: -1},
+	2: {x: 1, y: -1},
+	3: {x: 1, y: 0},
+	4: {x: 1, y: 1},
+	5: {x: 0, y: 1},
+	6: {x: -1, y: 1},
+	7: {x: -1, y: 0},
+	8: {x: -1, y: -1},
+}
+
+RoomPosition.prototype.findPositionAtDirection = function (direction: DirectionConstant): RoomPosition {
+	return new RoomPosition(this.x + DirectionOffsets[direction].x, this.y + DirectionOffsets[direction].y, this.roomName)
+}

@@ -1,5 +1,6 @@
 import { Empire } from "Empire";
 import { Manager } from "Manager";
+import { Capital } from "Room/Capital";
 import { Mission } from "./Mission";
 import { SettleManager } from "./SettleManager";
 
@@ -16,6 +17,10 @@ export class SettleMission extends Mission {
         if(this.capital) {
             this.manager = new SettleManager(this)
         }
+    }
+    filter(capital: Capital): boolean {
+
+        return capital.barracks? capital.level >= 5 : false
     }
 
     init(): void {

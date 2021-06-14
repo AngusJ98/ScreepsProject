@@ -107,3 +107,5 @@ Object.defineProperty(StructureTerminal.prototype, "energy", {
         return this.store.energy
     }
 })
+
+

@@ -21,6 +21,10 @@ export class SetupMission extends Mission {
         }
 
     }
+    filter(capital: Capital): boolean {
+
+        return capital.barracks? capital.level >= 5 : false
+    }
 
     init(): void {
         if (this.room && this.room.spawns.length >= 1 && this.controller!.level >= 4) {

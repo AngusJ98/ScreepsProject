@@ -75,7 +75,18 @@ export class CrisisManager extends Manager{
         if (roomEnergy + dropped < config.crisis.emergencyMinersEnergyLimit && (!this.capital.creepsByRole[Roles.drone] || this.capital.creepsByRole[Roles.drone].length < 2)) {
             this.spawnMiners()
         }
+
+        if (this.capital.creepsByRole[Roles.queen].length < this.capital.level) {
+            let lorry = this.capital.creepsByRole[Roles.van]
+            if (lorry[0]) {
+                lorry[0].reassign(Roles.queen, this.capital.barracks!.manager)
+            } else {
+                this.spawnList(this.capital.level, Setups.van)
+            }
+        }
     }
+
+
 
     run() {
         if (this.creeps.length > 0) {
