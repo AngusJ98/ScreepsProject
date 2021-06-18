@@ -7,3 +7,5 @@ export var BunkerPos = {
     x: 25,
     y: 25,
 }
+
+

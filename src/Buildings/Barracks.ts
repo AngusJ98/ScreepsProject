@@ -1,6 +1,7 @@
 import { bodyCost, CreepSetup } from "Creep_Setups/CreepSetup";
 import { Roles, Setups } from "Creep_Setups/Setups";
 import { Manager } from "Manager";
+import { ChargerManager } from "Managers/ChargerManager";
 import { CrisisManager } from "Managers/CrisisManager";
 import { DefenseManager } from "Managers/DefenseManager";
 import { QueenManager } from "Managers/QueenManager";
@@ -29,7 +30,7 @@ export class Barracks extends Building {
     extensions: StructureExtension[];
     energyStructures: (StructureSpawn | StructureExtension)[];
     name: string;
-    manager: QueenManager;
+    manager: QueenManager | ChargerManager;
     crisisManager?: CrisisManager; //used if capital is looking bad, or to start up a new capital
     defenseManager: DefenseManager;
 

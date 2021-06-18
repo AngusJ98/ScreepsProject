@@ -9,13 +9,14 @@ export abstract class ChargerManager extends Manager {
     setup: CreepSetup
     offset: {x: number, y: number}
     idlePoint: RoomPosition
+    extensions: (StructureExtension)[]
     abstract path: RoomPosition[]; //The clockwise path the filler will take
-    constructor(pos: RoomPosition, capital: Capital, prio = ManagerPriority.Core.charger, direction: DirectionConstant) {
-        super(capital, "ChargerManager_" + capital.name + "_" + direction, prio)
+    constructor(capital: Capital, prio = ManagerPriority.Core.charger, direction: DirectionConstant) {
+        super({pos:anchor.findPositionAtDirection(direction), capital: capital}, "ChargerManager_" + capital.name + "_" + direction, prio)
         this.setup = Setups.chargers.default
         let anchor = this.capital.anchor
-        this.idlePoint = anchor.findPositionAtDirection(direction)
         this.chargers = this.creepsByRole[Roles.charger]
+
 
     }
 

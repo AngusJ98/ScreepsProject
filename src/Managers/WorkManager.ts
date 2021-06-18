@@ -30,12 +30,14 @@ export class WorkManager extends Manager {
     critical = 2500;
     tolerance = 100000;
     fortifyThreshold = 300000;
+    repair: boolean
 
     constructor(capital: Capital, prio = ManagerPriority.Capital.work) {
         super(capital, "WorkManager_" + capital.name, prio)
         this.workers = this.creepsByRole[Roles.worker];
         this.setup = this.capital.level == 1 ? Setups.workers.early : Setups.workers.default;
         this.room = capital.room
+        this.repair = true
         this.hitsGoal = this.barrierHits[this.capital.level]
         this.fortifyTargets = _.filter(this.room.barriers, r => r.hits < this.hitsGoal);
         this.criticalTargets = _.filter(this.fortifyTargets, r => r.hits < this.critical);
@@ -119,9 +121,10 @@ export class WorkManager extends Manager {
                 }
 			}
 
-            if (this.repairTargets.length > 0) {
+            if (this.repair && this.repairTargets.length > 0) {
 				if (this.repairActions(worker)) {
                     worker.say("🛠️")
+                    this.repair = false
                     return;
                 }
 			}
@@ -173,6 +176,7 @@ export class WorkManager extends Manager {
     init(): void {
         let currentParts = this.setup.getBodyPotential(WORK, this.capital);
         let numWorkers = 0;
+
         if (this.capital.stage == CapitalSize.Town) {
             let MAX_WORKERS = 5;
             let energyMinedPerTick = _.sum(_.map(this.capital.miningSites, r => _.sum(r.manager.miners, t => t.getActiveBodyparts(WORK) * HARVEST_POWER)))
@@ -197,6 +201,7 @@ export class WorkManager extends Manager {
     }
 
     run(): void {
+        let repair = true
         _.forEach(this.workers, r => this.handleWorker(r));
     }
 

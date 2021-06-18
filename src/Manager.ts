@@ -5,6 +5,7 @@ import { Capital } from "Room/Capital";
 
 interface IManagerInitialiser {
 	capital: Capital;
+    pos: RoomPosition;
     room?: Room;
 }
 
@@ -17,7 +18,7 @@ export abstract class Manager {
 	priority: number;
     creeps: Creep[];
     creepsByRole: {[roleName: string]: Creep[]}
-    pos?: RoomPosition
+    pos: RoomPosition
     constructor(initialiser: IManagerInitialiser, name: string, priority: number) {
         //info from initialiser
         this.name = name

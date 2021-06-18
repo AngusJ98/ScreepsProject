@@ -1,5 +1,6 @@
 import {Traveler} from "Traveler"
 import { Empire } from "Empire";
+import { bunkerPath, getRoomPosForBunkerCoord } from "Room/Bunker";
 
 declare global {
   /*
@@ -48,11 +49,8 @@ export function loop(): void {
   //@ts-ignore
 
 
-  if(Game.cpu.bucket == 10000) {
-    //@ts-ignore
-    //Game.cpu.generatePixel();
-  }
-
+  console.log(Game.cpu.bucket)
+  console.log(getRoomPosForBunkerCoord(bunkerPath[BOTTOM_LEFT][0], {x: 10, y: 10, roomName: "W6N9"}))
 }
 
 
