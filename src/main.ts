@@ -35,13 +35,19 @@ declare global {
 
 
 export function loop(): void {
-
+  if (Game.cpu.bucket < 2000 && (Game.time + 1) % 5 == 0) {
+    console.log("Skipping tick for cpu")
+    console.log(Game.cpu.bucket)
+    return
+  }
   var empire:Empire = new Empire();
 
   empire.build();
   empire.init();
   empire.run();
   //@ts-ignore
+
+
   if(Game.cpu.bucket == 10000) {
     //@ts-ignore
     //Game.cpu.generatePixel();

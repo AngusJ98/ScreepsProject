@@ -19,12 +19,14 @@ export class SettleManager extends Manager {
 
     private handleClaimer(claimer: Creep) {
         console.log("Settle running")
-        if (this.controller && !this.controller.owner) {
+        if (this.controller && claimer.room == this.controller.room) {
             claimer.goClaim(this.controller!)
-        } else if (this.controller) {
+            claimer.say("CLAIMING")
+        } else if (this.controller && this.controller.owner) {
             claimer.goAttackController(this.controller)
         } else {
-            claimer.travelTo(this.mission.pos, {allowHostile: true, allowSK: true})
+            claimer.say("Moving")
+            claimer.travelTo(this.mission.pos, {allowHostile: true, allowSK: true, maxRooms: 500, ensurePath: true})
         }
     }
 

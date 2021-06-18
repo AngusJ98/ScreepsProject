@@ -10,7 +10,7 @@ declare global {
         goDeconstruct(target: Structure): void;
         goTransfer(target: Creep | Structure, resource?: ResourceConstant): void;
         goWithdraw(target: Structure | Tombstone | Resource, resource?: ResourceConstant): void;
-        goHarvest(target: Source | Mineral | Deposit): void;
+        goHarvest(target: Source | Mineral | Deposit, opts?: TravelToOptions): void;
         goDrop(target: RoomPosition, resource?: ResourceConstant): void;
         goSign(target: StructureController): void;
         goUpgrade(target: StructureController): void;
@@ -84,11 +84,11 @@ Creep.prototype.goWithdraw = function(target: Structure | Tombstone | Resource, 
 }
 
 
-Creep.prototype.goHarvest = function(target: Source | Mineral | Deposit) {
+Creep.prototype.goHarvest = function(target: Source | Mineral | Deposit, opts?: TravelToOptions) {
     if (this.pos.inRangeTo(target.pos, RANGES.HARVEST)) {
         this.harvest(target)
     } else {
-        this.travelTo(target)
+        this.travelTo(target, opts)
     }
 }
 

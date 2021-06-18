@@ -58,7 +58,7 @@ export class SetupManager extends Manager {
 
     private handlePioneer(pioneer: Creep) {
         if (pioneer.room != this.mission.flag.room) {
-            pioneer.travelTo(this.mission.flag)
+            pioneer.travelTo(this.mission.flag, {allowHostile: true, allowSK: true, maxRooms: 500, ensurePath: true})
 
             return
         }
@@ -84,10 +84,11 @@ export class SetupManager extends Manager {
             if (distance <= 1 && pioneer.store.getFreeCapacity() > 0) {
                 pioneer.say("I mine")
                 pioneer.goHarvest(source!)
+
             } else if (pioneer.store.getUsedCapacity() == 0) {
                 pioneer.say("I go")
                 if (source) {
-                    pioneer.goHarvest(source!)
+                    pioneer.goHarvest(source!, {ensurePath: true, repath: 3})
                 }
             } else {
                 this.workActions(pioneer)

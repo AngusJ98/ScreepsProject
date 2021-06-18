@@ -76,7 +76,7 @@ export class CrisisManager extends Manager{
             this.spawnMiners()
         }
 
-        if (this.capital.creepsByRole[Roles.queen].length < this.capital.level) {
+        if (this.capital.creepsByRole[Roles.queen].length < 1) {
             let lorry = this.capital.creepsByRole[Roles.van]
             if (lorry[0]) {
                 lorry[0].reassign(Roles.queen, this.capital.barracks!.manager)
