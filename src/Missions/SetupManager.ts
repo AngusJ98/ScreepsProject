@@ -35,7 +35,6 @@ export class SetupManager extends Manager {
     critical = 2500;
     tolerance = 100000;
     fortifyThreshold = 500000;
-    pos: RoomPosition;
 
     constructor(mission: SettleMission, prio = ManagerPriority.Colonization.pioneer) {
         super(mission.capital!, "SetupManager_" + mission.name, prio)
@@ -51,7 +50,6 @@ export class SetupManager extends Manager {
         this.repairTargets = _.filter(_.compact(this.room.repairables), r => r.hits < 0.8 * r.hitsMax);
         this.constructionSites = this.room.constructionSites;
         this.deconstructTargets = this.hostileSpawns
-        this.pos = mission.pos
     }
 
 

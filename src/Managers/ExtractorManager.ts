@@ -20,12 +20,10 @@ export class ExtractorManager extends Manager {
     container: StructureContainer | undefined;
     link: StructureLink | undefined;
     energyPerTick: number;
-    pos: RoomPosition
     room: Room
 
     constructor(extractorSite: ExtractorSite, priority = ManagerPriority.Capital.miner) {
         super(extractorSite, "ExtractorManager_" + extractorSite.mineral.id, priority);
-        this.pos = extractorSite.pos
         this.room = extractorSite.room
         this.site = extractorSite;
         this.container = this.site.container;
@@ -74,7 +72,7 @@ export class ExtractorManager extends Manager {
     }
 
     private handleMiner(miner: Creep) {
-        if (this.mineral.mineralAmount > 0) {
+        if (this.mineral.mineralAmount > 0 && this.container) {
             if (!(miner.pos.inRangeTo(this.container.pos, 0))) {
                 miner.travelTo(this.container.pos)
             } else if (Game.time % EXTRACTOR_COOLDOWN == 0) {

@@ -6,6 +6,7 @@ interface BunkerCoord {
     y: number,
 }
 
+//A static class of bunker methods
 export class Bunker {
     static bunkerFillTargets = {
         //bottomLeft

@@ -14,12 +14,10 @@ export class CrisisManager extends Manager{
     withdraw: (StructureStorage | StructureTerminal | StructureContainer | StructureLink | StructureTower)[];
     targets: (StructureSpawn | StructureExtension)[];
     room: Room;
-    pos: RoomPosition
 
     constructor(barracks: Barracks, prio = ManagerPriority.Crisis.mini) {
         super(barracks, "CrisisManager_" + barracks.coreSpawn.id, prio);
         this.room = barracks.room
-        this.pos = barracks.pos
         this.lorrys = this.creepsByRole[Roles.van]
         this.withdraw = _.filter(_.compact([this.room.storage!, this.room.terminal!, ...this.room.containers, ...this.room.links]), r => r.store.energy > 0);
         this.targets = _.filter([...this.room.spawns, ...this.room.extensions], r => r.energy < r.energyCapacity);

@@ -13,7 +13,6 @@ export class QueenManager extends Manager {
     targets: (StructureExtension | StructureSpawn | StructureTower)[]
     towers: StructureTower[];
     room: Room
-    pos: RoomPosition
     constructor(barracks: Barracks,  prio = ManagerPriority.Core.queen) {
         super (barracks, "QueenManager_"+ barracks.coreSpawn.id, prio);
         this.barracks = barracks;
@@ -23,7 +22,6 @@ export class QueenManager extends Manager {
         this.targets = _.filter(this.barracks.energyStructures, r => r.store.getFreeCapacity(RESOURCE_ENERGY)! > 0)
         this.towers = _.filter(this.capital.towers, r => r.energy < r.energyCapacity);
         this.targets = this.targets.concat(this.towers)
-        this.pos = barracks.pos
     }
 
     private handleQueen(queen: Creep) {
@@ -48,12 +46,12 @@ export class QueenManager extends Manager {
 
     withdrawActions(queen: Creep) {
         const drops = _.filter(this.room.droppedEnergy, r => r.amount >= queen.store.getCapacity()/2)
-        const structs = _.filter(_.compact([this.capital.storage, this.capital.terminal, ...this.capital.containers]), r => r!.store[RESOURCE_ENERGY] && r!.store[RESOURCE_ENERGY] >= queen.store.getCapacity())
+        const structs = _.filter(_.compact([this.capital.storage, this.capital.terminal, ...this.capital.containers]), r => r!.store[RESOURCE_ENERGY] && r!.store[RESOURCE_ENERGY] >= queen.store.getCapacity()) as (StructureStorage | StructureTerminal | StructureContainer)[]
         const tombs = _.filter(this.capital.room.tombstones, r => r.store.energy > queen.store.getCapacity()/4)
-        const targets: any[] = [].concat(drops,structs,tombs)
+        let targets: (Resource | StructureStorage | StructureTerminal | StructureContainer | Tombstone)[] = []
+        targets = targets.concat(...drops,...structs,...tombs)
         //console.log(JSON.stringify(this.room.drops))
-        const target = queen.pos.findClosestByRange(targets);
-        console.log(target?.id)
+        const target = queen.pos.findClosestByPath(targets)
         if(target) {
             queen.goWithdraw(target)
         } else {

@@ -25,7 +25,7 @@ export abstract class Manager {
         this.room = initialiser.room
         this.capital = initialiser.capital
         this.priority = priority
-
+        this.pos = initialiser.pos
         //Get list of my creeps from capital and group them by role
         this.creeps = this.capital.creepsByManager[this.name] || []
         this.creepsByRole = _.groupBy(this.creeps, r => r.memory.role)

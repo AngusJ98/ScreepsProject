@@ -27,7 +27,6 @@ export class LorryManager extends Manager {
     powerPer: number;
     sites: (MiningSite|UpgradeSite|ExtractorSite)[]
     room: Room;
-    pos: RoomPosition
 
     constructor(hq: LorryHQ, prio = ManagerPriority.Lorry.lorry) {
         super(hq, "LorryManager" + hq.storage.id, prio);
@@ -46,7 +45,6 @@ export class LorryManager extends Manager {
 
         this.sites = _.compact(this.sites)
         this.room = hq.room
-        this.pos = hq.pos
     }
 
     grabInputs() {

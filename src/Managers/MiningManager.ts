@@ -21,7 +21,6 @@ export class MiningManager extends Manager {
     setup: CreepSetup;
     mode: "Early" | "Standard" | "Link" | "Standard" | "Double" | "SK"
     isDropMining: boolean;
-    pos: RoomPosition
     room: Room
 
     container: StructureContainer | undefined;
@@ -33,7 +32,6 @@ export class MiningManager extends Manager {
     constructor(miningSite: MiningSite, priority = ManagerPriority.Capital.miner) {
         super(miningSite, "MineManager_" + miningSite.source.id, priority);
         this.site = miningSite;
-        this.pos = miningSite.pos
         this.container = this.site.container;
         this.link = this.site.link;
         this.constructionSite = _.first(this.pos.findInRange(FIND_MY_CONSTRUCTION_SITES, 2));
