@@ -48,12 +48,8 @@ export class ExtractorManager extends Manager {
 
     //calculates where the container should be put. If no barracks, just return the source position for miners to move to
     calculateContainerPos(): RoomPosition {
-        if (this.capital.barracks) {
-            let pathSearch = PathFinder.search(this.capital.coreSpawn!.pos, this.site.mineral.pos);
-            return _.last(pathSearch.path);
-        } else {
-            return _.first(this.site.mineral.pos.getAdjacentPositions());
-        }
+
+        return _.first(this.site.mineral.pos.getAdjacentPositions());
     }
 
     private addContainer(): void {

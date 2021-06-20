@@ -179,7 +179,7 @@ export class WorkManager extends Manager {
 
         if (this.capital.stage == CapitalSize.Town) {
             let MAX_WORKERS = 5;
-            let energyMinedPerTick = _.sum(_.map(this.capital.miningSites, r => _.sum(r.manager.miners, t => t.getActiveBodyparts(WORK) * HARVEST_POWER)))
+            let energyMinedPerTick = _.sum(_.map(this.capital.miningSites, r => _.sum(r.manager.miners, t => t.getActiveBodyparts(WORK) * HARVEST_POWER))) - 5
             numWorkers = Math.ceil(energyMinedPerTick / currentParts / 1.1 / 0.8)
             numWorkers = Math.min(MAX_WORKERS, numWorkers)
         } else {
