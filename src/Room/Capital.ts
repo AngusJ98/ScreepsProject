@@ -17,6 +17,7 @@ import { WorkManager } from "Managers/WorkManager";
 import { Mission } from "Missions/Mission";
 
 import * as I from "Room/Room_Find"
+import { Bunker } from "./Bunker";
 
 export enum CapitalSize {
     Town = 0,
@@ -87,13 +88,13 @@ export class Capital {
     constructor(room:Room, empire: Empire) {
         this.empire = empire;
         this.name = room.name
+
         if (!Memory.capitals[this.name]) {
             Memory.capitals[this.name] = {outposts: [], scoutTargets: [], isBunker: true, anchor: {x: 25, y: 25, roomName: room.name}}
         }
         this.memory = Memory.capitals[this.name]
-        if (this.memory.isBunker) {
-            //this.anchor = derefRoomPosition(this.memory.anchor) || this.storage?.pos || undefined
-        }
+
+
         this.capital = this
         this.room = room;
         this.observer = this.room.observer;
@@ -129,7 +130,18 @@ export class Capital {
         this.containers = this.room.containers
 
         this.ಠ_ಠ = 0
+        if (this.memory.isBunker) {
 
+            if (this.memory.anchor) {
+                this.anchor = derefRoomPosition(this.memory.anchor)
+            } else if (this.storage){
+                this.anchor = this.storage?.pos
+                this.memory.anchor = this.storage.pos
+            } else {
+                this.anchor = undefined
+            }
+
+        }
 
         this.level = this.controller.level
 
@@ -257,5 +269,22 @@ export class Capital {
         _.forEach(this.missions, r => r.run())
         _.forEach(this.buildings, r => r.run())
 
+        if (this.anchor) {
+            this.visualiseBunker()
+        }
+    }
+
+
+    visualiseBunker(): void {
+
+        let group = _.map(Bunker.bunkerFillTargets[6], r => Bunker.getRoomPosForBunkerCoord(r, this.anchor!))
+        _.forEach(group, r => new RoomVisual(this.anchor!.roomName).circle(r,  {fill: 'transparent', radius: 0.5, stroke: 'red'}))
+
+        group = _.map(Bunker.bunkerFillTargets[8], r => Bunker.getRoomPosForBunkerCoord(r, this.anchor!))
+        _.forEach(group, r => new RoomVisual(this.anchor!.roomName).circle(r,  {fill: 'transparent', radius: 0.4, stroke: 'white'}))
+
+
+        group = _.map(Bunker.bunkerFillTargets[2], r => Bunker.getRoomPosForBunkerCoord(r, this.anchor!))
+        _.forEach(group, r => new RoomVisual(this.anchor!.roomName).circle(r,  {fill: 'transparent', radius: 0.3, stroke: 'blue'}))
     }
 }

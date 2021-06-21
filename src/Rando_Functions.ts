@@ -109,3 +109,6 @@ Object.defineProperty(StructureTerminal.prototype, "energy", {
 })
 
 
+global.derefRoomPosition = function(protoPos: ProtoPos): RoomPosition {
+	return new RoomPosition(protoPos.x, protoPos.y, protoPos.roomName);
+};
