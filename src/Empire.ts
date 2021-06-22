@@ -75,7 +75,6 @@ export class Empire {
     build() {
         for (let roomName in Game.rooms) {
             let room: Room = Game.rooms[roomName];
-            console.log(room.name)
             if (room.controller && room.controller.my) {
                 this.capitals[room.name] = new Capital(room, this)
             }
@@ -86,7 +85,6 @@ export class Empire {
             let flag: Flag = Game.flags[flagName]
 
             let mission = createMission(flag, this)
-            console.log("Created ", mission?.name)
 
         }
 

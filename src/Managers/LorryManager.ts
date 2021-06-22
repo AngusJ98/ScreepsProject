@@ -153,7 +153,6 @@ export class LorryManager extends Manager {
                 let current = this.filterLife(_.filter(this.lorrys, r => r.memory.targetId == site.container!.id))
 
                 let currentSize = _.sum(current, r => r.getActiveBodyparts(CARRY))
-                console.log(site.container.id, site instanceof ExtractorSite, " needs: ", targetTotal, ". Current: ", currentSize)
                 let maxSize = this.powerPer
                 if (targetTotal > currentSize) {
                     let numNeeded = 1

@@ -5,6 +5,8 @@ import { Manager } from "Manager";
 import { config } from "config";
 import { CapitalSize } from "Room/Capital";
 import { ManagerPriority } from "./ManagerPriority";
+import { ChargerManager } from "./ChargerManager";
+import { QueenManager } from "./QueenManager";
 
 
 //Used to manage rooms that are just starting out. Uses miniminers and minilorrys to build stuffs
@@ -17,11 +19,12 @@ export class CrisisManager extends Manager{
 
     constructor(barracks: Barracks, prio = ManagerPriority.Crisis.mini) {
         super(barracks, "CrisisManager_" + barracks.coreSpawn.id, prio);
+
         this.room = barracks.room
+        console.log("CRISIS IN ROOM: " + this.room!.name)
         this.lorrys = this.creepsByRole[Roles.van]
         this.withdraw = _.filter(_.compact([this.room.storage!, this.room.terminal!, ...this.room.containers, ...this.room.links]), r => r.store.energy > 0);
         this.targets = _.filter([...this.room.spawns, ...this.room.extensions], r => r.energy < r.energyCapacity);
-        console.log("CRISIS MANAGER IN PROGRESS: ", this.room.name)
     }
 
     private spawnMiners() {
@@ -48,7 +51,6 @@ export class CrisisManager extends Manager{
     init() {
         //spawn early miners if this is early capital and has none. return statement so no other higher prio
         //creeps are spawned
-        console.log("Checking miners in ", this.room.name)
         if(this.capital.stage == CapitalSize.Town) {
 
             if (!this.capital.creepsByRole[Roles.drone] || this.capital.creepsByRole[Roles.drone].length == 0) {
@@ -58,10 +60,21 @@ export class CrisisManager extends Manager{
         }
 
         //spawn a transport and reassign as queen if no queen
-        if (this.capital.creepsByRole[Roles.queen].length == 0) {
+        if (this.capital.barracks?.manager instanceof QueenManager? this.capital.creepsByRole[Roles.queen].length == 0 : this.capital.creepsByRole[Roles.charger].length < this.capital.barracks!.chargerManagers.length) {
             let lorry = this.capital.creepsByRole[Roles.van]
             if (lorry[0]) {
-                lorry[0].reassign(Roles.queen, this.capital.barracks!.manager)
+                if (!this.capital.barracks!.manager) {
+                    let chargerManagers = this.capital.barracks?.chargerManagers
+
+                    let target = _.first(_.filter(chargerManagers!, r => !r.chargers || r.chargers.length == 0))
+                    if (target) {
+                        lorry[0].reassign(Roles.charger, target)
+                    } else {
+                        lorry[0].suicide()
+                    }
+                } else {
+                    lorry[0].reassign(Roles.queen, this.capital.barracks!.manager)
+                }
             } else {
                 this.spawnList(1, Setups.van)
             }
@@ -74,23 +87,11 @@ export class CrisisManager extends Manager{
             this.spawnMiners()
         }
 
-        if (this.capital.creepsByRole[Roles.queen].length < 1) {
-            let lorry = this.capital.creepsByRole[Roles.van]
-            if (lorry[0]) {
-                lorry[0].reassign(Roles.queen, this.capital.barracks!.manager)
-            } else {
-                this.spawnList(this.capital.level, Setups.van)
-            }
-        }
     }
 
 
 
     run() {
-        if (this.creeps.length > 0) {
-            console.log("Crisis manager has creeps?! How?")
-        }
-        if(this.capital.name == "W57N9") console.log(this.name, "===================")
 
     }
 }

@@ -12,6 +12,7 @@ import { UpgradeSite } from "Buildings/UpgradeSite";
 import { Roles } from "Creep_Setups/Setups";
 import { Empire } from "Empire";
 import { Manager } from "Manager";
+import { ChargerManager } from "Managers/ChargerManager";
 import { ScoutManager } from "Managers/ScoutManager";
 import { WorkManager } from "Managers/WorkManager";
 import { Mission } from "Missions/Mission";
@@ -85,6 +86,7 @@ export class Capital {
     buildingsByContainer: {[id: string]: UpgradeSite | MiningSite | ExtractorSite}
     missions: Mission[];
     invisRooms: string[];
+    towerNeedFilling: boolean;
     constructor(room:Room, empire: Empire) {
         this.empire = empire;
         this.name = room.name
@@ -181,12 +183,13 @@ export class Capital {
         this.managers = [];
         this.missions = []
 
-
+        this.towerNeedFilling = _.some(this.towers, r => r.energy < r.energyCapacity)
         this.assets = this.getAssets();
 
         this.createBuildings()
         this.workManager = this.barracks? new WorkManager(this) : undefined;
         this.scoutManager = new ScoutManager(this)
+
 
     }
 
@@ -264,7 +267,6 @@ export class Capital {
     }
 
     run(): void {
-        _.forEach(this.missions, r => console.log(r.name))
         _.forEach(this.managers, r => r.run())
         _.forEach(this.missions, r => r.run())
         _.forEach(this.buildings, r => r.run())

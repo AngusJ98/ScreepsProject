@@ -30,9 +30,10 @@ export class Barracks extends Building {
     extensions: StructureExtension[];
     energyStructures: (StructureSpawn | StructureExtension)[];
     name: string;
-    manager: QueenManager | ChargerManager;
+    manager: QueenManager | undefined;
     crisisManager?: CrisisManager; //used if capital is looking bad, or to start up a new capital
     defenseManager: DefenseManager;
+    chargerManagers: ChargerManager[] = [];
 
     private productionPriorities: number[]; // A list of priorities to check when spawning
 	private productionQueue: {[priority: number]: SpawnOrder[]}; // Prioritized queue of spawning orders
@@ -49,11 +50,23 @@ export class Barracks extends Building {
 
         this.productionPriorities = [];
 		this.productionQueue = {};
-        this.manager = new QueenManager(this)
+        if (this.capital.anchor && this.capital.storage && this.capital.storage.store.energy > 2000) {
+            this.chargerManagers.push(new ChargerManager(this.capital, BOTTOM_LEFT))
+
+            if (this.extensions.length > 21) {
+                this.chargerManagers.push(new ChargerManager(this.capital, TOP_LEFT))
+            }
+
+            if (this.extensions.length > 40) {
+                this.chargerManagers.push(new ChargerManager(this.capital, TOP_RIGHT))
+            }
+        } else {
+            this.manager = new QueenManager(this)
+        }
         this.defenseManager = new DefenseManager(this)
 
         //Use a crisis manager if there is no queen and not enough energy to make one
-        if (this.capital.room.energyAvailable < 1000 || this.capital.creepsByRole[Roles.queen].length < 2) {
+        if (this.capital.room.energyAvailable < 1000 || (this.capital.creepsByRole[Roles.queen].length < 2 && this.capital.creepsByRole[Roles.charger].length < 3)) {
             this.crisisManager = new CrisisManager(this)
         }
 

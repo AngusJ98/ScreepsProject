@@ -22,7 +22,7 @@ export abstract class Manager {
     constructor(initialiser: IManagerInitialiser, name: string, priority: number) {
         //info from initialiser
         this.name = name
-        this.room = initialiser.room
+        this.room = Game.rooms[initialiser.pos.roomName]
         this.capital = initialiser.capital
         this.priority = priority
         this.pos = initialiser.pos

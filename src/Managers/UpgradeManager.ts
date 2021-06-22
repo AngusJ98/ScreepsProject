@@ -73,7 +73,7 @@ export class UpgradeManager extends Manager {
 			return;
 		}
         console.log(this.capital.assets[RESOURCE_ENERGY])
-        if ((this.capital.assets[RESOURCE_ENERGY] > 100000 || this.controller.ticksToDowngrade < 500) && (this.room.hostileStructures.length == 0)) {
+        if ((this.capital.assets[RESOURCE_ENERGY] > 100000 || this.controller.ticksToDowngrade < 500) && (this.upgradeSite.container)) {
             let setup = this.capital.level == 8 ? Setups.upgraders.rcl8 : Setups.upgraders.default
             if (this.capital.level == 8) {
 				this.spawnList(1, setup);

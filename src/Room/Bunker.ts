@@ -5,7 +5,14 @@ interface BunkerCoord {
     x: number,
     y: number,
 }
+type SupplyStructure = StructureExtension | StructureSpawn | StructureTower;
 
+
+function isSupplyStructure(structure: Structure): structure is SupplyStructure {
+	return structure.structureType == STRUCTURE_EXTENSION
+		   || structure.structureType == STRUCTURE_TOWER
+		   || structure.structureType == STRUCTURE_SPAWN;
+}
 //A static class of bunker methods
 export class Bunker {
     static bunkerFillTargets = {
@@ -30,6 +37,19 @@ export class Bunker {
         2: [{"x":26,"y":24},{"x":26,"y":23},{"x":25,"y":22},{"x":26,"y":21},{"x":27,"y":20},{"x":28,"y":20},{"x":29,"y":21},{"x":30,"y":22},{"x":30,"y":23},{"x":29,"y":24},{"x":28,"y":25},{"x":27,"y":24},{"x":26,"y":24}],
 
     }
+
+    static spawnTargets = {
+        //bottomLeft
+        6: [{"x":25,"y":27},{"x":23,"y":25}],
+
+        //topLeft
+        8: [{"x":23,"y":25},{"x":25,"y":23}],
+
+        //topRight
+        2: [{"x":25,"y":23}],
+    }
+
+
     static getRoomPosForBunkerCoord(bunkerCoord: BunkerCoord, anchor: ProtoPos): RoomPosition {
         let dx = bunkerCoord.x - baseAnchor.x
         let dy = bunkerCoord.y - baseAnchor.y
@@ -41,11 +61,29 @@ export class Bunker {
         return _.filter(structs, r => r.structureType == STRUCTURE_EXTENSION || r.structureType == STRUCTURE_TOWER || r.structureType == STRUCTURE_SPAWN) as (StructureExtension | StructureTower | StructureSpawn)[]
     }
 
+
     static getFillStructuresFromList(anchor: RoomPosition, posList: BunkerCoord[]): (StructureExtension | StructureTower | StructureSpawn)[] {
         let structs: (StructureExtension | StructureTower | StructureSpawn)[] = []
+        let positions = _.map(posList, r => Bunker.getRoomPosForBunkerCoord(r, anchor))
+        for (const pos of positions) {
+            const structure = _.find(pos.lookFor(LOOK_STRUCTURES), s => isSupplyStructure(s)) as SupplyStructure | undefined;
+            if (structure) {
+                structs.push(structure);
+            }
+        }
+        return structs
+    }
+
+    static getSpawnAtPos(pos:RoomPosition): StructureSpawn[]{
+        let structs = pos.lookFor(LOOK_STRUCTURES)
+        return _.filter(structs, r => r.structureType == STRUCTURE_SPAWN) as StructureSpawn[]
+    }
+
+    static getSpawnsFromList(anchor: RoomPosition, posList: BunkerCoord[]) {
+        let structs: StructureSpawn[] = []
         for (let pogPos of posList) {
             let pos = Bunker.getRoomPosForBunkerCoord(pogPos, anchor)
-            structs.concat(Bunker.getFillStructureAtPosition(pos))
+            structs.concat(Bunker.getSpawnAtPos(pos))
         }
         return structs
     }

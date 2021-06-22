@@ -24,7 +24,16 @@ export class SettleMission extends Mission {
     }
 
     init(): void {
-
+        if (this.controller && this.controller.my) {
+            console.log("removing settler flag")
+            this.flag.setColor(COLOR_GREEN, COLOR_RED)
+            Memory.capitals[this.pos.roomName] = {
+                outposts: [],
+                isBunker: true,
+                scoutTargets: [],
+                anchor: this.pos
+            }
+        }
     }
 
     run(): void {

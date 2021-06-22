@@ -55,19 +55,13 @@ export class ExtractorManager extends Manager {
             let res = this.calculateContainerPos().createConstructionSite(STRUCTURE_CONTAINER)
 
             if (res != OK) {
-                console.log("No container could be built at " + JSON.stringify(this.calculateContainerPos()))
             }
         }
     }
 
     private addExtractor(): void {
-        console.log("Checking for extractor position")
         if (!this.extractor && !this.constructionSite) {
             let res = this.pos.createConstructionSite(STRUCTURE_EXTRACTOR)
-
-            if (res != OK) {
-                console.log("No extractor could be built at " + JSON.stringify(this.pos))
-            }
         }
     }
 

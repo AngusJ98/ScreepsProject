@@ -61,7 +61,6 @@ export class MiningManager extends Manager {
             this.setup = Setups.drones.miners.default;
         } //TODO Add code for when we want double miners (saves cpu)
         this.minersNeeded = Math.min(this.source.pos.getAdjacentPositions(1, true).length, Math.ceil(this.miningPowerNeeded / (this.setup.getBodyPotential(WORK, this.capital))))
-        console.log(this.name, "-", this.minersNeeded, "-", this.miningPowerNeeded, "-", Math.min(this.source.pos.getAdjacentPositions(1, true).length))
         this.isDropMining = this.capital.level < this.dropMineUntilRCL;
 
         if (this.mode != "Early" && !this.isDropMining) {

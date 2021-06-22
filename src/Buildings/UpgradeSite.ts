@@ -23,15 +23,18 @@ export class UpgradeSite extends Building {
         if(this.container) {
             this.capital.buildingsByContainer[this.container.id] = this
         }
+
     }
 
     buildContainerOrLink(type: STRUCTURE_CONTAINER | STRUCTURE_LINK) {
-        if (this.link) { //Just in case we accidentally call this when we have a link already
+        console.log("REEEE" + this.room.name)
+        if (this.link || this.container) { //Just in case we accidentally call this when we have a link already
             return
         } else { //finds the position 2 away with most adjacent spots to make pathing easier
             let possiblePos = this.controller.pos.getAdjacentPositions(2)
             let finalPos = maxBy(possiblePos, r => r.getAdjacentPositions().length)
             finalPos!.createConstructionSite(type)
+
         }
     }
 
@@ -40,7 +43,7 @@ export class UpgradeSite extends Building {
     }
 
     run(): void {
-        if (this.room && Game.time % 20 == 0 && this.capital.level >= 3 && this.capital.storage && this.manager.upgraders && this.manager.upgraders.length > 0) {
+        if (this.room && Game.time % 7 == 0 && this.capital.level >= 3 && this.capital.storage) {
             this.buildContainerOrLink(STRUCTURE_CONTAINER);
         }
     }

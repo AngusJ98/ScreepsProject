@@ -42,7 +42,6 @@ export class WorkManager extends Manager {
         this.fortifyTargets = _.filter(this.room.barriers, r => r.hits < this.hitsGoal);
         this.criticalTargets = _.filter(this.fortifyTargets, r => r.hits < this.critical);
         this.deconstructTargets = _.merge(this.room.hostileStructures, Game.getObjectById("60bf1d5b6b88b71cd5595c5c"))
-        console.log(this.deconstructTargets.length, " buildings to deconstruct")
         this.repairTargets = _.filter(_.compact(this.capital.repairables), r => r.hits < 0.8 * r.hitsMax);
         _.forEach(this.capital.miningSites, r => _.remove(this.repairTargets, t => r.container && t.id == r.container.id))
         this.constructionSites = this.capital.constructionSites;
@@ -162,13 +161,17 @@ export class WorkManager extends Manager {
                     return;
                 }
 			}
-            let drops = _.filter(this.room.droppedEnergy, r => r.amount >= worker.store.getCapacity())
-            let structs = _.filter(this.capital.room.storageUnits, r => r.store.energy >= worker.store.getCapacity())
-            let targets = _.merge(drops,structs)
+            const drops = _.filter(this.room.droppedEnergy, r => r.amount >= worker.store.getCapacity()/2)
+            const structs = _.filter(_.compact([this.capital.storage, this.capital.terminal, ...this.capital.containers]), r => r!.store[RESOURCE_ENERGY] && r!.store[RESOURCE_ENERGY] >= worker.store.getCapacity()) as (StructureStorage | StructureTerminal | StructureContainer)[]
+            const tombs = _.filter(this.capital.room.tombstones, r => r.store.energy > worker.store.getCapacity()/4)
+            let targets: (Resource | StructureStorage | StructureTerminal | StructureContainer | Tombstone)[] = []
+            targets = targets.concat(...drops,...structs,...tombs)
             //console.log(JSON.stringify(this.room.drops))
-            let target = worker.pos.findClosestByPath(targets, {ignoreCreeps: false});
+            const target = worker.pos.findClosestByPath(targets)
             if(target) {
                 worker.goWithdraw(target)
+            } else {
+                worker.say("No target")
             }
         }
     }
@@ -190,9 +193,7 @@ export class WorkManager extends Manager {
             if ((this.capital.storage?.store.energy || 0) + _.sum(this.capital.containers, r => r.store.energy) >= this.fortifyThreshold) {
                 fortifyTicks = _.sum(this.fortifyTargets, r => Math.max(0, this.hitsGoal - r.hits));
             }
-            console.log("build: ", buildTicks, " repair: ", repairTicks, " fort: ", fortifyTicks)
             numWorkers = Math.ceil(2 * (5 * buildTicks + repairTicks + fortifyTicks) / Math.ceil(currentParts * CREEP_LIFE_TIME))
-            console.log("Num: ", numWorkers)
             numWorkers = Math.min(numWorkers, MAX_WORKERS, Math.ceil(this.capital.assets[RESOURCE_ENERGY] / 20000))
         }
 

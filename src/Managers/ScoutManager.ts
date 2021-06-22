@@ -12,7 +12,6 @@ export class ScoutManager extends Manager {
         super(capital, "ScoutManager_" + capital.name, prio)
         this.scouts = this.creepsByRole[Roles.scout] || []
         this.targets = this.capital.invisRooms
-        console.log(capital.name, " trying to scout ", this.targets)
 
 
     }
@@ -23,7 +22,7 @@ export class ScoutManager extends Manager {
             scout.travelTo(travelPos)
         } else if (scout.memory.targetId == undefined) {
             console.log("scout without target in room ", scout.room, "with target ", scout.memory.targetId)
-            //scout.suicide()
+            scout.suicide()
         }
     }
 

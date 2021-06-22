@@ -18,7 +18,6 @@ export class SettleManager extends Manager {
     }
 
     private handleClaimer(claimer: Creep) {
-        console.log("Settle running")
         if (this.controller && claimer.room == this.controller.room) {
             claimer.goClaim(this.controller!)
             claimer.say("CLAIMING")
@@ -32,13 +31,7 @@ export class SettleManager extends Manager {
 
 
     init(): void {
-
-        if (this.controller && this.controller.my) {
-            console.log("removing settler flag")
-            this.mission.flag.secondaryColor = COLOR_RED
-        } else {
-            this.spawnList(1, Setups.colonisers.settler)
-        }
+        this.spawnList(1, Setups.colonisers.settler)
     }
 
     run(): void {

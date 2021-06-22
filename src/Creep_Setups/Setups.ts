@@ -133,8 +133,8 @@ export const Setups = {
 		}),
 
 		early: new CreepSetup(Roles.queen, {
-			pattern  : [CARRY, MOVE],
-			sizeLimit: Infinity,
+			pattern  : [CARRY, CARRY, MOVE],
+			sizeLimit: 2,
 		}),
 
 	},
