@@ -1,0 +1,61 @@
+Date : 2021-05-22 14:47:43
+Directory : c:\Users\ADMIN BOI\Documents\GitHub\ScreepsProject\src
+Total : 30 files,  2321 codes, 313 comments, 490 blanks, all 3124 lines
+
+Languages
++------------+------------+------------+------------+------------+------------+
+| language   | files      | code       | comment    | blank      | total      |
++------------+------------+------------+------------+------------+------------+
+| TypeScript |         30 |      2,321 |        313 |        490 |      3,124 |
++------------+------------+------------+------------+------------+------------+
+
+Directories
++------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                               | files      | code       | comment    | blank      | total      |
++------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                  |         30 |      2,321 |        313 |        490 |      3,124 |
+| Buildings                                                                          |          4 |        255 |          8 |         45 |        308 |
+| Creep                                                                              |          2 |         96 |         39 |         18 |        153 |
+| Creep_Setups                                                                       |          2 |        178 |          5 |         58 |        241 |
+| Managers                                                                           |          6 |        560 |         15 |         98 |        673 |
+| Roles                                                                              |          1 |          1 |          0 |          1 |          2 |
+| Room                                                                               |          3 |        358 |         43 |         72 |        473 |
+| utils                                                                              |          1 |         63 |         17 |         11 |         91 |
++------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| filename                                                                           | language   | code       | comment    | blank      | total      |
++------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| c:\Users\ADMIN BOI\Documents\GitHub\ScreepsProject\src\Buildings\Barracks.ts       | TypeScript |        169 |          7 |         26 |        202 |
+| c:\Users\ADMIN BOI\Documents\GitHub\ScreepsProject\src\Buildings\Building.ts       | TypeScript |         22 |          1 |          6 |         29 |
+| c:\Users\ADMIN BOI\Documents\GitHub\ScreepsProject\src\Buildings\MiningSite.ts     | TypeScript |         23 |          0 |          7 |         30 |
+| c:\Users\ADMIN BOI\Documents\GitHub\ScreepsProject\src\Buildings\UpgradeSite.ts    | TypeScript |         41 |          0 |          6 |         47 |
+| c:\Users\ADMIN BOI\Documents\GitHub\ScreepsProject\src\Creep\Creep_Actions.ts      | TypeScript |         91 |          0 |         14 |        105 |
+| c:\Users\ADMIN BOI\Documents\GitHub\ScreepsProject\src\Creep\Creep_Main.ts         | TypeScript |          5 |         39 |          4 |         48 |
+| c:\Users\ADMIN BOI\Documents\GitHub\ScreepsProject\src\Creep_Setups\CreepSetup.ts  | TypeScript |         50 |          3 |         18 |         71 |
+| c:\Users\ADMIN BOI\Documents\GitHub\ScreepsProject\src\Creep_Setups\Setups.ts      | TypeScript |        128 |          2 |         40 |        170 |
+| c:\Users\ADMIN BOI\Documents\GitHub\ScreepsProject\src\Empire_Main.ts              | TypeScript |         20 |          6 |         11 |         37 |
+| c:\Users\ADMIN BOI\Documents\GitHub\ScreepsProject\src\Empire_Memory.ts            | TypeScript |         34 |          1 |          5 |         40 |
+| c:\Users\ADMIN BOI\Documents\GitHub\ScreepsProject\src\Empire_Missions.ts          | TypeScript |          0 |          1 |          1 |          2 |
+| c:\Users\ADMIN BOI\Documents\GitHub\ScreepsProject\src\Empire_NextRoom.ts          | TypeScript |          0 |          1 |          1 |          2 |
+| c:\Users\ADMIN BOI\Documents\GitHub\ScreepsProject\src\Manager.ts                  | TypeScript |         54 |         15 |         14 |         83 |
+| c:\Users\ADMIN BOI\Documents\GitHub\ScreepsProject\src\Managers\CrisisManager.ts   | TypeScript |         59 |          6 |         12 |         77 |
+| c:\Users\ADMIN BOI\Documents\GitHub\ScreepsProject\src\Managers\ManagerPriority.ts | TypeScript |         51 |          3 |         16 |         70 |
+| c:\Users\ADMIN BOI\Documents\GitHub\ScreepsProject\src\Managers\MiningManager.ts   | TypeScript |        173 |          1 |         31 |        205 |
+| c:\Users\ADMIN BOI\Documents\GitHub\ScreepsProject\src\Managers\QueenManager.ts    | TypeScript |         46 |          1 |         11 |         58 |
+| c:\Users\ADMIN BOI\Documents\GitHub\ScreepsProject\src\Managers\UpgradeManager.ts  | TypeScript |         79 |          1 |         11 |         91 |
+| c:\Users\ADMIN BOI\Documents\GitHub\ScreepsProject\src\Managers\WorkManager.ts     | TypeScript |        152 |          3 |         17 |        172 |
+| c:\Users\ADMIN BOI\Documents\GitHub\ScreepsProject\src\Rando_Functions.ts          | TypeScript |         72 |          0 |         16 |         88 |
+| c:\Users\ADMIN BOI\Documents\GitHub\ScreepsProject\src\Roles\Role_Miner.ts         | TypeScript |          1 |          0 |          1 |          2 |
+| c:\Users\ADMIN BOI\Documents\GitHub\ScreepsProject\src\RoomPosition.ts             | TypeScript |         59 |          2 |          8 |         69 |
+| c:\Users\ADMIN BOI\Documents\GitHub\ScreepsProject\src\Room\Capital.ts             | TypeScript |        138 |         10 |         31 |        179 |
+| c:\Users\ADMIN BOI\Documents\GitHub\ScreepsProject\src\Room\Room_Find.ts           | TypeScript |        198 |         15 |         32 |        245 |
+| c:\Users\ADMIN BOI\Documents\GitHub\ScreepsProject\src\Room\Room_Main.ts           | TypeScript |         22 |         18 |          9 |         49 |
+| c:\Users\ADMIN BOI\Documents\GitHub\ScreepsProject\src\Traveler.ts                 | TypeScript |        407 |        139 |        105 |        651 |
+| c:\Users\ADMIN BOI\Documents\GitHub\ScreepsProject\src\config.ts                   | TypeScript |         44 |          2 |          4 |         50 |
+| c:\Users\ADMIN BOI\Documents\GitHub\ScreepsProject\src\index.d.ts                  | TypeScript |         83 |          0 |         16 |         99 |
+| c:\Users\ADMIN BOI\Documents\GitHub\ScreepsProject\src\main.ts                     | TypeScript |         37 |         19 |          6 |         62 |
+| c:\Users\ADMIN BOI\Documents\GitHub\ScreepsProject\src\utils\ErrorMapper.ts        | TypeScript |         63 |         17 |         11 |         91 |
+| Total                                                                              |            |      2,321 |        313 |        490 |      3,124 |
++------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
