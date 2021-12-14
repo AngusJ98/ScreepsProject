@@ -20,6 +20,9 @@
     "strictNullChecks": true,
     "noImplicitAny": true,
   },
+  "include": [
+    "index/*.d.ts"
+  ],
   "exclude": [
     "node_modules"
   ]
