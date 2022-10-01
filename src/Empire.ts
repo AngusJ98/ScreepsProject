@@ -12,6 +12,7 @@ export default class _Empire implements IEmpire {
     citizensByRole: {[role:string]:Creep[]}; // Hashtables of creeps grouped by role
     citizensByManager: {[managerId: string]: {[role: string]: Creep[]}}
     targets: {[id: string]: Creep[]}; //Hashtable of creeps grouped by their shared targets
+    managers: {[managerId: string]:Manager};
 
 
 
@@ -27,6 +28,7 @@ export default class _Empire implements IEmpire {
         this.citizensByRole = {};
         this.citizensByManager = {};
         this.targets = {};
+        this.managers = {};
     }
 
     build(): void {
@@ -50,10 +52,12 @@ export default class _Empire implements IEmpire {
     }
 
     init(): void {
+        //Init managers in order of priority
 
     }
 
     run(): void {
+        //Run managers in order of priority
 
     }
 

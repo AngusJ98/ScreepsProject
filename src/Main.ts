@@ -4,8 +4,8 @@ import _Empire  from "./Empire"
 function main(): void {
 
     if(!Empire || Empire.shouldBuild || Game.time >= Empire.timeToForceRebuild) {
-        delete global.Empire;
-        global.Empire = new _Empire();
+        Empire = undefined;
+        Empire = new _Empire();
     } else {
         Empire.refresh();
     }
@@ -17,7 +17,7 @@ function main(): void {
 }
 
 function onReset() {
-    global.Empire = new _Empire();
+    Empire = new _Empire();
 }
 
 export const loop = main;

@@ -9,7 +9,7 @@ declare namespace NodeJS {
 	}
 }
 
-declare var Empire: IEmpire;
+declare var Empire: IEmpire | undefined;
 interface IEmpire {
     memory: Memory;
     emperor: Emperor;
@@ -17,7 +17,8 @@ interface IEmpire {
     shouldBuild: boolean;
     kingdoms: {[roomName:string]:Kingdom};
     missions: {[missionId:string]:Mission};
-    citizens: {[creepId:string]:Citizen}
+    citizens: {[creepId:string]:Citizen};
+	managers: {[managerId:string]:Manager};
 
 
 	build(): void;
@@ -30,5 +31,4 @@ interface IEmpire {
 
     postRun(): void;
 }
-
 

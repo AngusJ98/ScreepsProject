@@ -1,0 +1,21 @@
+/**Logistics Systems are a class used to handle an set of hauling tasks. My goal here is to come up with a good algorithm
+ * for matching creeps to tasks as well as estimating the efficiency of the system so I can gauge how many creeps the system needs
+ *
+ * There can be several systems in one room, with the idea of having one for the bunker, one for handling miners, and one for the King creep in the centre
+ *
+ * The algorithm must take into consideration the following:
+ * -Positions of all current creeps, including those currently undertaking tasks
+ * -Priority of each task
+ * -Distance from start to finish
+ *
+ * Another thing to consider is that we will have active and passive requesters/providers
+ * For example, mines will be active providers, as having them overflow is inefficient,
+ * But a storage will be a passive provider, as long as it is not overflowing.
+ *
+ * Maybe I will just have each manager choose their own amount of hauler creeps that are needed.
+ * It will be much easier to calculate their hauling power needed and also much less time needed to fill
+ * hauling requests.
+ *
+ * Given the original idea of seperation of systems, this does make sense.
+ *
+ **/
