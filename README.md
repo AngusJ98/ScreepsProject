@@ -5,9 +5,5 @@ From the steam page:
 
 
 ### What is AozinBot?
-
-
-### Installation
-
-
+This is the start of programming my AI for this game, with a lot of inspiration for the structure from Overmind (https://github.com/bencbartlett/Overmind)
 
